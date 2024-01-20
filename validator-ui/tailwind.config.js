@@ -6,6 +6,8 @@ module.exports = {
       colors: {
         "bg-container": "#f0f0f0",
         "bg-header": "#e4e4e4",
+        "bg-primary": "#db7900",
+        "bg-cards": "#eeeeee",
       },
     },
   },
