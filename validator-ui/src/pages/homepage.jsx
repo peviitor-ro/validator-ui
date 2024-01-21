@@ -78,14 +78,14 @@ export default function Homepage() {
           },
         ]}
       />
-      <div className="h-screen m-10">
+      <div className="m-10">
         <div className="flex justify-between flex-wrap">
           <div>
             <h1 className="text-4xl">Companii</h1>
             <p className="font-semibold">600 de rezultate</p>
           </div>
           <div className="hidden md:block">
-            <label for="sort" className="mr-4">
+            <label htmlFor="sort" className="mr-4">
               Sorteaza
             </label>
             <select
@@ -100,7 +100,7 @@ export default function Homepage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 gap-y-10 mt-10 justify-center md:justify-normal">
+        <div className="flex flex-wrap gap-4 gap-y-10 mt-10 justify-center">
           {firme.map((item) => (
             <HomeCards data={item} />
           ))}
