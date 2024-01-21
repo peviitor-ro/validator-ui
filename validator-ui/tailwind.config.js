@@ -9,6 +9,9 @@ module.exports = {
         "bg-primary": "#db7900",
         "bg-cards": "#eeeeee",
       },
+      boxShadow: {
+        "card-shadow": "0px 2px 5px 0.5px rgba(80, 79, 79, 0.72);",
+      },
     },
   },
   plugins: [],
