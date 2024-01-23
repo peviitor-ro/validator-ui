@@ -65,9 +65,9 @@ export default function Header(props) {
             <div className="flex-1 flex justify-center">{links}</div>
             <a
               className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center lg:block hidden"
-              href="#"
+              href="/logout"
             >
-              Profilul Meu
+              Logout
             </a>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function Header(props) {
         </button>
         <a
           className="text-base font-medium hover:text-bg-primary pr-4 pl-4 w-full text-center"
-          href=""
+          href="/logout"
         >
           Profilul Meu
         </a>
