@@ -1,6 +1,6 @@
 const initialState = {
   isAuthenticated: false,
-  token: null,
+  authorize: null,
 };
 
 const oauthReducer = (state = initialState, action) => {
@@ -9,13 +9,19 @@ const oauthReducer = (state = initialState, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        token: action.payload,
+        authorize: action.payload,
+      };
+      case "LOGIN_FAIL":
+      return {
+        ...state,
+        isAuthenticated: false,
+        authorize: null,
       };
     case "LOGOUT":
       return {
         ...state,
         isAuthenticated: false,
-        token: null,
+        authorize: null,
       };
     default:
       return state;

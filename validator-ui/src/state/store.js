@@ -12,6 +12,5 @@ const persist = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persist,
-  // whitelist: ["oauthReducer"],
 });
 export default store;
