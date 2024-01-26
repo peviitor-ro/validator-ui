@@ -16,16 +16,4 @@ export default function Test() {
 }
 
 
-// const mapStateToProps = state => ({
-//     oauth: state.oauth
-//   });
-  
-//   const mapDispatchToProps = dispatch => ({
-//     loginSuccess: (data) => {dispatch(loginSuccess(data))},
-//     logout: () => dispatch(logout())
-//   });
-  
-
-  
-//   export default connect(mapStateToProps, mapDispatchToProps)(Test);
   
