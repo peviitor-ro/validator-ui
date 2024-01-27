@@ -6,9 +6,9 @@ import AppLayout from "./layouts/appLayout";
 import Login from "./pages/login";
 import Unautorized from "./pages/authorize/unautorized";
 import Test from "./pages/test";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -19,8 +19,23 @@ function App() {
         </Route>
         <Route path="/unauthorized" element={<Unautorized />} />
         <Route path="/authorize/*" element={<Authorize />} />
-        
-        <Route path="/login" element={< Login/>} />
+
+        <Route
+          path="/login"
+          element={
+            <GoogleReCaptchaProvider
+              reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
+              scriptProps={{
+                async: false,
+                defer: false,
+                appendTo: "head",
+                nonce: undefined,
+              }}
+            >
+              <Login />
+            </GoogleReCaptchaProvider>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
