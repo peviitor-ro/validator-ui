@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { IsAuthorized } from "./isAuthorized";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { IsAuthorized } from "./isAuthorized";
 
 function Authorize() {
   const navigate = useNavigate();
