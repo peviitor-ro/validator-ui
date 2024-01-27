@@ -11,7 +11,7 @@ const oauthReducer = (state = initialState, action) => {
         isAuthenticated: true,
         authorize: action.payload,
       };
-      case "LOGIN_FAIL":
+    case "LOGIN_FAIL":
       return {
         ...state,
         isAuthenticated: false,
