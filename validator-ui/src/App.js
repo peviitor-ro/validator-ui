@@ -1,13 +1,31 @@
-import { Provider } from 'react-redux'
-import { Router } from './routes/Router'
-import { store } from './state/store'
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { AuthProvider } from './AuthProvider';
+import { Router } from './routes/Router';
+import { AxiosInterceptors } from './services/AxiosInterceptors';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: 2,
+            staleTime: 0,
+            refetchOnMount: true,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: 'always',
+            suspense: false,
+        },
+    },
+});
 
 function App() {
     return (
-        <Provider store={store}>
-            <Router />
-        </Provider>
-    )
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <AxiosInterceptors>
+                    <Router />
+                </AxiosInterceptors>
+            </AuthProvider>
+        </QueryClientProvider>
+    );
 }
 
-export default App
+export default App;

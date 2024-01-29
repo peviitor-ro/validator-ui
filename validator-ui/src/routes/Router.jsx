@@ -1,33 +1,53 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { NotFoundRoute } from '../components/NotFoundRoute/NotFoundRoute'
+import { useAuthContext } from '../contexts/AuthContext'
 import AppLayout from '../layouts/AppLayout'
-import { Homepage } from '../pages/Homepage'
-import { Login } from '../pages/Login'
-import { Logout } from '../pages/Logout'
 import Authorize from '../pages/auth/Authorize'
-import Unautorized from '../pages/auth/Unautorized'
+import { Login } from '../pages/auth/Login'
+import { Homepage } from '../pages/home/Homepage'
+import { AuthGuard } from './AuthGuard'
 import { CapthchaProvider } from './CapthchaProvider'
 import { routes } from './routes'
 
 export function Router() {
+    const { isAuthenticated } = useAuthContext()
+
     return (
         <BrowserRouter>
             <Routes>
+                {/* PUBLIC ROUTES */}
                 <Route
                     path={routes.LOGIN}
                     element={
-                        <CapthchaProvider>
-                            <Login />
-                        </CapthchaProvider>
+                        isAuthenticated ? (
+                            <Navigate to="/" />
+                        ) : (
+                            <CapthchaProvider>
+                                <Login />
+                            </CapthchaProvider>
+                        )
                     }
                 />
+                <Route
+                    path={`${routes.AUTHORIZED}/:token`}
+                    element={isAuthenticated ? <Navigate to="/" /> : <Authorize />}
+                />
 
-                <Route path="/" element={<AppLayout />}>
+                {/* LOOGED IN USERS ROUTES */}
+                <Route
+                    path="/"
+                    element={
+                        <AuthGuard>
+                            <AppLayout />
+                        </AuthGuard>
+                    }
+                >
                     <Route index element={<Homepage />} />
-                    <Route path={routes.LOGOUT} element={<Logout />} />
                 </Route>
-                <Route path={routes.UNAUTHORIZED} element={<Unautorized />} />
-                <Route path={routes.AUTHORIZED} element={<Authorize />} />
+
+                {/* FALLBACK ROUTE */}
+                <Route path="*" element={<NotFoundRoute />} />
             </Routes>
         </BrowserRouter>
     )

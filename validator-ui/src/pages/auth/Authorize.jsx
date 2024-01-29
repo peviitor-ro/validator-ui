@@ -1,29 +1,26 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { IsAuthorized } from "./isAuthorized";
+import { useEffect } from 'react'
+import { Navigate, useParams } from 'react-router-dom'
+import { useAuthContext } from '../../contexts/AuthContext'
+import { useAuthStateQuery } from '../../services/auth/auth.queries'
+import Unautorized from './components/Unautorized'
 
 function Authorize() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const token_url = window.location.href.split("/");
-  let token = token_url[token_url.length - 1];
+    const { token } = useParams()
+    const { login } = useAuthContext()
+    const { data, isLoading, isError } = useAuthStateQuery(token)
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/unauthorized");
-    }
+    useEffect(() => {
+        if (data) {
+            login(data)
+        }
+    }, [data])
 
-    IsAuthorized(token).then((response) => {
-      if (response.authorized) {
-        dispatch({ type: "LOGIN_SUCCESS", payload: token });
-        navigate("/");
-      } else {
-        dispatch({ type: "LOGIN_FAILURE" });
-        navigate("/unauthorized");
-      }
-    });
-  }, [dispatch, navigate, token]);
+    if (isLoading) return <>Loading...</>
+
+    // TODO: add option to go back to login from unautorized page
+    if (isError || !data) return <Unautorized />
+
+    return <Navigate to="/" replace />
 }
 
-export default Authorize;
+export default Authorize

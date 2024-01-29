@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
-import logo from '../assets/svgs/logo.svg'
-import rocket from '../assets/svgs/rocket.svg'
-import { AuthorizeFetch } from './auth/authorizeFetch'
+import logo from '../../assets/svgs/logo.svg'
+import rocket from '../../assets/svgs/rocket.svg'
+import { useLoginMutation } from '../../services/auth/auth.queries'
 
 export function Login() {
     const { executeRecaptcha } = useGoogleReCaptcha()
+    const { mutate } = useLoginMutation()
 
     const handleReCaptchaVerify = useCallback(async () => {
         if (!executeRecaptcha) {
@@ -14,12 +15,28 @@ export function Login() {
             return
         }
 
-        const token = await executeRecaptcha('login')
+        await executeRecaptcha('login')
     }, [executeRecaptcha])
 
     useEffect(() => {
         handleReCaptchaVerify()
     }, [handleReCaptchaVerify])
+
+    function handleSubmit(e) {
+        e.preventDefault()
+        handleReCaptchaVerify()
+        const formData = new FormData(e.target)
+        const email = formData.get('email')
+
+        if (!email) {
+            return
+        }
+
+        mutate(email, {
+            onSuccess: () => console.log('Success'),
+            onError: () => console.log('error')
+        })
+    }
 
     return (
         <div className="flex items-center justify-around h-screen bg-[#f1f3f6]">
@@ -31,34 +48,38 @@ export function Login() {
                 height="320"
             />
 
-            <div className="flex flex-col items-center justify-around sm:w-1/2 h-1/3  bg-bg-container rounded-lg shadow-xl drop-shadow-md transform translate-x-0 md:translate-x-[-30%] ">
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col items-center justify-around sm:w-1/2 h-1/3  bg-bg-container rounded-lg shadow-xl drop-shadow-md transform translate-x-0 md:translate-x-[-30%] "
+            >
                 <h1 className="flex flex-col md:flex-row items-center justify-center text-2xl md:gap-2 font-bold text-center mt-10">
                     Dashboard
                     <img src={logo} alt="logo" width="100" height="100" />
                 </h1>
                 <div className="flex flex-col items-center w-full h-full">
                     <div className="flex flex-col items-center justify-center w-full px-8">
+                        <label htmlFor="email">Email</label>
                         <input
+                            name="email"
+                            id="email"
                             type="email"
                             className="w-full md:w-1/2 p-2 m-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-ring-primary focus:border-transparent"
-                            placeholder="Email"
+                            placeholder="Enter an Email"
                             focus="true"
+                            required
                         />
                     </div>
 
                     <button
+                        type="submit"
                         className="text-sm font-bold text-text-primary rounded-lg p-2 border border-border-primary hover:bg-bg-primary hover:text-white"
-                        onClick={() => {
-                            handleReCaptchaVerify()
-                            AuthorizeFetch(document.querySelector('input').value)
-                        }}
                     >
                         Autorizeaza
                     </button>
 
                     <p className="text-sm font-bold text-text-primary hidden">Email trimis</p>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }

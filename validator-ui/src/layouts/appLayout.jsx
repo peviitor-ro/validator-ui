@@ -1,26 +1,39 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Outlet, useNavigate } from 'react-router-dom'
-import { accesCookie } from '../utils/accesCookie'
+import { Outlet } from 'react-router-dom'
+import Header from '../components/header/Header'
 
 export default function AppLayout() {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const auth = useSelector((state) => state.auth)
-    const { isAuthenticated } = auth
-
-    const logout_url = process.env.REACT_APP_LOGOUT_URL
-
-    if (!isAuthenticated) {
-        const token = accesCookie('token')
-        if (!token) {
-            // window.location.href = logout_url;
-            return
-        }
-
-        dispatch({ type: 'LOGIN_SUCCESS', payload: token })
-        navigate('/')
-    }
-
-    return <Outlet />
+    return (
+        <>
+            <Header
+                links={[
+                    {
+                        name: 'Joburi',
+                        url: '#'
+                    },
+                    {
+                        name: 'Companii',
+                        url: '#'
+                    },
+                    {
+                        name: 'Cautare',
+                        url: '#'
+                    },
+                    {
+                        name: 'Despre',
+                        url: '#'
+                    },
+                    {
+                        name: 'Contact',
+                        url: '#'
+                    },
+                    {
+                        name: 'Documentatie',
+                        url: '#'
+                    }
+                ]}
+            />{' '}
+            <Outlet />
+        </>
+    )
 }
