@@ -14,7 +14,7 @@ export const useLocalStorage = (setState, key) => {
                 refreshToken: localStorageData.refresh_token
             })
         }
-    }, [])
+    })
 
     return {
         setItem: (value) => localStorage.setItem(key, JSON.stringify(value)),

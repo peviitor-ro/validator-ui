@@ -29,6 +29,6 @@ export function AxiosInterceptors({ children }) {
         return () => {
             return API.interceptors.response.eject(respInterceptor)
         }
-    }, [])
+    })
     return children
 }

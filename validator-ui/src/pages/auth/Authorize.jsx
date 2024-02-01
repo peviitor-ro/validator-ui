@@ -13,7 +13,7 @@ function Authorize() {
         if (data) {
             login(data)
         }
-    }, [data])
+    }, [data, login])
 
     if (isLoading) return <>Loading...</>
 
