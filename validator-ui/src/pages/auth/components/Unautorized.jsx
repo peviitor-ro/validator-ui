@@ -1,5 +1,5 @@
 import React from 'react'
-import broken_racket from '../../assets/svgs/broken_racket.svg'
+import broken_racket from '../../../assets/svgs/broken_racket.svg'
 
 export default function Unautorized() {
     return (
