@@ -1,29 +1,43 @@
-import { useState } from 'react'
-import { AuthContext, INITIAL_STATE } from './contexts/AuthContext'
-import { useLocalStorage } from './hooks/useLocalStorage'
+import { useState } from 'react';
+import { AuthContext, INITIAL_STATE } from './contexts/AuthContext';
+import { useLocalStorage } from './hooks/useLocalStorage';
 
 export function AuthProvider({ children }) {
-    const [authState, setAuthState] = useState(INITIAL_STATE)
+    const store = JSON.parse(window?.localStorage.getItem('validator'));
 
-    const { setItem, removeItem } = useLocalStorage(setAuthState, 'validator')
+    const [authState, setAuthState] = useState({
+        isAuthenticated: store?.accessToken && store?.refreshToken,
+        accessToken: store?.accessToken,
+        refreshToken: store?.refreshToken,
+    });
+
+    const { setItem, removeItem } = useLocalStorage(setAuthState, 'validator');
 
     function login(state) {
         setAuthState({
             isAuthenticated: true,
             refreshToken: state.refresh,
-            accessToken: state.access
-        })
-        setItem({ refresh_token: state.refresh, access_token: state.access })
+            accessToken: state.access,
+        });
+
+        setItem({ refreshToken: state.refresh, accessToken: state.access });
+    }
+
+    function updateAccessToken(accessToken) {
+        setAuthState({ ...authState, accessToken });
+        setItem({ refreshToken: authState.refreshToken, accessToken });
     }
 
     function logout() {
-        setAuthState(INITIAL_STATE)
-        removeItem()
+        setAuthState(INITIAL_STATE);
+        removeItem();
     }
 
     return (
-        <AuthContext.Provider value={{ ...authState, setAuthState, logout, login }}>
+        <AuthContext.Provider
+            value={{ ...authState, setAuthState, updateAccessToken, logout, login }}
+        >
             {children}
         </AuthContext.Provider>
-    )
+    );
 }

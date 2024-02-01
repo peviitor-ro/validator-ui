@@ -1,11 +1,15 @@
-import { API } from '../apiConfig'
+import { PUBLIC_API } from '../Api';
 
 export function loginUser(email) {
-    return API.post('/', { email }).then((res) => res.data)
+    return PUBLIC_API.post('/', { email }).then((res) => res.data);
 }
 
 export function getAuthState(token) {
-    if (!token) throw new Error('Invalid token')
+    if (!token) throw new Error('Invalid token');
 
-    return API.get(`/authorized/${token}`).then((res) => res.data)
+    return PUBLIC_API.get(`/authorized/${token}`).then((res) => res.data);
+}
+
+export function updateExpiredAccessToken(refreshToken) {
+    return PUBLIC_API.post('/refresh', { token: refreshToken }).then((res) => res.data);
 }
