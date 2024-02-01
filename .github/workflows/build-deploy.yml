@@ -27,15 +27,17 @@ jobs:
 
       - name: Installing NPM packages
         run: npm i
+        working-directory: validator-ui  # Setarea directorului de lucru aici
 
       - name: Building project
         run: npm run build
+        working-directory: validator-ui  # Setarea directorului de lucru aici
 
       - name: Uploading production-ready build files
         uses: actions/upload-artifact@v2
         with:
           name: production-files
-          path: ./build
+          path: ./validator-ui/build  # Corectarea căii către directorul de construcție
 
   deploy:
     name: Deploy
@@ -48,10 +50,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: production-files
-          path: ./build
+          path: ./validator-ui/build  # Corectarea căii către directorul de construcție
 
       - name: Deploying to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./validator-ui/build  # Corectarea căii către directorul de construcție
