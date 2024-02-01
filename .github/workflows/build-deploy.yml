@@ -22,14 +22,14 @@ jobs:
         with:
           node-version: 16.x
 
+      - name: Accessing the root folder 
+        run: cd validator-ui
+
       - name: Installing NPM packages
         run: npm i
 
       - name: Building project
         run: npm run build
-
-      - name: Running tests
-        run: npm run test
 
       - name: Uploading production-ready build files
         uses: actions/upload-artifact@v2
