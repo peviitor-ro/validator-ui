@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const PRIVATE_API = axios.create({
-    baseURL: `${process.env.REACT_APP_BASE_URL}`,
+    baseURL: `${import.meta.env.VITE_BASE_URL}`,
     timeout: 100000,
     headers: {
         'Content-Type': 'application/json',
@@ -9,24 +9,29 @@ export const PRIVATE_API = axios.create({
 });
 
 PRIVATE_API.interceptors.request.use(async (request) => {
-    try {
-        const { accessToken } = JSON.parse(localStorage.getItem('validator'));
+    const store = localStorage.getItem('validator');
 
-        if (!request.headers) {
-            request.headers = {};
-        }
-        if (accessToken) {
-            request.headers.Authorization = `Bearer ${accessToken}`;
-        }
-    } catch (err) {
+    if (!store) {
         return request;
     }
+
+    const parsedStore = JSON.parse(store);
+
+    if (!parsedStore.accessToken) {
+        return request;
+    }
+
+    if (!request.headers) {
+        request.headers = {};
+    }
+
+    request.headers.Authorization = `Bearer ${parsedStore.accessToken}`;
 
     return request;
 });
 
 export const PUBLIC_API = axios.create({
-    baseURL: `${process.env.REACT_APP_BASE_URL}`,
+    baseURL: `${import.meta.env.VITE_BASE_URL}`,
     timeout: 100000,
     headers: {
         'Content-Type': 'application/json',

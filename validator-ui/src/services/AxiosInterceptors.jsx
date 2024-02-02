@@ -4,69 +4,64 @@ import { PRIVATE_API } from './Api';
 import { updateExpiredAccessToken } from './auth/auth.service';
 
 export function AxiosInterceptors({ children }) {
-    const { logout, refreshToken, updateAccessToken } = useAuthContext();
+    const authContext = useAuthContext();
 
     useEffect(() => {
-        let isRefreshing = false;
-        const refreshAndRetryQueue = [];
+        const store = {
+            isRefreshing: false,
+        };
 
         const respInterceptor = PRIVATE_API.interceptors.response.use(
             (response) => response,
-            async (error) => {
-                const originalRequest = error.config;
-
-                if (error?.response?.status === 403) {
-                    if (isRefreshing) {
-                        isRefreshing = false;
-                        logout();
-                        return Promise.reject(error);
-                    }
-
-                    isRefreshing = true;
-
-                    try {
-                        if (!refreshToken) {
-                            throw new Error('Invalid token');
-                        }
-
-                        // In case a request fails, we need to memoized the originalRequest in order preserve the retry property
-                        // and to not cause an infinite loop
-
-                        const response = await updateExpiredAccessToken(refreshToken);
-
-                        if (!response.access) {
-                            throw new Error('Invalid token');
-                        }
-
-                        updateAccessToken(response.access);
-                        originalRequest.headers.Authorization = `Bearer ${response.access}`;
-
-                        refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
-                            PRIVATE_API.request(config)
-                                .then((res) => resolve(res))
-                                .catch((err) => reject(err));
-                        });
-
-                        refreshAndRetryQueue.length = 0;
-
-                        return PRIVATE_API(originalRequest);
-                    } catch (err) {
-                        logout();
-                    } finally {
-                        isRefreshing = false;
-                    }
-
-                    return new Promise((resolve, reject) => {
-                        refreshAndRetryQueue.push({ config: originalRequest, resolve, reject });
-                    });
-                }
-
-                return Promise.reject(error);
-            },
+            (error) => authResponseInterceptor(error, authContext, store)
         );
 
         return () => PRIVATE_API.interceptors.response.eject(respInterceptor);
     }, []);
 
     return children;
+}
+
+export const ERROR_MESSAGE = {
+    INVALID_TOKEN: 'Invalid token',
+    TOKEN_NOT_FOUND: 'Token not found',
+};
+
+export async function authResponseInterceptor(error, authContext, store) {
+    const originalRequest = error.config;
+    const { refreshToken, logout, updateAccessToken } = authContext;
+
+    if (error?.response?.status === 403) {
+        if (store.isRefreshing) {
+            store.isRefreshing = false;
+            logout();
+            return Promise.reject(error);
+        }
+
+        store.isRefreshing = true;
+
+        try {
+            if (!refreshToken) {
+                throw new Error(ERROR_MESSAGE.TOKEN_NOT_FOUND);
+            }
+
+            const response = await updateExpiredAccessToken(refreshToken);
+
+            if (!response.access) {
+                throw new Error(ERROR_MESSAGE.INVALID_TOKEN);
+            }
+
+            updateAccessToken(response.access);
+            error.config.headers.Authorization = `Bearer ${response.access}`;
+
+            return PRIVATE_API(originalRequest);
+        } catch (error) {
+            logout();
+            return Promise.reject(error);
+        } finally {
+            store.isRefreshing = false;
+        }
+    }
+
+    return Promise.reject(error);
 }

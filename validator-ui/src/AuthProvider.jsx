@@ -3,7 +3,7 @@ import { AuthContext, INITIAL_STATE } from './contexts/AuthContext';
 import { useLocalStorage } from './hooks/useLocalStorage';
 
 export function AuthProvider({ children }) {
-    const store = JSON.parse(window?.localStorage.getItem('validator'));
+    const store = JSON.parse(localStorage.getItem('validator'));
 
     const [authState, setAuthState] = useState({
         isAuthenticated: store?.accessToken && store?.refreshToken,
