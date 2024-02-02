@@ -1,41 +1,37 @@
-import React, { useCallback, useEffect } from 'react'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import React, { useCallback, useEffect } from 'react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
-import logo from '../../assets/svgs/logo.svg'
-import rocket from '../../assets/svgs/rocket.svg'
-import { useLoginMutation } from '../../services/auth/auth.queries'
+import logo from '../../assets/svgs/logo.svg';
+import rocket from '../../assets/svgs/rocket.svg';
+import { useLoginMutation } from '../../services/auth/auth.queries';
 
 export function Login() {
-    const { executeRecaptcha } = useGoogleReCaptcha()
-    const { mutate } = useLoginMutation()
+    const { executeRecaptcha } = useGoogleReCaptcha();
+    const { mutate } = useLoginMutation();
 
     const handleReCaptchaVerify = useCallback(async () => {
         if (!executeRecaptcha) {
-            console.log('Execute recaptcha not yet available')
-            return
+            return;
         }
 
-        await executeRecaptcha('login')
-    }, [executeRecaptcha])
+        await executeRecaptcha('login');
+    }, [executeRecaptcha]);
 
     useEffect(() => {
-        handleReCaptchaVerify()
-    }, [handleReCaptchaVerify])
+        handleReCaptchaVerify();
+    }, [handleReCaptchaVerify]);
 
     function handleSubmit(e) {
-        e.preventDefault()
-        handleReCaptchaVerify()
-        const formData = new FormData(e.target)
-        const email = formData.get('email')
+        e.preventDefault();
+        handleReCaptchaVerify();
+        const formData = new FormData(e.target);
+        const email = formData.get('email');
 
         if (!email) {
-            return
+            return;
         }
 
-        mutate(email, {
-            onSuccess: () => console.log('Success'),
-            onError: () => console.log('error')
-        })
+        mutate(email);
     }
 
     return (
@@ -43,9 +39,9 @@ export function Login() {
             <img
                 className="object-cover w-[50vw] transform rotate-[-30deg] hidden md:block"
                 src={rocket}
-                alt="rocket"
                 width="320"
                 height="320"
+                alt="Logo"
             />
 
             <form
@@ -65,7 +61,6 @@ export function Login() {
                             type="email"
                             className="w-full md:w-1/2 p-2 m-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-ring-primary focus:border-transparent"
                             placeholder="Enter an Email"
-                            focus="true"
                             required
                         />
                     </div>
@@ -81,5 +76,5 @@ export function Login() {
                 </div>
             </form>
         </div>
-    )
+    );
 }

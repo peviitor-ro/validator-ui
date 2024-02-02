@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeCards from '../../components/header/homeCards';
+import HomeCards from '../../components/header/HomeCards';
 import { useCompaniesQuery } from '../../services/landing/landing.queries';
 
 const firme = [

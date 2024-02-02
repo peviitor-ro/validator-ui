@@ -12,7 +12,7 @@ export function AxiosInterceptors({ children }) {
 
         const respInterceptor = PRIVATE_API.interceptors.response.use(
             (response) => response,
-            async function unauthorizedResponseInterceptor(error) {
+            async (error) => {
                 const originalRequest = error.config;
 
                 if (error?.response?.status === 403) {
@@ -39,18 +39,18 @@ export function AxiosInterceptors({ children }) {
                         }
 
                         updateAccessToken(response.access);
-                        error.config.headers['Authorization'] = `Bearer ${response.access}`;
+                        originalRequest.headers.Authorization = `Bearer ${response.access}`;
 
                         refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
                             PRIVATE_API.request(config)
-                                .then((response) => resolve(response))
+                                .then((res) => resolve(res))
                                 .catch((err) => reject(err));
                         });
 
                         refreshAndRetryQueue.length = 0;
 
                         return PRIVATE_API(originalRequest);
-                    } catch (error) {
+                    } catch (err) {
                         logout();
                     } finally {
                         isRefreshing = false;
@@ -62,12 +62,10 @@ export function AxiosInterceptors({ children }) {
                 }
 
                 return Promise.reject(error);
-            }
+            },
         );
 
-        return () => {
-            return PRIVATE_API.interceptors.response.eject(respInterceptor);
-        };
+        return () => PRIVATE_API.interceptors.response.eject(respInterceptor);
     }, []);
 
     return children;
