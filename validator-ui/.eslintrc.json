@@ -20,6 +20,8 @@
         "react/prop-types": "off",
         "jsx-a11y/control-has-associated-label": "off",
         "jsx-a11y/label-has-associated-control": "off",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "react/jsx-filename-extension": "off",
+        "react/jsx-no-useless-fragment": "off"
     }
 }

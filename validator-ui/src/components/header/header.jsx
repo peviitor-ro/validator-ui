@@ -1,29 +1,20 @@
-import React, { useId } from 'react';
+import React, { useId, useState } from 'react';
 
 import { NavLink } from 'react-router-dom';
 import logo from '../../assets/svgs/logo.svg';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { routes } from '../../routes/routes';
+import NavList from './NavList';
 
 export function Header({ links }) {
     const anchorId = useId();
 
     const { logout } = useAuthContext();
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-
-    const LinkComponent = links?.map((link) => (
-        <a
-            key={anchorId + link.name}
-            href={link.url}
-            className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center"
-        >
-            {link.name}
-        </a>
-    ));
 
     return (
         <>
@@ -53,7 +44,9 @@ export function Header({ links }) {
                 </a>
                 <div className="hidden lg:flex items-center justify-end h-full lg:grow">
                     <div className="flex-1 flex items-center">
-                        <div className="flex-1 flex justify-center">{links}</div>
+                        <div className="flex-1 flex justify-center">
+                            <NavList />
+                        </div>
                         <NavLink
                             className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center lg:block hidden"
                             to={routes.LOGIN}
@@ -112,7 +105,8 @@ export function Header({ links }) {
                 >
                     Profilul Meu
                 </a>
-                <LinkComponent />
+
+                <NavList />
             </div>
         </>
     );
