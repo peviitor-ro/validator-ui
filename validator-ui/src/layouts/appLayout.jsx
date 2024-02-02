@@ -1,6 +1,6 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Header from '../components/header/Header'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { Header } from '../components/header/Header';
 
 export default function AppLayout() {
     return (
@@ -9,31 +9,31 @@ export default function AppLayout() {
                 links={[
                     {
                         name: 'Joburi',
-                        url: '#'
+                        url: '#',
                     },
                     {
                         name: 'Companii',
-                        url: '#'
+                        url: '#',
                     },
                     {
                         name: 'Cautare',
-                        url: '#'
+                        url: '#',
                     },
                     {
                         name: 'Despre',
-                        url: '#'
+                        url: '#',
                     },
                     {
                         name: 'Contact',
-                        url: '#'
+                        url: '#',
                     },
                     {
                         name: 'Documentatie',
-                        url: '#'
-                    }
+                        url: '#',
+                    },
                 ]}
             />{' '}
             <Outlet />
         </>
-    )
+    );
 }

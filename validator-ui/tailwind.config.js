@@ -11,7 +11,17 @@ module.exports = {
 
                 'text-primary': '#db7900',
                 'text-secondary': '#4f4f4f',
+                'text-primary': '#db7900',
+                'text-secondary': '#4f4f4f',
 
+                'border-primary': '#db7900',
+            },
+            boxShadow: {
+                'card-shadow': '0px 2px 5px 0.5px rgba(80, 79, 79, 0.72);',
+            },
+        },
+    },
+    plugins: [],
                 'border-primary': '#db7900',
             },
             boxShadow: {
