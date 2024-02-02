@@ -1,5 +1,4 @@
-import React from 'react';
-import HomeCards from '../../components/header/HomeCards';
+import HomeCard from '../../components/header/HomeCard';
 import { useCompaniesQuery } from '../../services/landing/landing.queries';
 
 const firme = [
@@ -79,7 +78,7 @@ export function Homepage() {
 
             <div className="flex flex-wrap gap-4 gap-y-10 mt-10 justify-center">
                 {firme.map((item) => (
-                    <HomeCards data={item} />
+                    <HomeCard key={item.id} data={item} />
                 ))}
             </div>
         </div>

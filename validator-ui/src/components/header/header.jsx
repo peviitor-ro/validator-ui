@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import { useState } from 'react';
 
 import { NavLink } from 'react-router-dom';
 import logo from '../../assets/svgs/logo.svg';
@@ -7,8 +7,6 @@ import { routes } from '../../routes/routes';
 import NavList from './NavList';
 
 export function Header({ links }) {
-    const anchorId = useId();
-
     const { logout } = useAuthContext();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -45,7 +43,7 @@ export function Header({ links }) {
                 <div className="hidden lg:flex items-center justify-end h-full lg:grow">
                     <div className="flex-1 flex items-center">
                         <div className="flex-1 flex justify-center">
-                            <NavList />
+                            <NavList links={links} />
                         </div>
                         <NavLink
                             className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center lg:block hidden"
@@ -106,7 +104,7 @@ export function Header({ links }) {
                     Profilul Meu
                 </a>
 
-                <NavList />
+                <NavList links={links} />
             </div>
         </>
     );

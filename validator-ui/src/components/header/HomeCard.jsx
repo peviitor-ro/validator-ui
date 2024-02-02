@@ -1,6 +1,4 @@
-import React from 'react';
-
-function HomeCards({ data }) {
+export default function HomeCard({ data }) {
     const { id, name, image, description, linkSite } = data;
 
     return (
@@ -30,5 +28,3 @@ function HomeCards({ data }) {
         </div>
     );
 }
-
-export default HomeCards;

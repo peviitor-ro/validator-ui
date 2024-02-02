@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from 'vitest';
+import { afterEach, describe, expect, it, test, vi } from 'vitest';
 import * as axios from '../src/services/Api';
 import { ERROR_MESSAGE, authResponseInterceptor } from '../src/services/AxiosInterceptors';
 import * as authService from '../src/services/auth/auth.service';

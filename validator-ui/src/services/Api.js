@@ -25,7 +25,7 @@ PRIVATE_API.interceptors.request.use(async (request) => {
         request.headers = {};
     }
 
-    request.headers.Authorization = `Bearer ${accessToken}`;
+    request.headers.Authorization = `Bearer ${parsedStore.accessToken}`;
 
     return request;
 });
