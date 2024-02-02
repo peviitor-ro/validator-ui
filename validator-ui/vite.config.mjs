@@ -15,4 +15,9 @@ export default defineConfig({
     server: {
         port: 3000,
     },
+    optimizeDeps: {
+        esbuildOptions: {
+            jsx: 'automatic',
+        },
+    },
 });
