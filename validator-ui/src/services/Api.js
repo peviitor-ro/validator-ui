@@ -10,7 +10,7 @@ export const PRIVATE_API = axios.create({
 
 PRIVATE_API.interceptors.request.use(async (request) => {
     try {
-        const accessToken = JSON.parse(localStorage.getItem('validator')).accessToken;
+        const { accessToken } = JSON.parse(localStorage.getItem('validator'));
 
         if (!request.headers) {
             request.headers = {};

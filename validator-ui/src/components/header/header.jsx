@@ -1,41 +1,38 @@
-import React, { useId } from 'react'
+import React, { useId } from 'react';
 
-import { NavLink } from 'react-router-dom'
-import logo from '../../assets/svgs/logo.svg'
-import { useAuthContext } from '../../contexts/AuthContext'
-import { routes } from '../../routes/routes'
+import { NavLink } from 'react-router-dom';
+import logo from '../../assets/svgs/logo.svg';
+import { useAuthContext } from '../../contexts/AuthContext';
+import { routes } from '../../routes/routes';
 
-export default function Header(props) {
-    const anchorId = useId()
+export default function Header({ links }) {
+    const anchorId = useId();
 
-    const { logout } = useAuthContext()
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+    const { logout } = useAuthContext();
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
+        setIsMenuOpen(!isMenuOpen);
+    };
 
-    const links = props.links
-        ? props.links.map((link) => {
-              return (
-                  <a
-                      key={anchorId + link.name}
-                      href={link.url}
-                      className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center"
-                  >
-                      {link.name}
-                  </a>
-              )
-          })
-        : null
+    const LinkComponent = links?.map((link) => (
+        <a
+            key={anchorId + link.name}
+            href={link.url}
+            className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center"
+        >
+            {link.name}
+        </a>
+    ));
 
     return (
         <>
             <div className=" flex items-center justify-between w-full h-16 bg-bg-header">
                 <button
+                    type="button"
                     className="lg:hidden focus:outline-none ml-4 hover:text-bg-primary"
                     onClick={() => {
-                        toggleMenu()
+                        toggleMenu();
                     }}
                 >
                     <svg
@@ -69,7 +66,7 @@ export default function Header(props) {
                 </div>
                 <a
                     className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center lg:hidden block"
-                    href="#"
+                    href="#home"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -97,6 +94,7 @@ export default function Header(props) {
                 <button
                     className="absolute top-0 right-0 mr-4 mt-4 focus:outline-none active:text-bg-primary"
                     onClick={toggleMenu}
+                    type="button"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -114,8 +112,8 @@ export default function Header(props) {
                 >
                     Profilul Meu
                 </a>
-                {links}
+                <LinkComponent />
             </div>
         </>
-    )
+    );
 }
