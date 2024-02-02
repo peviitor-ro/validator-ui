@@ -5,7 +5,7 @@ import logo from '../../assets/svgs/logo.svg';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { routes } from '../../routes/routes';
 
-export default function Header({ links }) {
+export function Header({ links }) {
     const anchorId = useId();
 
     const { logout } = useAuthContext();
