@@ -1,34 +1,67 @@
-import { useEffect } from 'react'
-import { useAuthContext } from '../contexts/AuthContext'
-import { API } from './apiConfig'
+import { useEffect } from 'react';
+import { useAuthContext } from '../contexts/AuthContext';
+import { PRIVATE_API } from './Api';
+import { updateExpiredAccessToken } from './auth/auth.service';
 
 export function AxiosInterceptors({ children }) {
-    const { logout } = useAuthContext()
+    const authContext = useAuthContext();
 
     useEffect(() => {
-        const respInterceptor = API.interceptors.response.use(
-            async (response) => {
-                return response
-            },
-            async (error) => {
-                // TODO: Send a refresh token request and update the auth state
-                if (error.response.status === 401) {
-                    logout()
-                }
+        const store = {
+            isRefreshing: false,
+        };
 
-                if (error.response.status === 403) {
-                    console.log('not allowed')
-                }
+        const respInterceptor = PRIVATE_API.interceptors.response.use(
+            (response) => response,
+            (error) => authResponseInterceptor(error, authContext, store)
+        );
 
-                //TODO: UNITAR ERROR HANDLING
-                console.log(error)
-                throw error
-            }
-        )
+        return () => PRIVATE_API.interceptors.response.eject(respInterceptor);
+    }, []);
 
-        return () => {
-            return API.interceptors.response.eject(respInterceptor)
+    return children;
+}
+
+export const ERROR_MESSAGE = {
+    INVALID_TOKEN: 'Invalid token',
+    TOKEN_NOT_FOUND: 'Token not found',
+};
+
+export async function authResponseInterceptor(error, authContext, store) {
+    const originalRequest = error.config;
+    const { refreshToken, logout, updateAccessToken } = authContext;
+
+    if (error?.response?.status === 403) {
+        if (store.isRefreshing) {
+            store.isRefreshing = false;
+            logout();
+            return Promise.reject(error);
         }
-    }, [])
-    return children
+
+        store.isRefreshing = true;
+
+        try {
+            if (!refreshToken) {
+                throw new Error(ERROR_MESSAGE.TOKEN_NOT_FOUND);
+            }
+
+            const response = await updateExpiredAccessToken(refreshToken);
+
+            if (!response.access) {
+                throw new Error(ERROR_MESSAGE.INVALID_TOKEN);
+            }
+
+            updateAccessToken(response.access);
+            error.config.headers.Authorization = `Bearer ${response.access}`;
+
+            return PRIVATE_API(originalRequest);
+        } catch (error) {
+            logout();
+            return Promise.reject(error);
+        } finally {
+            store.isRefreshing = false;
+        }
+    }
+
+    return Promise.reject(error);
 }

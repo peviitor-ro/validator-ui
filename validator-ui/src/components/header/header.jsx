@@ -1,41 +1,27 @@
-import React, { useId } from 'react'
+import { useState } from 'react';
 
-import { NavLink } from 'react-router-dom'
-import logo from '../../assets/svgs/logo.svg'
-import { useAuthContext } from '../../contexts/AuthContext'
-import { routes } from '../../routes/routes'
+import { NavLink } from 'react-router-dom';
+import logo from '../../assets/svgs/logo.svg';
+import { useAuthContext } from '../../contexts/AuthContext';
+import { routes } from '../../routes/routes';
+import NavList from './NavList';
 
-export default function Header(props) {
-    const anchorId = useId()
-
-    const { logout } = useAuthContext()
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+export function Header({ links }) {
+    const { logout } = useAuthContext();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
-
-    const links = props.links
-        ? props.links.map((link) => {
-              return (
-                  <a
-                      key={anchorId + link.name}
-                      href={link.url}
-                      className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center"
-                  >
-                      {link.name}
-                  </a>
-              )
-          })
-        : null
+        setIsMenuOpen(!isMenuOpen);
+    };
 
     return (
         <>
             <div className=" flex items-center justify-between w-full h-16 bg-bg-header">
                 <button
+                    type="button"
                     className="lg:hidden focus:outline-none ml-4 hover:text-bg-primary"
                     onClick={() => {
-                        toggleMenu()
+                        toggleMenu();
                     }}
                 >
                     <svg
@@ -56,7 +42,9 @@ export default function Header(props) {
                 </a>
                 <div className="hidden lg:flex items-center justify-end h-full lg:grow">
                     <div className="flex-1 flex items-center">
-                        <div className="flex-1 flex justify-center">{links}</div>
+                        <div className="flex-1 flex justify-center">
+                            <NavList links={links} />
+                        </div>
                         <NavLink
                             className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center lg:block hidden"
                             to={routes.LOGIN}
@@ -69,7 +57,7 @@ export default function Header(props) {
                 </div>
                 <a
                     className="text-base font-medium hover:text-bg-primary pr-4 pl-4 text-center lg:hidden block"
-                    href="#"
+                    href="#home"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -97,6 +85,7 @@ export default function Header(props) {
                 <button
                     className="absolute top-0 right-0 mr-4 mt-4 focus:outline-none active:text-bg-primary"
                     onClick={toggleMenu}
+                    type="button"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -114,8 +103,9 @@ export default function Header(props) {
                 >
                     Profilul Meu
                 </a>
-                {links}
+
+                <NavList links={links} />
             </div>
         </>
-    )
+    );
 }

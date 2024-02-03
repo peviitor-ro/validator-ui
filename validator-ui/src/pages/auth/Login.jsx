@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 import logo from '../../assets/svgs/logo.svg';
@@ -11,7 +11,6 @@ export function Login() {
 
     const handleReCaptchaVerify = useCallback(async () => {
         if (!executeRecaptcha) {
-            console.log('Execute recaptcha not yet available');
             return;
         }
 
@@ -32,10 +31,7 @@ export function Login() {
             return;
         }
 
-        mutate(email, {
-            onSuccess: () => console.log('Success'),
-            onError: () => console.log('error'),
-        });
+        mutate(email);
     }
 
     return (
@@ -43,9 +39,9 @@ export function Login() {
             <img
                 className="object-cover w-[50vw] transform hidden md:block"
                 src={rocket}
-                alt="rocket"
                 width="320"
                 height="320"
+                alt="Logo"
             />
 
             <form
@@ -65,7 +61,6 @@ export function Login() {
                             type="email"
                             className="w-full lg:w-1/2 p-2 m-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-ring-primary focus:border-transparent"
                             placeholder="Enter an Email"
-                            focus="true"
                             required
                         />
                     </div>
