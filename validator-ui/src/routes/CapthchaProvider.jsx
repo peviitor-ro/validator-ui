@@ -10,7 +10,7 @@ const scriptProps = {
 export function CapthchaProvider({ children }) {
     return (
         <GoogleReCaptchaProvider
-            reCaptchaKey={import.meta.env.REACT_APP_RECAPTCHA_KEY}
+            reCaptchaKey={import.meta.env.VITE_RECAPTCHA_KEY}
             scriptProps={scriptProps}
         >
             {children}
