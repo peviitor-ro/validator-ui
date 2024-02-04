@@ -10,11 +10,18 @@ module.exports = {
     ignorePatterns: ['dist', 'build', '.eslintrc.cjs'],
     parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
     settings: { react: { version: '18.2' } },
-    plugins: ['react-refresh'],
+    plugins: ['react-refresh', 'jsx-a11y'],
     rules: {
         'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
         'react/prop-types': 'off',
         'react-hooks/exhaustive-deps': 'off',
         'react-refresh/only-export-components': 'off',
+        'jsx-a11y/alt-text': [
+            'error',
+            {
+                elements: ['img'],
+                img: ['Image'],
+            },
+        ],
     },
 };
