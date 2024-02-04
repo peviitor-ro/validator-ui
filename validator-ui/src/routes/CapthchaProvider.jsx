@@ -7,13 +7,19 @@ const scriptProps = {
     nonce: undefined,
 };
 
+import PropTypes from 'prop-types';
+
 export function CapthchaProvider({ children }) {
     return (
         <GoogleReCaptchaProvider
-            reCaptchaKey={import.meta.env.REACT_APP_RECAPTCHA_KEY}
+            reCaptchaKey={import.meta.env.VITE_RECAPTCHA_KEY}
             scriptProps={scriptProps}
         >
             {children}
         </GoogleReCaptchaProvider>
     );
 }
+
+CapthchaProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+};
