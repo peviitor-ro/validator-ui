@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 const scriptProps = {
@@ -6,8 +7,6 @@ const scriptProps = {
     appendTo: 'head',
     nonce: undefined,
 };
-
-import PropTypes from 'prop-types';
 
 export function CapthchaProvider({ children }) {
     return (

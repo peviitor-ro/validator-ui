@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::root {
+    --text: #85858f;
+}
+
+@layer base {
+    h1,
+    h2,
+    h2 {
+        @apply text-heading;
+    }
+}
+
+@layer utilities {
+    .border-input {
+        @apply rounded-md border border-subtitle;
+        outline: none;
+
+        &:focus-visible {
+            @apply outline-subtitle;
+            outline: 1px solid;
+        }
+        &::placeholder {
+            @apply text-subtitle;
+        }
+    }
+}

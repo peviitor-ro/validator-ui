@@ -3,6 +3,7 @@ import { NotFoundRoute } from '../components/NotFoundRoute/NotFoundRoute';
 import { useAuthContext } from '../contexts/AuthContext';
 import AppLayout from '../layouts/AppLayout';
 import Authorize from '../pages/auth/Authorize';
+import EmailConfirmation from '../pages/auth/EmailConfirmation';
 import { Login } from '../pages/auth/Login';
 import { Homepage } from '../pages/home/Homepage';
 import { AuthGuard } from './AuthGuard';
@@ -32,6 +33,7 @@ export function Router() {
                     path={`${routes.AUTHORIZED}/:token`}
                     element={isAuthenticated ? <Navigate to="/" /> : <Authorize />}
                 />
+                <Route path={routes.CONFIRM_EMAIL} element={<EmailConfirmation />} />
 
                 {/* LOOGED IN USERS ROUTES */}
                 <Route

@@ -16,6 +16,7 @@ module.exports = {
         'react/prop-types': 'off',
         'react-hooks/exhaustive-deps': 'off',
         'react-refresh/only-export-components': 'off',
+        'react/display-name': 'off',
         'jsx-a11y/alt-text': [
             'error',
             {
