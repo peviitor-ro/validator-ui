@@ -15,7 +15,7 @@ const schema = z
 
 export function Login() {
     const { executeRecaptcha } = useGoogleReCaptcha();
-    const { mutate } = useLoginMutation();
+    const { mutate, isLoading } = useLoginMutation();
 
     const {
         register,
@@ -44,6 +44,8 @@ export function Login() {
         });
     }
 
+    console.log(isLoading);
+
     return (
         <div className="flex items-center justify-around h-screen bg-container">
             <img
@@ -65,7 +67,7 @@ export function Login() {
                     placeholder="m@example.com"
                     errorMessage={errors.email && errors.email.message}
                 />
-                <Form.Btn text="Conectare" />
+                <Form.Action text="Conectare" isLoading={isLoading} />
                 <Form.Info text="Nu ai cont?" link={'/creare-cont'} linkText="Creare cont nou" />
             </Form>
         </div>

@@ -18,8 +18,8 @@ Form.Description = function ({ text }) {
     return <h1 className="mb-10 text-subtitle">{text}</h1>;
 };
 
-Form.Btn = function ({ text }) {
-    return <Button text={text} />;
+Form.Action = function ({ text, isLoading }) {
+    return <Button text={text} isLoading={isLoading} />;
 };
 
 Form.Field = function ({ id, type, label, register, placeholder, errorMessage }) {

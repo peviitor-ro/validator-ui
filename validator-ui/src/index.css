@@ -16,7 +16,7 @@
 
 @layer utilities {
     .border-input {
-        @apply rounded-md border border-subtitle;
+        @apply rounded-md border;
         outline: none;
 
         &:focus-visible {

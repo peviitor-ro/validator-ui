@@ -1,12 +1,20 @@
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
 export default function InputField(props, ref) {
     const { id, label, type, errorMessage, placeholder, register } = props;
     const errorId = `error-${id}`;
 
+    const inputClassName = clsx('mt-1 px-3 py-2 border-input', {
+        'text-error border-text-error': errorMessage,
+        'border-subtitle': !errorMessage,
+    });
+
+    const labelClassName = clsx('block font-semibold', { 'text-error': errorMessage });
+
     return (
         <>
-            <label htmlFor={id} className="block mb-2 font-semibold">
+            <label htmlFor={id} className={labelClassName}>
                 {label}
             </label>
 
@@ -14,13 +22,13 @@ export default function InputField(props, ref) {
                 ref={ref}
                 id={id}
                 type={type}
-                className="mb-2 px-3 py-2 border-input"
+                className={inputClassName}
                 aria-errormessage={errorId}
                 placeholder={placeholder}
                 {...register(id)}
             />
 
-            <p className="h-2 my-2 text-error" id={errorId}>
+            <p className="h-8 my-1 text-error" id={errorId}>
                 {errorMessage}
             </p>
         </>
