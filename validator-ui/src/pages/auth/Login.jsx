@@ -2,9 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect } from 'react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 import rocket from '../../assets/svgs/rocket.svg';
 import Form from '../../components/Form';
+import { routes } from '../../routes/routes';
 import { useLoginMutation } from '../../services/auth/auth.queries';
 
 const schema = z
@@ -16,6 +18,7 @@ const schema = z
 export function Login() {
     const { executeRecaptcha } = useGoogleReCaptcha();
     const { mutate, isLoading } = useLoginMutation();
+    const navigate = useNavigate();
 
     const {
         register,
@@ -41,10 +44,9 @@ export function Login() {
 
         mutate(e.email, {
             onError: () => setError('email', { type: 'custom', message: 'Invalid email address' }),
+            onSuccess: () => navigate(`/${routes.CONFIRM_EMAIL}`),
         });
     }
-
-    console.log(isLoading);
 
     return (
         <div className="flex items-center justify-around h-screen bg-container">
@@ -55,7 +57,6 @@ export function Login() {
                 height="320"
                 alt="Logo"
             />
-            {/* <img src={logo} alt="logo" width="100" height="100" /> */}
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Title text="Conectare" />
                 <Form.Description text="Enter your email below to login to your account" />

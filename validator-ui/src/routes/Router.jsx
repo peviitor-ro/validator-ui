@@ -3,7 +3,7 @@ import { NotFoundRoute } from '../components/NotFoundRoute/NotFoundRoute';
 import { useAuthContext } from '../contexts/AuthContext';
 import AppLayout from '../layouts/AppLayout';
 import Authorize from '../pages/auth/Authorize';
-import EmailConfirmation from '../pages/auth/EmailConfirmation';
+import { EmailConfirmation } from '../pages/auth/EmailConfirmation';
 import { Login } from '../pages/auth/Login';
 import { Homepage } from '../pages/home/Homepage';
 import { AuthGuard } from './AuthGuard';
