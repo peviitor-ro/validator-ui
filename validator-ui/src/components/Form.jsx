@@ -1,4 +1,3 @@
-import { NavLink } from 'react-router-dom';
 import { Button } from './Button';
 import InputField from './InputField/InputField';
 
@@ -15,7 +14,7 @@ Form.Title = function ({ text }) {
 };
 
 Form.Description = function ({ text }) {
-    return <h1 className="mb-10 text-subtitle">{text}</h1>;
+    return <p className="mb-10">{text}</p>;
 };
 
 Form.Action = function ({ text, isLoading }) {
@@ -32,13 +31,5 @@ Form.Field = function ({ id, type, label, register, placeholder, errorMessage })
             placeholder={placeholder}
             errorMessage={errorMessage}
         />
-    );
-};
-
-Form.Info = function ({ text, linkText, link }) {
-    return (
-        <p className="mt-4 text-center">
-            {text} <NavLink to={link}>{linkText}</NavLink>
-        </p>
     );
 };

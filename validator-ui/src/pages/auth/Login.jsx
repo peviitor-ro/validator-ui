@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 import rocket from '../../assets/svgs/rocket.svg';
+import { Container } from '../../components/Container';
 import Form from '../../components/Form';
 import { routes } from '../../routes/routes';
 import { useLoginMutation } from '../../services/auth/auth.queries';
@@ -49,7 +50,7 @@ export function Login() {
     }
 
     return (
-        <div className="flex items-center justify-around h-screen bg-container">
+        <Container className="flex items-center justify-around">
             <img
                 className="object-cover w-[50vw] transform hidden md:block"
                 src={rocket}
@@ -69,8 +70,7 @@ export function Login() {
                     errorMessage={errors.email && errors.email.message}
                 />
                 <Form.Action text="Conectare" isLoading={isLoading} />
-                <Form.Info text="Nu ai cont?" link={'/creare-cont'} linkText="Creare cont nou" />
             </Form>
-        </div>
+        </Container>
     );
 }
