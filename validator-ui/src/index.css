@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::root {
+    --text: #85858f;
+}
+
+@layer base {
+    h1,
+    h2,
+    h3 {
+        @apply text-heading;
+    }
+
+    h1 {
+        @apply text-3xl font-bold;
+    }
+
+    p {
+        @apply text-subtitle;
+    }
+}
+
+@layer utilities {
+    .border-input {
+        @apply rounded-md border;
+        outline: none;
+    }
+    .border-input:focus-visible {
+        @apply outline-subtitle;
+        outline: 1px solid;
+    }
+
+    .border-input::placeholder {
+        @apply text-subtitle;
+    }
+
+    .border-input:user-invalid {
+        background-color: red !important;
+    }
+
+    .btn {
+        @apply rounded-md px-3 py-2 bg-heading text-card;
+        @apply hover:opacity-90 transition-opacity;
+    }
+}

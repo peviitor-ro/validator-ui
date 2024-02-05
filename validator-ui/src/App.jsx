@@ -13,6 +13,9 @@ const queryClient = new QueryClient({
             refetchOnReconnect: 'always',
             suspense: false,
         },
+        mutations: {
+            retry: 0,
+        },
     },
 });
 

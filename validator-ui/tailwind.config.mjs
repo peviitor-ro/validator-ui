@@ -2,21 +2,17 @@
 export default {
     content: ['./index.html', './src/**/*.{js,jsx}'],
     theme: {
-        extend: {
-            colors: {
-                'bg-container': '#f0f0f0',
-                'bg-header': '#e4e4e4',
-                'bg-primary': '#db7900',
-                'bg-cards': '#eeeeee',
-
-                'text-primary': '#db7900',
-                'text-secondary': '#4f4f4f',
-
-                'border-primary': '#db7900',
-            },
-            boxShadow: {
-                'card-shadow': '0px 2px 5px 0.5px rgba(80, 79, 79, 0.72);',
-            },
+        colors: {
+            primary: '#fe643d',
+            secondary: '',
+            heading: '#0c0c0c',
+            subtitle: '#71717a',
+            card: '#fff',
+            container: '#f3f4f6',
+            error: '#ff3333',
+        },
+        boxShadow: {
+            'card-shadow': '0px 2px 5px 0.5px rgba(80, 79, 79, 0.72);',
         },
     },
     plugins: [],
