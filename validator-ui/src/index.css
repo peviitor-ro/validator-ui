@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-::root {
-    --text: #85858f;
-}
-
 @layer base {
     h1,
     h2,
@@ -36,12 +32,22 @@
         @apply text-subtitle;
     }
 
-    .border-input:user-invalid {
-        background-color: red !important;
-    }
-
     .btn {
         @apply rounded-md px-3 py-2 bg-heading text-card;
         @apply hover:opacity-90 transition-opacity;
+    }
+
+    .link {
+        transition: all 150ms ease 100ms;
+    }
+    .underline {
+        width: 0;
+        display: block;
+        @apply h-0.5;
+        transition: all 150ms ease 100ms;
+    }
+    .link:hover > .underline {
+        width: 100%;
+        transition: all 150ms ease 100ms;
     }
 }

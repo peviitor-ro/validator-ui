@@ -1,5 +1,5 @@
-import HomeCard from '../../components/header/HomeCard';
 import { useCompaniesQuery } from '../../services/landing/landing.queries';
+import { HomeCard } from './HomeCard';
 
 const firme = [
     {
