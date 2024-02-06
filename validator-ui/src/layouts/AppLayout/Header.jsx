@@ -1,39 +1,41 @@
 import { useState } from 'react';
 
-import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 import logo from '../../assets/svgs/logo.svg';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { routes } from '../../routes/routes';
-import NavList from './NavList';
+import { AppNavLink } from './AppNavLink';
 
 const links = [
     {
         name: 'Joburi',
-        url: '#',
+        url: '/jobs',
     },
     {
         name: 'Companii',
-        url: '#',
+        url: '/companies',
     },
     {
         name: 'Cautare',
-        url: '#',
+        url: '/search',
     },
     {
         name: 'Despre',
-        url: '#',
+        url: '/info',
     },
     {
         name: 'Contact',
-        url: '#',
+        url: '/contact',
     },
     {
         name: 'Documentatie',
-        url: '#',
+        url: '/docs',
     },
 ];
+
+//TODO: Create a reusable mobile menu or a reusable action with popup/element;
 
 export function Header() {
     const { logout } = useAuthContext();
@@ -54,7 +56,11 @@ export function Header() {
                     <img src={logo} alt="logo" className="logo" />
                 </NavLink>
 
-                <NavList links={links} />
+                <nav className="lg:flex hidden">
+                    {links?.map(({ name, url }, key) => (
+                        <AppNavLink key={key} url={url} name={name} className="px-4" />
+                    ))}
+                </nav>
 
                 <NavLink className="lg:block hidden" to={routes.LOGIN} replace onClick={logout}>
                     Logout
@@ -67,36 +73,22 @@ export function Header() {
 
             <div
                 className={clsx(
-                    'absolute transform -translate-x-full transition-all duration-500 ease-in-out w-full h-screen top-0 bg-card flex flex-col',
+                    'absolute transform -translate-x-full transition-all duration-500 ease-in-out w-full h-screen top-0 bg-card flex flex-col p-4',
                     { 'translate-x-0  lg:-translate-x-full': isMenuOpen },
                 )}
             >
-                <button
-                    className="absolute top-0 right-0 mr-4 mt-4 focus:outline-none active:text-bg-primary"
-                    onClick={toggleMenu}
-                    type="button"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="currentColor"
-                        viewBox="0 0 16 16"
-                    >
-                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                    </svg>
+                <button className="ml-auto" onClick={toggleMenu} type="button">
+                    <XMarkIcon className="h-7 w-7" />
                 </button>
 
                 <nav className="flex flex-col m-auto items-center">
                     {links.map(({ name, url }, key) => (
-                        <NavLink
+                        <AppNavLink
                             key={key}
-                            to={url}
-                            className="link text-2xl text-subtitle hover:text-heading py-3 uppercase"
-                        >
-                            {name}
-                            <span className="underline bg-heading"></span>
-                        </NavLink>
+                            name={name}
+                            url={url}
+                            className="text-2xl py-3 uppercase"
+                        />
                     ))}
                 </nav>
                 <NavLink to="/login" onClick={logout} replace>
