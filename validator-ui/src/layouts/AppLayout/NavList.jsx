@@ -1,6 +1,6 @@
 export default function NavList({ links }) {
     return (
-        <>
+        <nav className="lg:block hidden">
             {links?.map(({ name, url }) => (
                 <a
                     key={name}
@@ -10,6 +10,6 @@ export default function NavList({ links }) {
                     {name}
                 </a>
             ))}
-        </>
+        </nav>
     );
 }

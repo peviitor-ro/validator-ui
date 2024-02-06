@@ -1,4 +1,4 @@
-export default function HomeCard({ data }) {
+export function HomeCard({ data }) {
     const { id, name, image, description, linkSite } = data;
 
     return (

@@ -4,7 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { Container } from './Container';
 
 export function GenericPage({ children }) {
-    return <Container className="flex items-center justify-center flex-col">{children}</Container>;
+    return (
+        <Container className="flex items-center justify-center flex-col px-6">{children}</Container>
+    );
 }
 
 GenericPage.Symbol = ({ icon }) => {

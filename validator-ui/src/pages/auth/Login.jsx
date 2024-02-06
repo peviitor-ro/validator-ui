@@ -50,7 +50,7 @@ export function Login() {
     }
 
     return (
-        <Container className="flex items-center justify-around">
+        <Container className="flex items-center justify-around px-6">
             <img
                 className="object-cover w-[50vw] transform hidden md:block"
                 src={rocket}
