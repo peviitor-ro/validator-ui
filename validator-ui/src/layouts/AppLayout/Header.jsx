@@ -36,6 +36,8 @@ const links = [
 ];
 
 //TODO: Create a reusable mobile menu or a reusable action with popup/element;
+// TODO: Custom component/class to preserve the padding accross all ui components
+// TODO: posititon sticky to header
 
 export function Header() {
     const { logout } = useAuthContext();
@@ -47,7 +49,7 @@ export function Header() {
 
     return (
         <>
-            <header className="flex items-center justify-between h-16 px-4 bg-card">
+            <header className="flex items-center justify-between h-16 px-4 lg:px-10 bg-card">
                 <button type="button" className="lg:hidden" onClick={toggleMenu}>
                     <Bars3Icon className="w-6 h-6" />
                 </button>
