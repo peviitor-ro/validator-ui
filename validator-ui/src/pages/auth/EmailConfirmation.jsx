@@ -11,7 +11,7 @@ export function EmailConfirmation() {
             <GenericPage.Description text="If you don't see it in your inbox, don't forget to check your spam folder." />
             <GenericPage.ExternalLink
                 text="Open Email"
-                to="https://mail.google.com/mail"
+                href="https://mail.google.com/mail"
                 target="blank"
             />
         </GenericPage>
