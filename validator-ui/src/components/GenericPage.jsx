@@ -14,7 +14,9 @@ GenericPage.Symbol = ({ icon }) => {
 };
 
 GenericPage.Title = ({ text, className }) => {
-    return <h1 className={clsx('text-4xl my-4', { [className]: className })}>{text}</h1>;
+    return (
+        <h1 className={clsx('text-4xl my-4 text-center', { [className]: className })}>{text}</h1>
+    );
 };
 
 GenericPage.Description = ({ text }) => {

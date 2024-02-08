@@ -4,6 +4,7 @@ import { Container } from '../../components/Container';
 import Loading from '../../components/Loading';
 import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
 import { CompanyCards } from './components/CompanyCards';
+import NoResultFound from './components/NoResultFound';
 
 //     {
 //         id: 1,
@@ -21,8 +22,6 @@ import { CompanyCards } from './components/CompanyCards';
 // TODO: Generic filter components
 // ! When filters and sorting are available extract logic into new component
 
-// TODO: Placeholders for company fields, disable view jobs if jobs count is 0
-
 export function Homepage() {
     const { ref, inView } = useInView();
 
@@ -35,12 +34,17 @@ export function Homepage() {
         }
     }, [fetchNextPage, inView]);
 
+    //TODO: if data is empty return NoResultFound
+
+    if (!data?.pages[0].data?.length) {
+        return <NoResultFound />;
+    }
+
     return (
         <main className="flex flex-col gap-4 p-4 lg:gap-10 lg:p-10 ">
             <div>
                 <h1>Companii</h1>
-                <p className="font-semibold">{data?.pages[0].count} de rezultate</p>
-                {/* <SelectField /> */}
+                <p className="font-semibold">{data.pages[0].count} de rezultate</p>
             </div>
 
             {status == 'pending' ? (
@@ -51,11 +55,9 @@ export function Homepage() {
                 <span>Error: {error.message}</span>
             ) : (
                 <>
-                    <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
-                        {data?.pages.map((page, index) => (
-                            <CompanyCards key={index} companies={page.data} />
-                        ))}
-                    </div>
+                    {data?.pages.map((page, index) => (
+                        <CompanyCards key={index} companies={page.data} />
+                    ))}
 
                     <button
                         ref={ref}
