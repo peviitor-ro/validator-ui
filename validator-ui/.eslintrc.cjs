@@ -10,7 +10,7 @@ module.exports = {
     ignorePatterns: ['dist', 'build', '.eslintrc.cjs'],
     parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
     settings: { react: { version: '18.2' } },
-    plugins: ['react-refresh', 'jsx-a11y'],
+    plugins: ['react-refresh', 'jsx-a11y', '@tanstack/query'],
     rules: {
         'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
         'react/prop-types': 'off',

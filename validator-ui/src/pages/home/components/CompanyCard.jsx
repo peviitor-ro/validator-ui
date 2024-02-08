@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 
 export function CompanyCard({ data }) {
-    const { name, description, image, link, externalLink, jobsCount } = data;
+    const { company, description, logo, link, website, jobsCount } = data;
 
     return (
         <article className="card flex flex-col h-[400px]">
-            <img src={image} className="m-auto flex-0 basis-1/5" alt="Company" />
+            <img src={logo} className="m-auto flex-0 basis-1/5" alt="Company" />
 
-            <h3 className="text-center mb-6 uppercase">{name}</h3>
+            <h3 className="text-center mb-6 uppercase">{company}</h3>
 
             <p className="line-clamp-2 mb-6 break-all">{description}</p>
 
@@ -15,7 +15,7 @@ export function CompanyCard({ data }) {
                 Vizualizeaza Joburi ({jobsCount})
             </NavLink>
 
-            <a href={externalLink} className="btn btn-primary-outlined text-center">
+            <a href={website} className="btn btn-primary-outlined text-center">
                 Vizualizeaza WebSite
             </a>
         </article>

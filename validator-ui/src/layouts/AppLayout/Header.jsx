@@ -4,9 +4,8 @@ import { Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/outlin
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 import logo from '../../assets/svgs/logo.svg';
-import { useAuthContext } from '../../contexts/AuthContext';
-import { routes } from '../../routes/routes';
 import { AppNavLink } from './AppNavLink';
+import { LogoutLink } from './LogoutLink';
 
 const links = [
     {
@@ -35,12 +34,11 @@ const links = [
     },
 ];
 
-//TODO: Create a reusable mobile menu or a reusable action with popup/element;
+// TODO: Create a reusable mobile menu or a reusable action with popup/element;
 // TODO: Custom component/class to preserve the padding accross all ui components
 // TODO: posititon sticky to header
 
 export function Header() {
-    const { logout } = useAuthContext();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -64,9 +62,7 @@ export function Header() {
                     ))}
                 </nav>
 
-                <NavLink className="lg:block hidden" to={routes.LOGIN} replace onClick={logout}>
-                    Logout
-                </NavLink>
+                <LogoutLink className="lg:block hidden" />
 
                 <button disabled className="lg:hidden block">
                     <UserCircleIcon className="w-7 h-7" />
@@ -83,7 +79,7 @@ export function Header() {
                     <XMarkIcon className="h-7 w-7" />
                 </button>
 
-                <nav className="flex flex-col m-auto items-center">
+                <nav className="flex flex-col items-center m-auto">
                     {links.map(({ name, url }, key) => (
                         <AppNavLink
                             key={key}
@@ -93,9 +89,7 @@ export function Header() {
                         />
                     ))}
                 </nav>
-                <NavLink to="/login" onClick={logout} replace>
-                    Logout
-                </NavLink>
+                <LogoutLink />
             </div>
         </>
     );
