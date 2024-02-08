@@ -45,7 +45,7 @@ export function Homepage() {
 
             {status == 'pending' ? (
                 <Container className="flex">
-                    <Loading size="w-28" className="m-auto" />
+                    <Loading className="w-28 m-auto" />
                 </Container>
             ) : status == 'error' ? (
                 <span>Error: {error.message}</span>
@@ -63,11 +63,11 @@ export function Homepage() {
                         disabled={!hasNextPage || isFetchingNextPage}
                         className="m-auto"
                     >
-                        {!isFetchingNextPage ? (
-                            <span className="text-xl">
-                                Loading more ...
-                                <Loading size="w-20" />
-                            </span>
+                        {isFetchingNextPage ? (
+                            <>
+                                <span className="text-xl">Loading more ...</span>
+                                <Loading className="w-28" />
+                            </>
                         ) : hasNextPage ? (
                             'Load Newer'
                         ) : (

@@ -36,6 +36,10 @@
 
     .btn {
         @apply rounded-md px-3 py-2 bg-heading text-card;
+    }
+
+    .btn:enabled,
+    .active-link {
         @apply hover:opacity-90 transition-opacity;
     }
 
@@ -46,6 +50,13 @@
     .btn-primary-outlined {
         @apply border-primary text-primary border;
         background-color: inherit;
+    }
+
+    .btn-disabled {
+        @apply cursor-default bg-disabled text-subtitle;
+    }
+    .btn-disabled-outlined {
+        @apply cursor-default border-none bg-disabled text-subtitle;
     }
 
     .link {

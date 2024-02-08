@@ -18,7 +18,7 @@ const schema = z
 
 export function Login() {
     const { executeRecaptcha } = useGoogleReCaptcha();
-    const { mutate, isLoading } = useLoginMutation();
+    const { mutate, isPending } = useLoginMutation();
     const navigate = useNavigate();
 
     const {
@@ -69,7 +69,7 @@ export function Login() {
                     placeholder="m@example.com"
                     errorMessage={errors.email && errors.email.message}
                 />
-                <Form.Action text="Conectare" isLoading={isLoading} />
+                <Form.Action text="Conectare" isLoading={isPending} />
             </Form>
         </Container>
     );

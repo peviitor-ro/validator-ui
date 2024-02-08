@@ -1,4 +1,4 @@
-export default function Loading({ size = 'inherit', className }) {
+export default function Loading({ className }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -8,8 +8,6 @@ export default function Loading({ size = 'inherit', className }) {
                 display: 'block',
                 shapeRendering: 'auto',
             }}
-            width={size}
-            height={size}
             viewBox="0 0 100 100"
             className={className}
             preserveAspectRatio="xMidYMid"

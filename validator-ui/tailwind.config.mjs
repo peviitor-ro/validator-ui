@@ -9,6 +9,7 @@ export default {
             card: '#fff',
             container: '#f3f4f6',
             error: '#ff3333',
+            disabled: '#e5e5e5',
         },
 
         extend: {
