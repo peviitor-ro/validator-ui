@@ -16,6 +16,9 @@ export default {
             boxShadow: {
                 '3xl': '0px 4px 10px -2px #71717a',
             },
+            gridTemplateColumns: {
+                minmax: 'repeat(auto-fill, minmax(min(270px,45vw), 1fr))',
+            },
         },
     },
     plugins: [],

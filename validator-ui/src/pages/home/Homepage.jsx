@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Container } from '../../components/Container';
 import Loading from '../../components/Loading';
+import useWindowSize from '../../hooks/useWindowSize';
 import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
 import { CompanyCards } from './components/CompanyCards';
 import NoResultFound from './components/NoResultFound';
@@ -18,23 +19,23 @@ import NoResultFound from './components/NoResultFound';
 //     },
 // ];
 
-// TODO: Generic No data component, Generic error component ??,
+// TODO:  Generic error component ??,
 // TODO: Generic filter components
-// ! When filters and sorting are available extract logic into new component
+// TODO: When filters and sorting are available extract logic into new component
 
 export function Homepage() {
     const { ref, inView } = useInView();
 
+    const { width } = useWindowSize();
+
     const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } =
-        useCompaniesInfiniteQuery();
+        useCompaniesInfiniteQuery(getPageSize(width));
 
     useEffect(() => {
         if (inView) {
             fetchNextPage();
         }
     }, [fetchNextPage, inView]);
-
-    //TODO: if data is empty return NoResultFound
 
     if (!data?.pages[0].data?.length) {
         return <NoResultFound />;
@@ -55,9 +56,11 @@ export function Homepage() {
                 <span>Error: {error.message}</span>
             ) : (
                 <>
-                    {data?.pages.map((page, index) => (
-                        <CompanyCards key={index} companies={page.data} />
-                    ))}
+                    <div className="grid grid-cols-minmax gap-6">
+                        {data?.pages.map((page, index) => (
+                            <CompanyCards key={index} companies={page.data} />
+                        ))}
+                    </div>
 
                     <button
                         ref={ref}
@@ -80,4 +83,16 @@ export function Homepage() {
             )}
         </main>
     );
+}
+
+function getPageSize(width) {
+    if (width < 576) {
+        return 5;
+    } else if (width < 768) {
+        return 10;
+    } else if (width < 1024) {
+        return 15;
+    }
+
+    return 20;
 }
