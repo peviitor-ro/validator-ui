@@ -7,18 +7,6 @@ import { useCompaniesInfiniteQuery } from '../../services/landing/landing.querie
 import { CompanyCards } from './components/CompanyCards';
 import NoResultFound from './components/NoResultFound';
 
-//     {
-//         id: 1,
-//         company: 'Veeam',
-//         logo: 'https://img.veeam.com/careers/logo/veeam/veeam_logo_bg.svg',
-//         description:
-//             'Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-//         link: '#',
-//         website: '',
-//         jobsCount: 15,
-//     },
-// ];
-
 // TODO:  Generic error component ??,
 // TODO: Generic filter components
 // TODO: When filters and sorting are available extract logic into new component

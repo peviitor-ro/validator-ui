@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { useAuthContext } from '../../contexts/AuthContext';
-import { routes } from '../../routes/routes';
+import { useAuthContext } from '../../../contexts/AuthContext';
+import { routes } from '../../../routes/routes';
 
 export function LogoutLink({ className }) {
     const { logout } = useAuthContext();
