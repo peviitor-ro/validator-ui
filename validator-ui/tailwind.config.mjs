@@ -3,16 +3,22 @@ export default {
     content: ['./index.html', './src/**/*.{js,jsx}'],
     theme: {
         colors: {
-            primary: '#fe643d',
-            secondary: '',
+            primary: '#db7900',
             heading: '#0c0c0c',
             subtitle: '#71717a',
             card: '#fff',
             container: '#f3f4f6',
             error: '#ff3333',
+            disabled: '#e5e5e5',
         },
-        boxShadow: {
-            'card-shadow': '0px 2px 5px 0.5px rgba(80, 79, 79, 0.72);',
+
+        extend: {
+            boxShadow: {
+                '3xl': '0px 4px 10px -2px #71717a',
+            },
+            gridTemplateColumns: {
+                minmax: 'repeat(auto-fill, minmax(min(270px,45vw), 1fr))',
+            },
         },
     },
     plugins: [],

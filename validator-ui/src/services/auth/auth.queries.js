@@ -1,14 +1,14 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAuthState, loginUser, updateExpiredAccessToken } from './auth.service';
 
 export function useLoginMutation() {
-    return useMutation((email) => loginUser(email));
+    return useMutation({ mutationFn: (email) => loginUser(email) });
 }
 
 export function useAuthStateQuery(token) {
-    return useQuery(['auth', token], () => getAuthState(token));
+    return useQuery({ queryKey: ['auth', token], queryFn: () => getAuthState(token) });
 }
 
 export function useUpdateExpiredAccessTokenMutation() {
-    return useMutation((refreshToken) => updateExpiredAccessToken(refreshToken));
+    return useMutation({ mutationFn: (refreshToken) => updateExpiredAccessToken(refreshToken) });
 }

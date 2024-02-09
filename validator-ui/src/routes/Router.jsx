@@ -33,7 +33,10 @@ export function Router() {
                     path={`${routes.AUTHORIZED}/:token`}
                     element={isAuthenticated ? <Navigate to="/" /> : <Authorize />}
                 />
-                <Route path={routes.CONFIRM_EMAIL} element={<EmailConfirmation />} />
+                <Route
+                    path={routes.CONFIRM_EMAIL}
+                    element={isAuthenticated ? <Navigate to="/" /> : <EmailConfirmation />}
+                />
 
                 {/* LOOGED IN USERS ROUTES */}
                 <Route

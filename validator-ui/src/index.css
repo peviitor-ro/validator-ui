@@ -12,12 +12,14 @@
     h1 {
         @apply text-3xl font-bold;
     }
+    h3 {
+        @apply text-lg font-semibold;
+    }
 
     p {
         @apply text-subtitle;
     }
 }
-
 @layer utilities {
     .border-input {
         @apply rounded-md border;
@@ -34,20 +36,49 @@
 
     .btn {
         @apply rounded-md px-3 py-2 bg-heading text-card;
+    }
+
+    .btn:enabled,
+    .active-link {
         @apply hover:opacity-90 transition-opacity;
+    }
+
+    .btn-primary {
+        @apply bg-primary text-card;
+    }
+
+    .btn-primary-outlined {
+        @apply border-primary text-primary border;
+        background-color: inherit;
+    }
+
+    .btn-disabled {
+        @apply cursor-default bg-disabled text-subtitle;
+    }
+    .btn-disabled-outlined {
+        @apply cursor-default border-none bg-disabled text-subtitle;
     }
 
     .link {
         transition: all 150ms ease 100ms;
     }
+
     .underline {
         width: 0;
         display: block;
         @apply h-0.5;
         transition: all 150ms ease 100ms;
     }
+
     .link:hover > .underline {
         width: 100%;
+        transition: all 150ms ease 100ms;
+    }
+}
+
+@layer components {
+    .card {
+        @apply bg-card rounded-md shadow p-4 hover:shadow-3xl;
         transition: all 150ms ease 100ms;
     }
 }

@@ -1,6 +1,11 @@
-import { useQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getCompanies } from './landing.service';
 
-export function useCompaniesQuery() {
-    return useQuery('companies', () => getCompanies());
+export function useCompaniesInfiniteQuery(size) {
+    return useInfiniteQuery({
+        queryKey: ['projects'],
+        queryFn: ({ pageParam }) => getCompanies(pageParam, size),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => lastPage.nextId ?? undefined,
+    });
 }

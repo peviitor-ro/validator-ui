@@ -1,86 +1,86 @@
-import { useCompaniesQuery } from '../../services/landing/landing.queries';
-import { HomeCard } from './HomeCard';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { Container } from '../../components/Container';
+import Loading from '../../components/Loading';
+import useWindowSize from '../../hooks/useWindowSize';
+import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
+import { CompanyCards } from './components/CompanyCards';
+import NoResultFound from './components/NoResultFound';
 
-const firme = [
-    {
-        id: 1,
-        name: 'Veeam',
-        image: 'https://img.veeam.com/careers/logo/veeam/veeam_logo_bg.svg',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor',
-        linkSite: '#',
-    },
-    {
-        id: 2,
-        name: 'Banca Transilvania',
-        image: 'https://www.bancatransilvania.ro/themes/bancatransilvania/assets/images/logos/bt-cariere.svg',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor',
-        linkSite: '#',
-    },
-    {
-        id: 3,
-        name: 'Coca-Cola Romania',
-        image: 'https://careers.coca-colahellenic.com/portal/5/images/logo.svg',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor',
-        linkSite: '#',
-    },
-    {
-        id: 4,
-        name: 'Dedeman',
-        image: 'https://i.dedeman.ro/dedereact/design/images/logo.svg',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor',
-        linkSite: '#',
-    },
-    {
-        id: 5,
-        name: 'Schneider Electric',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Schneider_Electric_2007.svg/284px-Schneider_Electric_2007.svg.png?20150906005100',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor',
-        linkSite: '#',
-    },
-];
+// TODO:  Generic error component ??,
+// TODO: Generic filter components
+// TODO: When filters and sorting are available extract logic into new component
 
 export function Homepage() {
-    const { data, isLoading, isError } = useCompaniesQuery();
+    const { ref, inView } = useInView();
 
-    if (isLoading) return;
+    const { width } = useWindowSize();
 
-    if (isError) return <>error...</>;
+    const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } =
+        useCompaniesInfiniteQuery(getPageSize(width));
 
-    if (!data || !data?.length) return <>No data</>;
+    useEffect(() => {
+        if (inView) {
+            fetchNextPage();
+        }
+    }, [fetchNextPage, inView]);
+
+    if (!data?.pages[0].data?.length) {
+        return <NoResultFound />;
+    }
 
     return (
-        <div className="m-10">
-            <div className="flex justify-between flex-wrap">
-                <div>
-                    <h1 className="text-4xl">Companii</h1>
-                    <p className="font-semibold">600 de rezultate</p>
-                </div>
-                <div className="hidden md:block">
-                    <label htmlFor="sort" className="mr-4">
-                        Sorteaza
-                    </label>
-                    <select
-                        name="sort"
-                        className="bg-bg-header rounded-sm px-2 py-2 outline-none text-sm"
-                    >
-                        <option value="">Dupa numarul de joburi active</option>
-                        <option value="">Dupa numarul de joburi active 2</option>
-                        <option value="">Dupa numarul de joburi active 1</option>
-                        <option value="">Dupa numarul de joburi active 3</option>
-                    </select>
-                </div>
+        <main className="flex flex-col gap-4 p-4 lg:gap-10 lg:p-10 ">
+            <div>
+                <h1>Companii</h1>
+                <p className="font-semibold">{data.pages[0].count} de rezultate</p>
             </div>
 
-            <div className="flex flex-wrap gap-4 gap-y-10 mt-10 justify-center">
-                {firme.map((item) => (
-                    <HomeCard key={item.id} data={item} />
-                ))}
-            </div>
-        </div>
+            {status == 'pending' ? (
+                <Container className="flex">
+                    <Loading className="w-28 m-auto" />
+                </Container>
+            ) : status == 'error' ? (
+                <span>Error: {error.message}</span>
+            ) : (
+                <>
+                    <div className="grid grid-cols-minmax gap-6">
+                        {data?.pages.map((page, index) => (
+                            <CompanyCards key={index} companies={page.data} />
+                        ))}
+                    </div>
+
+                    <button
+                        ref={ref}
+                        onClick={() => fetchNextPage()}
+                        disabled={!hasNextPage || isFetchingNextPage}
+                        className="m-auto"
+                    >
+                        {isFetchingNextPage ? (
+                            <>
+                                <span className="text-xl">Loading more ...</span>
+                                <Loading className="w-28" />
+                            </>
+                        ) : hasNextPage ? (
+                            'Load Newer'
+                        ) : (
+                            ''
+                        )}
+                    </button>
+                </>
+            )}
+        </main>
     );
+}
+
+function getPageSize(width) {
+    if (width < 576) {
+        return 5;
+    } else if (width < 768) {
+        return 10;
+    } else if (width < 1024) {
+        return 15;
+    }
+
+    return 20;
 }

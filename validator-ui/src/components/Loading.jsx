@@ -1,4 +1,4 @@
-export default function Loading() {
+export default function Loading({ className }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -8,9 +8,8 @@ export default function Loading() {
                 display: 'block',
                 shapeRendering: 'auto',
             }}
-            width="inherit"
-            height="inherit"
             viewBox="0 0 100 100"
+            className={className}
             preserveAspectRatio="xMidYMid"
         >
             <circle cx="84" cy="50" r="10" fill="#e15b64">
