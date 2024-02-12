@@ -18,6 +18,7 @@ export default {
             },
             gridTemplateColumns: {
                 minmax: 'repeat(auto-fill, minmax(min(270px,45vw), 1fr))',
+                fixed: '1fr 200px',
             },
         },
     },

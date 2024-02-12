@@ -4,20 +4,21 @@ import { Container } from '../../components/Container';
 import Loading from '../../components/Loading';
 import useWindowSize from '../../hooks/useWindowSize';
 import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
+import { useCompanyOptionsSelector } from '../../store/Company.selectors';
 import { CompanyCards } from './components/CompanyCards';
 import NoResultFound from './components/NoResultFound';
+import SelectOrderField from './components/SelectOrderField';
 
 // TODO:  Generic error component ??,
-// TODO: Generic filter components
-// TODO: When filters and sorting are available extract logic into new component
 
 export function Homepage() {
     const { ref, inView } = useInView();
 
     const { width } = useWindowSize();
 
+    const { order } = useCompanyOptionsSelector();
     const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } =
-        useCompaniesInfiniteQuery(getPageSize(width));
+        useCompaniesInfiniteQuery(getPageSize(width), order);
 
     useEffect(() => {
         if (inView) {
@@ -31,9 +32,13 @@ export function Homepage() {
 
     return (
         <main className="flex flex-col gap-4 p-4 lg:gap-10 lg:p-10 ">
-            <div>
-                <h1>Companii</h1>
-                <p className="font-semibold">{data.pages[0].count} de rezultate</p>
+            <div className="grid grid-cols-fixed items-center">
+                <h1 className="col-start-1 col-end-2 flex-1">Companii</h1>
+                <p className="font-semibold col-start-1 col-end-2">
+                    {data.pages[0].count} de rezultate
+                </p>
+
+                <SelectOrderField />
             </div>
 
             {status == 'pending' ? (

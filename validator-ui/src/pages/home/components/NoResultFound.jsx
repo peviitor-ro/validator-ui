@@ -1,6 +1,10 @@
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { GenericPage } from '../../../components/GenericPage';
-// TODO: When filters are applied return different message
+import { useCompanyOptionsSelector } from '../../../store/Company.selectors';
+
 export default function NoResultFound() {
+    const { isEmpty, reset } = useCompanyOptionsSelector();
+
     return (
         <GenericPage>
             <GenericPage.Symbol
@@ -36,10 +40,17 @@ export default function NoResultFound() {
                 }
             />
 
-            <GenericPage.Title text="No company found" />
-            <GenericPage.Description text="We can't find any assigned company" />
-
-            {/* TODO: Display a refresh filters btn */}
+            <GenericPage.Title text={isEmpty ? 'No company found' : 'No result found'} />
+            <GenericPage.Description
+                text={
+                    isEmpty
+                        ? "We can't find any assigned company"
+                        : "We can't find any result with this set of filters"
+                }
+            />
+            {!isEmpty && (
+                <GenericPage.Action text="Reset filters" onClick={reset} icon={<ArrowPathIcon />} />
+            )}
         </GenericPage>
     );
 }

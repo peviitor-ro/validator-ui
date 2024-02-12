@@ -1,6 +1,7 @@
 import { ArrowLeftIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
+import { Button } from '../components/Button';
 import { Container } from './Container';
 
 export function GenericPage({ children }) {
@@ -39,4 +40,8 @@ GenericPage.ExternalLink = ({ href, target, icon = <ArrowTopRightOnSquareIcon />
             {text}
         </a>
     );
+};
+
+GenericPage.Action = ({ onClick, icon = <ArrowTopRightOnSquareIcon />, text }) => {
+    return <Button type="button" text={text} onClick={onClick} icon={icon} className="mt-10" />;
 };
