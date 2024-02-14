@@ -4,9 +4,15 @@ import { NavLink } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Container } from './Container';
 
-export function GenericPage({ children }) {
+export function GenericPage({ children, className }) {
     return (
-        <Container className="flex items-center justify-center flex-col px-6">{children}</Container>
+        <Container
+            className={clsx('flex items-center justify-center flex-col px-6', {
+                [className]: className,
+            })}
+        >
+            {children}
+        </Container>
     );
 }
 
@@ -16,7 +22,13 @@ GenericPage.Symbol = ({ icon }) => {
 
 GenericPage.Title = ({ text, className }) => {
     return (
-        <h1 className={clsx('text-4xl my-4 text-center', { [className]: className })}>{text}</h1>
+        <p
+            className={clsx('text-4xl font-semibold text-heading my-4 text-center', {
+                [className]: className,
+            })}
+        >
+            {text}
+        </p>
     );
 };
 

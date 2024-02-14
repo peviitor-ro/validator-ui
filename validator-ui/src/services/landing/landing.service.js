@@ -1,20 +1,13 @@
 import { PRIVATE_API } from '../Api';
 
-let count = 0;
-
-export async function getCompanies(page, size, order = '') {
+export async function getCompanies(page, size, order = '', search = '') {
     const response = await PRIVATE_API.get(
-        `companies?page=${page}&page_size=${size}&order=${order}`,
+        `companies?page=${page}&page_size=${size}&order=${order}&search=${search}`,
     );
-
-    if (!count) {
-        count = response.data.count;
-    }
 
     return {
         data: response.data.results ?? [],
         nextId: response.data.next ? page + 1 : null,
-        previousId: null,
-        count,
+        count: response.data?.count ?? 0,
     };
 }

@@ -2,11 +2,11 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { GenericPage } from '../../../components/GenericPage';
 import { useCompanyOptionsSelector } from '../../../store/Company.selectors';
 
-export default function NoResultFound() {
+export function NoResultFound() {
     const { isEmpty, reset } = useCompanyOptionsSelector();
 
     return (
-        <GenericPage>
+        <GenericPage className="min-h-max">
             <GenericPage.Symbol
                 icon={
                     <svg

@@ -1,11 +1,14 @@
 import clsx from 'clsx';
 
-export function SelectField({ options, label, onChange, value, className, labelClassName }) {
-    const selectClassName = clsx('rounded-md p-2 bg-card', { [className]: className });
+export function SelectField({ options, onChange, value, label, className, labelClassName }) {
+    const selectClassName = clsx('rounded-md px-3 py-2 bg-card', { [className]: className });
 
     return (
         <>
-            <label htmlFor="select-sorting" className={clsx({ [labelClassName]: labelClassName })}>
+            <label
+                htmlFor="select-sorting"
+                className={clsx({ [labelClassName]: labelClassName, invisible: !label })}
+            >
                 {label}
             </label>
             <select

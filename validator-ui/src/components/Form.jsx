@@ -1,5 +1,5 @@
 import { Button } from './Button';
-import InputField from './InputField/InputField';
+import { InputField } from './InputField/InputField';
 
 export default function Form({ children, ...rest }) {
     return (

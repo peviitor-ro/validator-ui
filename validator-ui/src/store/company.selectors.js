@@ -7,8 +7,9 @@ export function useCompanyOptionsSelector() {
     const search = useCompanyOptionsStore((state) => state.search);
 
     const reset = useCompanyOptionsStore((state) => state.reset);
+    const setSearch = useCompanyOptionsStore((state) => state.setSearch);
 
     const isEmpty = order === INITIAL_COMPANY_STATE.order && !filters.length && !search;
 
-    return { order, filters, search, setOrder, reset, isEmpty };
+    return { order, filters, search, setOrder, reset, setSearch, isEmpty };
 }
