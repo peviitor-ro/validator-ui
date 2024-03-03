@@ -16,6 +16,8 @@ const schema = z
     })
     .required();
 
+// TODO: Error message when sending multiple emails in a short period of time
+
 export function Login() {
     const { executeRecaptcha } = useGoogleReCaptcha();
     const { mutate, isPending } = useLoginMutation();
