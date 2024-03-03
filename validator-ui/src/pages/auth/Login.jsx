@@ -54,10 +54,10 @@ export function Login() {
     return (
         <Container className="flex items-center justify-around px-6">
             <img
-                className="object-cover w-[50vw] transform hidden md:block"
+                className="absolute object-cover transform hidden md:block translate-x-1/2 -translate-y-1/2"
                 src={rocket}
-                width="320"
-                height="320"
+                width="400"
+                height="400"
                 alt="Logo"
             />
             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -69,7 +69,7 @@ export function Login() {
                     label="Email"
                     register={register}
                     placeholder="m@example.com"
-                    errorMessage={errors.email && errors.email.message}
+                    errorMessage={errors.email?.message}
                 />
                 <Form.Action text="Conectare" isLoading={isPending} />
             </Form>

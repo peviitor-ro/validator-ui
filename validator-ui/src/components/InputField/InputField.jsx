@@ -33,7 +33,7 @@ export function InputField({ showError = true, type = 'text', ...props }) {
             'border-subtitle': !errorMessage,
             'pl-8 border-none': leftIcon,
         },
-        'mt-1 px-3 py-2 border-input',
+        'mt-1 px-3 py-2 border-input w-full',
     );
 
     const labelClassName = clsx('block font-semibold', { 'text-error': errorMessage });
