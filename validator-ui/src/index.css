@@ -74,6 +74,11 @@
         width: 100%;
         transition: all 150ms ease 100ms;
     }
+
+        .btn-delete {
+            @apply bg-red-500 text-card rounded-none;
+        }
+
 }
 
 @layer components {
