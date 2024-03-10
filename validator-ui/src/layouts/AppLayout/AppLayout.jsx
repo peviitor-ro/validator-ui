@@ -4,7 +4,7 @@ import { Header } from './components/Header';
 
 export function AppLayout() {
     return (
-        <Container>
+        <Container className={"bg-background"}>
             <Header />
             <Outlet />
         </Container>
