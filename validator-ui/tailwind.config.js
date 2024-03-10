@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
     content: ['./index.html', './src/**/*.{js,jsx}'],
     theme: {
         colors: {
+            ...require('tailwindcss/colors'),
             primary: '#db7900',
             heading: '#0c0c0c',
             subtitle: '#71717a',
@@ -10,6 +11,7 @@ export default {
             container: '#f3f4f6',
             error: '#ff3333',
             disabled: '#e5e5e5',
+            background: '#f1f3f6',
         },
 
         extend: {

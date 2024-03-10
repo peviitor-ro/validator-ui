@@ -33,7 +33,7 @@ export function InputField({ showError = true, type = 'text', ...props }) {
             'border-subtitle': !errorMessage,
             'pl-8 border-none': leftIcon,
         },
-        'mt-1 px-3 py-2 border-input',
+        'border-input h-full w-full p-2',
     );
 
     const labelClassName = clsx('block font-semibold', { 'text-error': errorMessage });
@@ -57,7 +57,7 @@ export function InputField({ showError = true, type = 'text', ...props }) {
                     placeholder={placeholder}
                     {...register(id)}
                 />
-            ) : (
+            ) : onChange ? (
                 <input
                     id={id}
                     type={type}
@@ -66,6 +66,15 @@ export function InputField({ showError = true, type = 'text', ...props }) {
                     placeholder={placeholder}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
+                />
+            ) : (
+                <input
+                    id={id}
+                    type={type}
+                    className={inputClassName}
+                    aria-errormessage={errorId}
+                    placeholder={placeholder}
+                    value={value}
                 />
             )}
 

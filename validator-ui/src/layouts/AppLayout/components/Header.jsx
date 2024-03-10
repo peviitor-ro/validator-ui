@@ -15,7 +15,7 @@ export function Header() {
         <>
             <header
                 className={clsx(
-                    'flex items-center justify-between h-16 px-4 lg:px-10 bg-card sticky top-0 link shadow-3xl',
+                    'flex items-center justify-between h-16 px-4 lg:px-10 bg-card sticky top-0 link shadow-3xl z-10',
                     {
                         '-translate-y-20 opacity-45': isScrollingDown,
                         'translate-y-0': !isScrollingDown,
