@@ -1,14 +1,19 @@
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Container } from '../../components/Container';
-import Loading from '../../components/Loading';
+
 import { useDebounce } from '../../hooks/useDebounce';
-import useWindowSize from '../../hooks/useWindowSize';
+
 import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
 import { useCompanyOptionsSelector } from '../../store/Company.selectors';
-import { CompanyCards } from './components/CompanyCards';
-import { Home } from './components/Home';
+
+import { Cards } from './components/cards/Cards';
+import { Home } from './components/filters/CompanyFilter';
 import { NoResultFound } from './components/NoResultFound';
+import { CompanyCard } from './components/cards/CompanyCard';
+import { Container } from '../../components/Container';
+
+import useWindowSize from '../../hooks/useWindowSize';
+import Loading from '../../components/Loading';
 
 // TODO: Generic error component ??,
 // TODO: Home Items, Home Item components
@@ -34,11 +39,11 @@ export function Homepage() {
         <Home>
             <Home.Header data={data} />
 
-            {status == 'pending' ? (
+            {status === 'pending' ? (
                 <Container className="flex">
                     <Loading className="w-28 m-auto" />
                 </Container>
-            ) : status == 'error' ? (
+            ) : status === 'error' ? (
                 <span>Error: {error.message}</span>
             ) : (
                 <>
@@ -47,9 +52,16 @@ export function Homepage() {
                     ) : (
                         <>
                             <div className="grid grid-cols-minmax gap-6">
-                                {data?.pages.map((page, index) => (
-                                    <CompanyCards key={index} companies={page.data} />
-                                ))}
+                                {data?.pages.map((page, index) => {
+                                    const uniqueKey = `company_${index}`;
+                                    return (
+                                        <Cards
+                                            key={uniqueKey}
+                                            data={page.data}
+                                            component={CompanyCard}
+                                        />
+                                    );
+                                })}
                             </div>
 
                             <button
