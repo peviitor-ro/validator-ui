@@ -11,7 +11,10 @@ import { InputField } from './InputField/InputField';
  */
 export default function Form({ children, ...rest }) {
     return (
-        <form className="flex flex-col bg-card rounded-md p-6 drop-shadow-lg w-full max-w-md z-10" {...rest}>
+        <form
+            className="flex flex-col bg-card rounded-md p-6 drop-shadow-lg w-full max-w-md z-10"
+            {...rest}
+        >
             {children}
         </form>
     );
@@ -76,6 +79,7 @@ Form.Field = function ({ id, type, label, register, placeholder, errorMessage })
             register={register}
             placeholder={placeholder}
             errorMessage={errorMessage}
+            fieldClassName="h-10 mb-8"
         />
     );
 };
