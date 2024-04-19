@@ -11,6 +11,7 @@ import { addScraper } from '../../../../services/landing/landing.service';
 const schema = yup.object().shape({
     url: yup.string().url().required(),
     language: yup.string().required(),
+    isSystemVariable: yup.bool(),
 });
 
 export function AddScraperForm() {
@@ -36,13 +37,15 @@ export function AddScraperForm() {
             setLoading(false);
         }
     };
+    
     return (
         <div>
-            <form onSubmit={handleSubmit(onSubmit)} className="text-gray-500">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 text-gray-500">
                 <div>
-                    <label>Url</label>
+                    <label htmlFor="url">Url</label>
                     <InputField
                         id="url"
+                        name="url"
                         placeholder="https://github.com/account/repository.git"
                         errorMessage={errors.url?.message}
                         type="text"
@@ -50,13 +53,26 @@ export function AddScraperForm() {
                     />
                 </div>
                 <div>
-                    <label>Language</label>
-                    <InputField
+                    <label htmlFor="language">Container</label>
+                    <select
                         id="language"
-                        placeholder="Python"
-                        errorMessage={errors.language?.message}
-                        register={register}
+                        {...register('language')}
+                        className="
+                        border-input h-full w-full p-2
+                    "
+                    >
+                        <option value="Python">Python</option>
+                        <option value="Node">Node.js (JavaScript)</option>
+                        <option value="Jmeter">Jmeter (Java)</option>
+                    </select>
+                </div>
+                <div className="flex items-center justify-center gap-4 w-full mt-4">
+                    <input
+                        type="checkbox"
+                        id="isSystemVariable"
+                        {...register('isSystemVariable')}
                     />
+                    <label htmlFor="isSystemVariable">Seteaza-l ca variabila de sistem</label>
                 </div>
                 <div>
                     <Button text="Adauga" isLoading={loading} />

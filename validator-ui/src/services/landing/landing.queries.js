@@ -1,8 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { getCompanies } from './landing.service';
-import { getJobs } from './landing.service';
-import { getScrapers, getScraperFiles } from './landing.service';
-import { getCities } from './landing.service';
+import { getCompanies, getJobs, getScrapers, getScraperFiles, getCities } from './landing.service';
 
 export function useCompaniesInfiniteQuery(size, order, search) {
     return useInfiniteQuery({
@@ -43,7 +40,4 @@ export function useCitiesQuery(size, search) {
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.nextId ?? undefined,
     });
-    
 }
-
-
