@@ -1,3 +1,4 @@
+import { json } from 'react-router-dom';
 import { PRIVATE_API } from '../Api';
 
 export async function getCompanies(page, size, order = '', search = '') {
@@ -87,7 +88,6 @@ export async function updateScraper(scraperName) {
 }
 
 export async function getCities(page, size = 50, search = '') {
-    console.log('fetching cities');
     const response = await PRIVATE_API.get(
         `orase/?page=${page}&page_size=${size}&search=${search}`,
     );
@@ -97,4 +97,15 @@ export async function getCities(page, size = 50, search = '') {
         nextId: response.data.next ? page + 1 : null,
         count: response.data?.count ?? 0,
     };
+}
+
+export async function getUsersAndCompanies(user = '') {
+    const response = await PRIVATE_API.get(`user/companies${user ? `?user=${user}` : ''}`);
+
+    return response.data;
+}
+
+export async function editUserCompanies(data) {
+    const response = await PRIVATE_API.post('user/companies', data);
+    return response.status;
 }
