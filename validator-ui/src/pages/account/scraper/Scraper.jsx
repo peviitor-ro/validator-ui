@@ -18,11 +18,11 @@ export function Scraper() {
     return (
         <div className="flex flex-col gap-4 ml-2 p-2">
             {data?.length === 0 ? (
-                <h1>No scrapers found</h1>
+                <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">No scrapers found</h2>
             ) : data?.length > 1 ? (
-                <h1>Scrapers</h1>
+                <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">Scrapers</h2>
             ) : (
-                <h1>Scraper</h1>
+                <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">Scraper</h2>
             )}
             {status === 'pending' ? (
                 <Container className="flex">
