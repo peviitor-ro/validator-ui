@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useUserCompaniesSelector } from '../../store/userCompanies.selector';
 import { getUsersAndCompanies, editUserCompanies } from '../../services/landing/landing.service';
+import { Alert } from '../../components/Alert';
 
 import Loading from '../../components/Loading';
 
@@ -35,8 +36,12 @@ export function CompanyAccess() {
     }, [email]);
 
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
 
-    const onsSubmit = async () => {
+    const onsSubmit = async (e) => {
+        e.preventDefault();
         setLoading(true);
         const email = document.getElementById('email').value;
         const companySelect = document.getElementById('company');
@@ -58,11 +63,21 @@ export function CompanyAccess() {
             is_staff,
         };
         const response = await editUserCompanies(JSON.stringify(data));
+
+        setAlert(true);
+        if (response === 200) {
+            setAlertMessage('Modificari salvate cu succes');
+            setAlertType('success');
+        } else {
+            setAlertMessage('A aparut o eroare');
+            setAlertType('error');
+        }
+
         setLoading(false);
     };
 
-    const handleClick = () => {
-        onsSubmit();
+    const handleClick = (e) => {
+        onsSubmit(e);
     };
 
     const [userIsStaff, setUserIsStaff] = useState(false);
@@ -73,6 +88,7 @@ export function CompanyAccess() {
 
     return (
         <>
+            {alert && <Alert message={alertMessage} type={alertType} />}
             {is_superuser ? (
                 <div className="flex flex-col gap-4 m-2 p-2 border bg-white rounded-md shadow-md">
                     <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">
