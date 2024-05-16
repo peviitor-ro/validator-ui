@@ -1,21 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '../../../../components/Modal';
 import { JobForm } from '../forms/JobForm';
 import clsx from 'clsx';
-import  Loading  from '../../../../components/Loading';
+import Loading from '../../../../components/Loading';
 
 import { removeJob, publishJob } from '../../../../services/landing/landing.service';
 
 export function JobCard({ data }) {
-    const { job_link, job_title, country, city, county, remote, edited, published, posted } = data;
+    const [job, setJob] = useState(data);
+
+    useEffect(() => {
+        setJob(data);
+    }, [data]);
+
+    const { job_link, job_title, country, city, county, remote, edited, published, posted } = job;
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const containerClasses = clsx(
         'relative flex flex-col gap-4 bg-white shadow rounded border my-2 px-3 pt-2',
         {
-            'pb-8': edited || published ,
-            'pb-2': !edited && !published 
+            'pb-8': edited || published,
+            'pb-2': !edited && !published,
         },
     );
 
@@ -26,7 +32,6 @@ export function JobCard({ data }) {
             const response = await removeJob(data);
             if (response === 200) {
                 window.location.reload();
-
             } else {
                 setLoading(false);
                 console.error('A aparut o eroare');
@@ -43,7 +48,10 @@ export function JobCard({ data }) {
         try {
             const response = await publishJob(data);
             if (response === 200) {
-                window.location.reload();
+                let chaged = job;
+                chaged.published = true;
+                setJob(chaged);
+                setLoading(false);
             } else {
                 console.error('A aparut o eroare');
                 setLoading(false);
@@ -52,12 +60,12 @@ export function JobCard({ data }) {
             console.error(error);
             setLoading(false);
         }
-    }
+    };
 
     return (
         <div className={containerClasses}>
             <Modal open={open} setOpen={setOpen} className="w-2/3">
-                {open && <JobForm {...data} />}
+                {open && <JobForm props={job} set={setJob} setOpen={setOpen} />}
             </Modal>
             <div className="flex flex-col gap-3 ml-2">
                 <div className="text-lg font-semibold">{job_title}</div>

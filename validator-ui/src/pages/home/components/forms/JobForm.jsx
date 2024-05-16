@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { useDebounce } from '../../../../hooks/useDebounce';
 import clsx from 'clsx';
 import { useCitiesSelector } from '../../../../store/cities.selector';
 import { useCitiesQuery } from '../../../../services/landing/landing.queries';
 
-import { useJobSelector } from '../../../../store/job.selector';
 import { useJobStore } from '../../../../store/job.state';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useForm } from 'react-hook-form';
@@ -25,9 +26,10 @@ const schema = yup.object().shape({
 
 export function JobForm({ ...props }) {
     const store = useJobStore();
-    const [propsdata, setPropsData] = useState(props);
+    const [propsdata, setPropsData] = useState(props.props);
 
-    const { job_title, job_link, city, county, remote } = propsdata;
+    const { job_link, job_title, country, city, county, remote, edited, published, posted } =
+        propsdata;
 
     useEffect(() => {
         store.setJob({ ...propsdata });
@@ -43,12 +45,14 @@ export function JobForm({ ...props }) {
     const onSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log(propsdata);
-
         try {
             const response = await editJob(propsdata);
             if (response === 200) {
-                window.location.reload();
+                let changedJob = propsdata;
+                changedJob.edited = true;
+                setPropsData({ ...changedJob });
+                props.set(propsdata);
+                props.setOpen(false);
             } else {
                 setError('job_title', { type: 'manual', message: 'A aparut o eroare' });
             }
@@ -65,7 +69,18 @@ export function JobForm({ ...props }) {
     };
 
     const { search, setSearch } = useCitiesSelector();
-    const { data } = useCitiesQuery(10, search);
+    const debounceSearch = useDebounce(search);
+    const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } = useCitiesQuery(
+        10,
+        search,
+    );
+    const { ref, inView } = useInView();
+
+    useEffect(() => {
+        if (inView) {
+            fetchNextPage();
+        }
+    }, [fetchNextPage, inView]);
 
     useEffect(() => {
         setSearch(city?.[0]);
@@ -116,7 +131,7 @@ export function JobForm({ ...props }) {
                     "
                         id="job_title"
                         placeholder="Titlu"
-                        // errorMessage={errors.title?.message}
+                        errorMessage={errors.title?.message}
                         type="text"
                         // register={register}
                         defaultValue={job_title}
@@ -173,7 +188,14 @@ export function JobForm({ ...props }) {
                             </button>
                         </div>
 
-                        <ul className={dropdownClasses} name="city_search" id="city_search">
+                        <ul
+                            className={dropdownClasses}
+                            onScroll={(e) => {
+                                console.log(e);
+                            }}
+                            name="city_search"
+                            id="city_search"
+                        >
                             {data?.pages
                                 .map((page) => page.data)
                                 .flat()
@@ -187,6 +209,24 @@ export function JobForm({ ...props }) {
                                         >{`${obj.name} ,jud: ${obj.county}`}</li>
                                     );
                                 })}
+
+                            <button
+                                ref={ref}
+                                onClick={() => fetchNextPage()}
+                                disabled={!hasNextPage || isFetchingNextPage}
+                                className="m-auto"
+                            >
+                                {isFetchingNextPage ? (
+                                    <>
+                                        <span className="text-xl">Loading more ...</span>
+                                        <Loading className="w-28" />
+                                    </>
+                                ) : hasNextPage ? (
+                                    'Load Newer'
+                                ) : (
+                                    ''
+                                )}
+                            </button>
                         </ul>
                     </div>
                     <div
