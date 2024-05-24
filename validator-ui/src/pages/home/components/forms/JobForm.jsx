@@ -87,6 +87,17 @@ export function JobForm({ ...props }) {
     }, [setSearch, city]);
 
     const changeHandler = (e) => {
+        if (e.target.id === 'remote') {
+            const options = e.target.options;
+            const value = [];
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].selected) {
+                    value.push(options[i].value);
+                }
+            }
+            setPropsData({ ...propsdata, [e.target.id]: value.join(',') });
+            return;
+        }
         setPropsData({ ...propsdata, [e.target.id]: e.target.value });
     };
 
@@ -131,7 +142,7 @@ export function JobForm({ ...props }) {
                     "
                         id="job_title"
                         placeholder="Titlu"
-                        errorMessage={errors.title?.message}
+                        // errorMessage={errors.title?.message}
                         type="text"
                         // register={register}
                         defaultValue={job_title}
@@ -244,19 +255,22 @@ export function JobForm({ ...props }) {
                         </p>
                     </div>
                 </div>
-
                 <div className="flex flex-col">
-                    <label>Tipul Jobului</label>
-                    <input
-                        className="
-                            border-input h-full w-full p-2
-                        "
+                    <label htmlFor="remote">Tipul Jobului</label>
+                    <select
+                        className="border-input h-full w-full p-2"
                         id="remote"
-                        placeholder="ex. Remote, Onsite"
-                        type="text"
-                        defaultValue={remote}
                         onChange={changeHandler}
-                    />
+                        defaultValue={remote.split(',')}
+                        multiple
+                    >
+                        <option value="">Fara selectie</option>
+                        {['remote', 'on-site', 'hybrid'].map((choice) => (
+                            <option key={choice} value={choice.toLowerCase()}>
+                                {choice}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div>
