@@ -157,7 +157,7 @@ export function JobForm({ ...props }) {
                         placeholder="Link"
                         type="text"
                         defaultValue={job_link}
-                        onChange={changeHandler}
+                        disabled
                     />
                 </div>
                 <div
