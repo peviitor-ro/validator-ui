@@ -116,7 +116,7 @@ export function JobCard({ data }) {
                     )}
 
                     <button onClick={() => setOpen(!open)}>Editati</button>
-                    <a href={job_link} className="flex items-center">
+                    <a href={job_link} target='_blank' className="flex items-center">
                         Catre Job
                     </a>
                 </div>
