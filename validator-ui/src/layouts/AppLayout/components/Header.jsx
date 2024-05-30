@@ -29,8 +29,8 @@ export function Header() {
                 </NavLink>
 
                 <nav className="lg:flex hidden">
-                    {NAV_LINKS?.map(({ name, url }, key) => (
-                        <AppNavLink key={key} url={url} name={name} className="px-4" />
+                    {NAV_LINKS?.map(({ name, url, onClick }, key) => (
+                        <AppNavLink key={key} url={url} name={name} onClick={onClick} className="px-4" />
                     ))}
                 </nav>
 

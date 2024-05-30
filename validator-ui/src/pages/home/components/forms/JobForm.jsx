@@ -90,9 +90,9 @@ export function JobForm({ ...props }) {
         if (e.target.id === 'remote') {
             const options = e.target.options;
             const value = [];
-            for (let i = 0; i < options.length; i++) {
-                if (options[i].selected) {
-                    value.push(options[i].value);
+            for (const option of options) {
+                if (option.selected) {
+                    value.push(option.value);
                 }
             }
             setPropsData({ ...propsdata, [e.target.id]: value.join(',') });

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 
-export function AppNavLink({ name, url, className }) {
+export function AppNavLink({ name, url, className, onClick }) {
     return (
         <NavLink
             to={url}
@@ -11,6 +11,7 @@ export function AppNavLink({ name, url, className }) {
                     [className]: className,
                 })
             }
+            onClick={onClick}
         >
             {name}
             <span className="underline bg-heading"></span>

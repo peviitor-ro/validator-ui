@@ -1,3 +1,5 @@
+
+import { useLocation } from 'react-router-dom';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 import { useCompanyOptionsSelector } from '../../../../store/Company.selectors';
@@ -14,8 +16,9 @@ export function Home({ children }) {
 Home.Header = function H({ data }) {
     const { search, order, setOrder, setSearch } = useCompanyOptionsSelector();
 
+
     return (
-        <div className="flex gap-2">
+        <div id='search-container' className="flex gap-2">
             <h1>Companii</h1>
             {!!data?.pages[0]?.count && (
                 <p className="font-semibold p-2">{data.pages[0].count} de rezultate</p>

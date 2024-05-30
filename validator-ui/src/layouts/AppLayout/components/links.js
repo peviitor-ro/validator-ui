@@ -5,19 +5,29 @@ export const NAV_LINKS = Object.freeze([
     },
     {
         name: 'Companii',
-        url: '/companies',
+        url: '/',
     },
     {
         name: 'Cautare',
-        url: '/search',
+        url: window.location,
+        onClick: () => {
+            const element = document.getElementById('search-container');
+            const search = document.getElementById('search');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                setTimeout(() => {
+                    search.focus();
+                }, 1000);
+            }
+        },
     },
     {
         name: 'Despre',
-        url: '/info',
+        url: 'https://peviitor-ro.github.io/oportunitatisicariere/',
     },
     {
         name: 'Contact',
-        url: '/contact',
+        url: 'mailto:aocpeviitor@gmail.com',
     },
     {
         name: 'Documentatie',
