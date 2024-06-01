@@ -79,7 +79,6 @@ Form.Field = function ({ id, type, label, register, placeholder, errorMessage })
             register={register}
             placeholder={placeholder}
             errorMessage={errorMessage}
-            fieldClassName="h-10 mb-8"
         />
     );
 };

@@ -9,14 +9,47 @@ import { Container } from '../../components/Container';
 import Form from '../../components/Form';
 import { routes } from '../../routes/routes';
 import { useLoginMutation } from '../../services/auth/auth.queries';
+import PropTypes from 'prop-types';
 
 const schema = z
     .object({
-        email: z.string().email('Email is required'),
+        email: z.string().email('Emailul este obligatoriu'),
     })
     .required();
 
 // TODO: Error message when sending multiple emails in a short period of time
+
+
+/**
+ * Renders the Login template component.
+ */
+export const Template = ({ onSubmit, register, errors, isLoading }) => {
+
+    return (
+        <Container className="flex items-center justify-around px-6">
+            <img
+                className="absolute object-cover transform hidden md:block translate-x-1/2 -translate-y-1/2"
+                src={rocket}
+                width="400"
+                height="400"
+                alt="Logo"
+            />
+            <Form onSubmit={onSubmit}>
+                <Form.Title text="Conectare" />
+                <Form.Description text="Introdu adresa de email pentru a primi un link de conectare." />
+                <Form.Field
+                    id="email"
+                    type="email"
+                    label="Email"
+                    register={register}
+                    placeholder="Adresa de email"
+                    errorMessage={errors?.email?.message}
+                />
+                <Form.Action text="Conectare" isLoading={isLoading} />
+            </Form>
+        </Container>
+    );
+}
 
 export function Login() {
     const { executeRecaptcha } = useGoogleReCaptcha();
@@ -46,33 +79,31 @@ export function Login() {
         handleReCaptchaVerify();
 
         mutate(e.email, {
-            onError: () => setError('email', { type: 'custom', message: 'Invalid email address' }),
+            onError: () => setError('email', { type: 'custom', message: 'Adresa de email invalidă' }),
             onSuccess: () => navigate(`/${routes.CONFIRM_EMAIL}`),
         });
     }
 
     return (
-        <Container className="flex items-center justify-around px-6">
-            <img
-                className="absolute object-cover transform hidden md:block translate-x-1/2 -translate-y-1/2"
-                src={rocket}
-                width="400"
-                height="400"
-                alt="Logo"
-            />
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Title text="Conectare" />
-                <Form.Description text="Enter your email below to login to your account" />
-                <Form.Field
-                    id="email"
-                    type="email"
-                    label="Email"
-                    register={register}
-                    placeholder="m@example.com"
-                    errorMessage={errors.email?.message}
-                />
-                <Form.Action text="Conectare" isLoading={isPending} />
-            </Form>
-        </Container>
+        <Template onSubmit={handleSubmit(onSubmit)} register={register} errors={errors} isLoading={isPending} />
     );
 }
+
+Template.propTypes = {
+    /**
+     * Function to handle form submission
+    */
+    onSubmit: PropTypes.func,
+    /**
+     * Function to register form fields
+    */
+    register: PropTypes.func,
+    /**
+     * Object containing form errors
+    */
+    errors: PropTypes.object,
+    /**
+     * Boolean value to indicate if the form is loading
+    */
+    isLoading: PropTypes.bool,
+};
