@@ -5,8 +5,22 @@ import Loading from '../../components/Loading';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { useAuthStateQuery } from '../../services/auth/auth.queries';
 import Unautorized from './Unautorized';
+import PropTypes from 'prop-types';
 
-function Authorize() {
+/**
+ * Renders the Authorize template component.
+ */
+export const Template = ({ icon, titleText, descriptionText }) => {
+    return (
+        <GenericPage>
+            <GenericPage.Symbol icon={icon} />
+            <GenericPage.Title text={titleText} className="text-subtitle mt-0" />
+            <GenericPage.Description text={descriptionText} />
+        </GenericPage>
+    );
+};
+
+export function Authorize() {
     const { token } = useParams();
     const { login } = useAuthContext();
     const { data, isLoading, isError } = useAuthStateQuery(token);
@@ -19,11 +33,11 @@ function Authorize() {
 
     if (isLoading) {
         return (
-            <GenericPage>
-                <GenericPage.Symbol icon={<Loading />} />
-                <GenericPage.Title text="Loading" className="text-subtitle mt-0" />
-                <GenericPage.Description text="It will take just a moment" />
-            </GenericPage>
+            <Template
+                icon={<Loading />}
+                titleText="Incarcare"
+                descriptionText="Va dura doar un moment"
+            />
         );
     }
 
@@ -34,4 +48,17 @@ function Authorize() {
     return <Navigate to="/" replace />;
 }
 
-export default Authorize;
+Template.propTypes = {
+    /**
+     * The icon to be displayed.
+     */
+    icon: PropTypes.node.isRequired,
+    /**
+     * The title to be displayed.
+     */
+    titleText: PropTypes.string.isRequired,
+    /**
+     * The description to be displayed.
+     */
+    descriptionText: PropTypes.string.isRequired,
+};
