@@ -1,6 +1,9 @@
 import { AtSymbolIcon } from '@heroicons/react/24/outline';
 import { GenericPage } from '../../components/GenericPage';
 
+/**
+ * Renders the EmailConfirmation template component.
+ */
 export function EmailConfirmation() {
     //todo check user email
 
