@@ -31,6 +31,6 @@ export const NAV_LINKS = Object.freeze([
     },
     {
         name: 'Documentatie',
-        url: '/docs',
+        url: 'https://adminpeviitordocs.netlify.app/',
     },
 ]);
