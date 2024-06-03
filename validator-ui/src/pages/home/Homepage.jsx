@@ -14,20 +14,24 @@ import { Container } from '../../components/Container';
 
 import useWindowSize from '../../hooks/useWindowSize';
 import Loading from '../../components/Loading';
+import { NoMoreResults } from './components/NoMoreResults';
+import PropTypes from 'prop-types';
 
 // TODO: Generic error component ??,
 // TODO: Home Items, Home Item components
 
-export function Homepage() {
+/**
+ * Homepage template
+ */
+export const Template = ({
+    data,
+    status,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+}) => {
     const { ref, inView } = useInView();
-
-    const { width } = useWindowSize();
-
-    const { order, search } = useCompanyOptionsSelector();
-    const debounceSearch = useDebounce(search);
-
-    const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } =
-        useCompaniesInfiniteQuery(getPageSize(width), order, debounceSearch);
 
     useEffect(() => {
         if (inView) {
@@ -44,7 +48,7 @@ export function Homepage() {
                     <Loading className="w-28 m-auto" />
                 </Container>
             ) : status === 'error' ? (
-                <span>Error: {error.message}</span>
+                <span>Eroare: {error.message}</span>
             ) : (
                 <>
                     {!data?.pages[0].data?.length ? (
@@ -76,9 +80,9 @@ export function Homepage() {
                                         <Loading className="w-28" />
                                     </>
                                 ) : hasNextPage ? (
-                                    'Load Newer'
+                                    'Se încarcă mai multe ...'
                                 ) : (
-                                    ''
+                                    <NoMoreResults message="Nu mai sunt companii de afișat" />
                                 )}
                             </button>
                         </>
@@ -86,6 +90,26 @@ export function Homepage() {
                 </>
             )}
         </Home>
+    );
+};
+
+export function Homepage() {
+    const { width } = useWindowSize();
+
+    const { order, search } = useCompanyOptionsSelector();
+    const debounceSearch = useDebounce(search);
+
+    const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } =
+        useCompaniesInfiniteQuery(getPageSize(width), order, debounceSearch);
+    return (
+        <Template
+            data={data}
+            status={status}
+            error={error}
+            isFetchingNextPage={isFetchingNextPage}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+        />
     );
 }
 
@@ -100,3 +124,30 @@ function getPageSize(width) {
 
     return 20;
 }
+
+Template.propTypes = {
+    /**
+     * Data from the query
+     */
+    data: PropTypes.object,
+    /**
+     * Status of the query
+     */
+    status: PropTypes.oneOf(['success', 'pending', 'error']),
+    /**
+     * Error object
+     */
+    error: PropTypes.object,
+    /**
+     * Flag to check if the next page is being fetched
+     */
+    isFetchingNextPage: PropTypes.bool,
+    /**
+     * Function to fetch the next page
+     */
+    fetchNextPage: PropTypes.func,
+    /**
+     * Flag to check if there is a next page
+     */
+    hasNextPage: PropTypes.bool,
+};

@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../components/NotFoundRoute/NotFoundRoute';
 import { useAuthContext } from '../contexts/AuthContext';
 import { AppLayout } from '../layouts/AppLayout/AppLayout';
-import Authorize from '../pages/auth/Authorize';
+import { Authorize } from '../pages/auth/Authorize';
 import { EmailConfirmation } from '../pages/auth/EmailConfirmation';
 import { Login } from '../pages/auth/Login';
 import { Homepage } from '../pages/home/Homepage';
