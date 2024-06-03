@@ -14,7 +14,7 @@ Home.Header = function H({ data, company }) {
     const { search, order, setOrder, setSearch } = useJobsOptionsSelector();
 
     return (
-        <div className="flex gap-2">
+        <div id='search-container' className="flex gap-2">
             <h1>Joburi Disponibile {company}</h1>
             {!!data?.pages[0]?.count && (
                 <p className="font-semibold p-2">{data.pages[0].count} de rezultate</p>
