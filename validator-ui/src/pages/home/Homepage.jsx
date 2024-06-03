@@ -4,7 +4,7 @@ import { useInView } from 'react-intersection-observer';
 import { useDebounce } from '../../hooks/useDebounce';
 
 import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
-import { useCompanyOptionsSelector } from '../../store/Company.selectors';
+import { useCompanyOptionsSelector } from '../../store/company.selectors';
 
 import { Cards } from './components/cards/Cards';
 import { Home } from './components/filters/CompanyFilter';

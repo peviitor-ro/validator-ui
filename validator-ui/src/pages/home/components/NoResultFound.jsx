@@ -1,6 +1,6 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { GenericPage } from '../../../components/GenericPage';
-import { useCompanyOptionsSelector } from '../../../store/Company.selectors';
+import { useCompanyOptionsSelector } from '../../../store/company.selectors';
 
 export function NoResultFound() {
     const { isEmpty, reset } = useCompanyOptionsSelector();
