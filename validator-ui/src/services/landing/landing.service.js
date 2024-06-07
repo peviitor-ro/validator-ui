@@ -1,4 +1,3 @@
-import { json } from 'react-router-dom';
 import { PRIVATE_API } from '../Api';
 
 export async function getCompanies(page, size, order = '', search = '') {
@@ -18,6 +17,15 @@ export async function removeCompany(companyName) {
         company: companyName,
     };
     const response = await PRIVATE_API.post('companies/delete/', data);
+
+    return response.status;
+}
+
+export async function clearCompany(companyName) {
+    const data = {
+        company: companyName,
+    };
+    const response = await PRIVATE_API.post('companies/clear/', data);
 
     return response.status;
 }
