@@ -11,6 +11,8 @@ import { addScraper } from '../../../../services/landing/landing.service';
 const schema = yup.object().shape({
     url: yup.string().url().required(),
     language: yup.string().required(),
+    key: yup.string(),
+    value: yup.string(),
     isSystemVariable: yup.bool(),
 });
 
@@ -37,7 +39,7 @@ export function AddScraperForm() {
             setLoading(false);
         }
     };
-    
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 text-gray-500">
@@ -57,15 +59,43 @@ export function AddScraperForm() {
                     <select
                         id="language"
                         {...register('language')}
-                        className="
-                        border-input h-full w-full p-2
-                    "
+                        className="border-input h-full w-full p-2"
                     >
                         <option value="Python">Python</option>
                         <option value="Node">Node.js (JavaScript)</option>
                         <option value="Jmeter">Jmeter (Java)</option>
                     </select>
                 </div>
+                <div>
+                    <span className="text-gray-400 text-sm">
+                        Seteaza variabilela de mediu pentru email (optional)
+                    </span>
+                    <div className="flex justify-between gap-2 w-full">
+                        <div className="w-1/2">
+                            <label htmlFor="key">Cheie</label>
+                            <InputField
+                                id="key"
+                                name="key"
+                                placeholder="cheie"
+                                type="text"
+                                register={register}
+                                showError={false}
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <label htmlFor="value">Email</label>
+                            <InputField
+                                id="value"
+                                name="value"
+                                placeholder="Email"
+                                type="text"
+                                register={register}
+                                showError={false}
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 <div className="flex items-center justify-center gap-4 w-full mt-4">
                     <input
                         type="checkbox"
