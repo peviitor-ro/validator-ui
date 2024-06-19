@@ -6,7 +6,7 @@ import { useDebounce } from '../../hooks/useDebounce';
 
 import { useJobsInfiniteQuery } from '../../services/landing/landing.queries';
 import { useJobsOptionsSelector } from '../../store/jobs.selectors';
-import { clearCompany } from '../../services/landing/landing.service';
+import { clearCompany, syncJobs } from '../../services/landing/landing.service';
 
 import { Cards } from './components/cards/Cards';
 import { JobCard } from './components/cards/JobCard';
@@ -41,6 +41,7 @@ export function JobsPage() {
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [syncLoading, setSyncLoading] = useState(false);
 
     const handleclearCompany = async () => {
         setLoading(true);
@@ -51,6 +52,18 @@ export function JobsPage() {
             console.error(error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSyncJobs = async () => {
+        setSyncLoading(true);
+        try {
+            await syncJobs(company);
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setSyncLoading(false);
         }
     };
 
@@ -112,17 +125,24 @@ export function JobsPage() {
                 <div className="absolute top-0 right-0 w-full h-full opacity-80 bg-gray-900 z-0"></div>
 
                 <button
-                    className="flex gap-2 justify-center items-center rounded-full border p-1 cursor-pointer bg-red-500 text-white active:translate-y-1 z-10 hover:bg-red-400 w-[100px] text-[10px]"
+                    className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-red-500 text-white active:translate-y-1 z-10 hover:bg-red-400 w-[100px] text-[10px]"
                     title="Sterge toate joburile din productie"
                     onClick={handleclearCompany}
                 >
                     {loading ? <Loading className="w-5" /> : 'Sterge joburile din productie'}
                 </button>
                 <button
-                    className="flex gap-2 justify-center items-center rounded-full border p-1 cursor-pointer bg-green-500 text-white active:translate-y-1 z-10 hover:bg-green-400 w-[100px] text-[10px]"
+                    className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-green-500 text-white active:translate-y-1 z-10 hover:bg-green-400 w-[100px] text-[10px]"
                     title="Publica toate joburile"
                 >
                     Publica toate joburile
+                </button>
+                <button
+                    className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-yellow-500 text-white active:translate-y-1 z-10 hover:bg-yellow-400 w-[100px] text-[10px]"
+                    title="Sinconizeaza joburile"
+                    onClick={handleSyncJobs}
+                >
+                    {syncLoading ? <Loading className="w-5" /> : 'Sincronizeaza joburile'}
                 </button>
             </div>
         </>

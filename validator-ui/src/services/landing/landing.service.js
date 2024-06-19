@@ -30,6 +30,11 @@ export async function clearCompany(companyName) {
     return response.status;
 }
 
+export async function syncJobs(companyName) {
+    const response = await PRIVATE_API.post('jobs/sync/', { company: companyName });
+    return response.status;
+};
+
 export async function getDataset(companyName) {
     const response = await PRIVATE_API.get(`companies/dataset/${companyName}/`);
 
