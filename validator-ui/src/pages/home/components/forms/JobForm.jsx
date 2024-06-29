@@ -14,6 +14,7 @@ import * as yup from 'yup';
 import { editJob } from '../../../../services/landing/landing.service';
 
 import Loading from '../../../../components/Loading';
+import { City } from './City';
 
 const schema = yup.object().shape({
     job_title: yup.string().required(),
@@ -245,9 +246,18 @@ export function JobForm({ ...props }) {
                         flex flex-col gap-1 text-xs text-gray-500 mt-2
                     "
                     >
-                        <p>
+                        <p className="flex gap-1">
                             {city?.length > 1 ? 'Orase' : 'Oras'}:{' '}
-                            {city?.length ? city.join(', ') : 'Niciun oras specificat'}
+                            {city?.length
+                                ? city.map((city) => (
+                                      <City
+                                          cityProp={city}
+                                          propsData={propsdata}
+                                          setPropsData={setPropsData}
+                                          key={city}
+                                      />
+                                  ))
+                                : 'Niciun oras specificat'}
                         </p>
                         <p>
                             {county?.length > 1 ? 'Judete' : 'Judet'}:{' '}
