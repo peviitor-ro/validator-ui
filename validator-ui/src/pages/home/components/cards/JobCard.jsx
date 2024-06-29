@@ -73,7 +73,9 @@ export function JobCard({ data }) {
                     <div className="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
                         <span>
                             {city?.length > 1 ? 'Orase' : 'Oras'}:{' '}
-                            {city?.length ? separateByComma([city]) : 'Niciun oras specificat'}
+                            {city?.length
+                                ? separateByComma([city.map((c) => c.replace('all', 'tot judetul '))])
+                                : 'Niciun oras specificat'}
                         </span>
                         <span>
                             {county?.length > 1 ? 'Judete' : 'Judet'}:{' '}
@@ -116,7 +118,7 @@ export function JobCard({ data }) {
                     )}
 
                     <button onClick={() => setOpen(!open)}>Editati</button>
-                    <a href={job_link} target='_blank' className="flex items-center">
+                    <a href={job_link} target="_blank" className="flex items-center">
                         Catre Job
                     </a>
                 </div>

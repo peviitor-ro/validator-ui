@@ -212,13 +212,18 @@ export function JobForm({ ...props }) {
                                 .map((page) => page.data)
                                 .flat()
                                 .map((obj, index) => {
+                                    const name = obj.name.replace('all', 'tot judetul ');
                                     return (
                                         <li
                                             value={[obj.name, obj.county]}
                                             key={index}
                                             className="border-input h-full w-full p-2 cursor-pointer hover:bg-gray-200"
                                             onClick={handleCitySelect}
-                                        >{`${obj.name} ,jud: ${obj.county}`}</li>
+                                        >
+                                            {name.includes('tot judetul')
+                                                ? `${name}`
+                                                : `${name} ,jud: ${obj.county}`}
+                                        </li>
                                     );
                                 })}
 
@@ -251,7 +256,7 @@ export function JobForm({ ...props }) {
                             {city?.length
                                 ? city.map((city) => (
                                       <City
-                                          cityProp={city}
+                                          cityProp={city.replace('all', 'tot judetul ')}
                                           propsData={propsdata}
                                           setPropsData={setPropsData}
                                           key={city}

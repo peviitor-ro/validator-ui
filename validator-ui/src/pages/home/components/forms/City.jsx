@@ -7,7 +7,9 @@ export function City({ cityProp, propsData, setPropsData }) {
     const city = useJobStore((state) => state.city);
     const county = useJobStore((state) => state.county);
 
-    const { data: searchedCities } = useCitiesQuery(10, cityProp);
+    const cityName = cityProp.replace('tot judetul ', 'all');
+
+    const { data: searchedCities } = useCitiesQuery(50, cityName);
 
     const [cityOptions, setCityOptions] = useState([]);
 
@@ -19,19 +21,23 @@ export function City({ cityProp, propsData, setPropsData }) {
 
     const handleRemoveCity = (e) => {
         e.preventDefault();
-        const removeCity = city.filter((c) => c !== cityProp);
         const newCounty = cityOptions?.pages[0].data;
+
         const removedCounty = [];
 
         for (const c of newCounty) {
-            if (c.city === cityProp) {
+            if (c.name === cityName && county.includes(c.county)) {
                 removedCounty.push(c.county);
             }
         }
 
-        const removeCounty = county.filter((c) => removedCounty.includes(c));
+        setPropsData({ ...propsData, city: city.filter((c) => c !== cityName)
+            
+            , county: 
+            county.filter((c) => !removedCounty.includes(c)) 
 
-        setPropsData({ ...propsData, city: removeCity, county: removeCounty });
+        })
+
 
     };
 
