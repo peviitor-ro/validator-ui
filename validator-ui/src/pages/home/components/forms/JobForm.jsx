@@ -14,6 +14,7 @@ import * as yup from 'yup';
 import { editJob } from '../../../../services/landing/landing.service';
 
 import Loading from '../../../../components/Loading';
+import { City } from './City';
 
 const schema = yup.object().shape({
     job_title: yup.string().required(),
@@ -211,13 +212,18 @@ export function JobForm({ ...props }) {
                                 .map((page) => page.data)
                                 .flat()
                                 .map((obj, index) => {
+                                    const name = obj.name.replace('all', 'tot judetul ');
                                     return (
                                         <li
                                             value={[obj.name, obj.county]}
                                             key={index}
                                             className="border-input h-full w-full p-2 cursor-pointer hover:bg-gray-200"
                                             onClick={handleCitySelect}
-                                        >{`${obj.name} ,jud: ${obj.county}`}</li>
+                                        >
+                                            {name.includes('tot judetul')
+                                                ? `${name}`
+                                                : `${name} ,jud: ${obj.county}`}
+                                        </li>
                                     );
                                 })}
 
@@ -245,9 +251,18 @@ export function JobForm({ ...props }) {
                         flex flex-col gap-1 text-xs text-gray-500 mt-2
                     "
                     >
-                        <p>
+                        <p className="flex gap-1">
                             {city?.length > 1 ? 'Orase' : 'Oras'}:{' '}
-                            {city?.length ? city.join(', ') : 'Niciun oras specificat'}
+                            {city?.length
+                                ? city.map((city) => (
+                                      <City
+                                          cityProp={city.replace('all', 'tot judetul ')}
+                                          propsData={propsdata}
+                                          setPropsData={setPropsData}
+                                          key={city}
+                                      />
+                                  ))
+                                : 'Niciun oras specificat'}
                         </p>
                         <p>
                             {county?.length > 1 ? 'Judete' : 'Judet'}:{' '}
