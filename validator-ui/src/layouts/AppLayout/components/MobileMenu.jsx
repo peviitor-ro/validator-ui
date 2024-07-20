@@ -11,18 +11,18 @@ export function MobileMenu() {
     const { width } = useWindowSize();
     const { isOpen, handleToggle } = useHamburgerMenu(width);
 
+    const portalStyle = clsx(
+        'fixed transform -translate-x-full transition-all duration-500 ease-in-out w-full h-screen top-0 bg-card flex flex-col p-4 lg:hidden',
+        { 'translate-x-0  lg:-translate-x-full': isOpen },
+    );
+
     return (
         <>
-            <button type="button" className="lg:hidden" onClick={() => handleToggle(true)}>
+            <button type="button" className="lg:hidden" onClick={() => handleToggle(!isOpen)}>
                 <Bars3Icon className="w-6 h-6" />
             </button>
             {createPortal(
-                <div
-                    className={clsx(
-                        'fixed transform -translate-x-full transition-all duration-500 ease-in-out w-full h-screen top-0 bg-card flex flex-col p-4 lg:hidden',
-                        { 'translate-x-0  lg:-translate-x-full': isOpen },
-                    )}
-                >
+                <div className={portalStyle}>
                     <button className="ml-auto" onClick={() => handleToggle(false)} type="button">
                         <XMarkIcon className="h-7 w-7" />
                     </button>

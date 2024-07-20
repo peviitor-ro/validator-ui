@@ -23,7 +23,7 @@ export const NAV_LINKS = Object.freeze([
     },
     {
         name: 'Despre',
-        url: 'https://peviitor-ro.github.io/oportunitatisicariere/',
+        url: 'https://oportunitatisicariere.ro/',
     },
     {
         name: 'Contact',
