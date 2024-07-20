@@ -1,7 +1,12 @@
 import clsx from 'clsx';
 
 export function SelectField({ options, onChange, value, label, className, labelClassName }) {
-    const selectClassName = clsx('rounded-md px-3 py-2 bg-card', { [className]: className });
+
+    // set select class
+    const selectClassName = clsx(
+        'rounded-md p-2 bg-card border border-disabled focus:outline-none focus:ring-1 focus:ring-primary',
+        { [className]: className },
+    );
 
     return (
         <>

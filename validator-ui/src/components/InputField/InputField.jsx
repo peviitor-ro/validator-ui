@@ -25,8 +25,10 @@ export function InputField({ showError = true, type = 'text', ...props }) {
         leftIcon,
     } = props;
 
+    // set error id
     const errorId = `error-${id}`;
 
+    // set input class
     const inputClassName = clsx(
         {
             'text-error border-text-error': errorMessage,
@@ -36,6 +38,7 @@ export function InputField({ showError = true, type = 'text', ...props }) {
         'border-input h-full w-full p-2',
     );
 
+    // set label class
     const labelClassName = clsx('block font-semibold', { 'text-error': errorMessage });
 
     return (
@@ -61,7 +64,7 @@ export function InputField({ showError = true, type = 'text', ...props }) {
                 <input
                     id={id}
                     type={type}
-                    className={inputClassName}
+                    className={`${inputClassName} rounded-md focus:outline-none focus:ring-1 focus:ring-primary`}
                     aria-errormessage={errorId}
                     placeholder={placeholder}
                     value={value}

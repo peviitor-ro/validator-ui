@@ -1,4 +1,3 @@
-
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 import { useCompanyOptionsSelector } from '../../../../store/company.selectors';
@@ -7,26 +6,30 @@ import { SORT_OPTIONS } from './constants';
 import { InputField } from '../../../../components/InputField/InputField';
 import { SelectField } from '../../../../components/SelectField';
 
-
 export function Home({ children }) {
     return <main className="flex flex-col gap-4 p-4 lg:gap-10 lg:p-10">{children}</main>;
 }
 
-Home.Header = function H({ data }) {
+Home.Header = function H() {
     const { search, order, setOrder, setSearch } = useCompanyOptionsSelector();
 
-
     return (
-        <div id='search-container' className="flex gap-2">
-            <h1>Companii</h1>
-            {!!data?.pages[0]?.count && (
-                <p className="font-semibold p-2">{data.pages[0].count} de rezultate</p>
-            )}
+        <div
+            id="search-container"
+            className="flex flex-col gap-2 
+            border-b border-disabled pb-4 lg:flex-row lg:pb-6 lg:items-center 
+
+            "
+        >
+            <h1 id="companies-title" className="text-3xl font-semibold text-primary">
+                Companii
+            </h1>
+
             <InputField
                 id="search"
                 value={search}
                 onChange={setSearch}
-                fieldClassName="ml-auto"
+                fieldClassName="rounded-md bg-card border border-disabled focus:outline-none focus:ring-1 lg:ml-auto"
                 placeholder="Cauta aici..."
                 leftIcon={<MagnifyingGlassIcon className="h-5" />}
                 showError={false}

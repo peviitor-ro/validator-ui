@@ -41,7 +41,7 @@ export const Template = ({
 
     return (
         <Home>
-            <Home.Header data={data} />
+            <Home.Header />
 
             {status === 'pending' ? (
                 <Container className="flex">
