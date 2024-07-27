@@ -11,7 +11,7 @@ const schema = yup.object().shape({
     company: yup.string().required('Numele companiei este obligatoriu'),
 });
 
-export function CompanyForm() {
+export function CompanyForm({ company, scname, website, description, method = 'POST' }) {
     // Define the loading state
     const [loading, setLoading] = useState(false);
 
@@ -56,15 +56,12 @@ export function CompanyForm() {
         try {
             // Set the loading state
             setLoading(true);
-            const response = await post('companies/', {
-                company,
-                scname,
-                website,
-                description,
-            });
-
+            const response =
+                method === 'POST'
+                    ? await post('companies/add/', { company, scname, website, description })
+                    : await post('companies/update/', { company, scname, website, description });
             // Check the response status
-            if (response.status === 201) {
+            if (response.status === 201 || response.status === 200) {
                 window.location.reload();
             }
         } catch (error) {
@@ -96,6 +93,7 @@ export function CompanyForm() {
                     className={errorClass}
                     placeholder="Numele companiei"
                     aria-errormessage="error-company"
+                    defaultValue={company}
                 />
             </div>
             <div className="flex flex-col gap-2">
@@ -107,6 +105,7 @@ export function CompanyForm() {
                     id="scname"
                     className="border-input h-full w-full p-2"
                     placeholder="Denumirea societatii"
+                    defaultValue={scname}
                 />
             </div>
             <div className="flex flex-col gap-2">
@@ -118,6 +117,7 @@ export function CompanyForm() {
                     id="website"
                     className="border-input h-full w-full p-2"
                     placeholder="Website-ul companiei"
+                    defaultValue={website}
                 />
             </div>
             <div className="flex flex-col gap-2">
@@ -130,6 +130,7 @@ export function CompanyForm() {
                     cols={30}
                     rows={5}
                     placeholder="Descriere companiei"
+                    defaultValue={description}
                 />
             </div>
 

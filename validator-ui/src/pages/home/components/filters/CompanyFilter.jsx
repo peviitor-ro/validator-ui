@@ -39,11 +39,9 @@ Home.Header = function H() {
             />
             <SelectField options={SORT_OPTIONS} value={order} onChange={setOrder} />
 
-            <Button className="w-full lg:w-auto" text="Adaugă"
-                onClick={() => setOpen(true)}
-            />
+            <Button className="w-full lg:w-auto" text="Adaugă" onClick={() => setOpen(true)} />
 
-            <Modal open={open} setOpen={setOpen} title="Adaugă companie" className="w-11/12 md:w-2/3">
+            <Modal open={open} setOpen={setOpen} title="Adaugă companie">
                 <CompanyForm />
             </Modal>
         </div>
