@@ -1,19 +1,42 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { PhotoIcon, TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
-
-import clsx from 'clsx';
-
-import { PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
-
 import { removeCompany } from '../../../../services/landing/landing.service';
 import { Button } from '../../../../components/Button';
-
+import { useAuthContext } from '../../../../contexts/AuthContext';
+import { Modal } from '../../../../components/Modal';
+import { CompanyForm } from '../forms/CompanyForm';
+import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
 
 export function CompanyCard({ data }) {
-    const { company, description, logo, website, jobsCount } = data;
+    const { company, scname, description, logo, website, jobsCount } = data;
 
+    // get the user context
+    const { is_superuser, is_staff } = useAuthContext();
+
+    const [open, setOpen] = useState(false);
+
+    // check if the user has access
+    const [access, setAccess] = useState(false);
+
+    useEffect(() => {
+        if (is_superuser || is_staff) {
+            setAccess(true);
+        }
+    }, [is_superuser, is_staff]);
+
+    // handle the delete action
     function handleDelete() {
+        // show a confirmation dialog
+        const results = window.confirm('Esti sigur ca vrei sa stergi aceasta companie?');
+
+        // if the user cancels the action, return
+        if (!results) {
+            return;
+        }
+
+        // remove the company
         const responseStatus = removeCompany(company);
         responseStatus.then((status) => {
             if (status === 200) {
@@ -24,6 +47,7 @@ export function CompanyCard({ data }) {
 
     const logoRef = useRef(null);
 
+    // handle the image error
     logoRef.current?.addEventListener('error', () => {
         logoRef.current.src = photo;
         logoRef.current.onerror = null;
@@ -31,14 +55,22 @@ export function CompanyCard({ data }) {
 
     return (
         <article className="relative card flex flex-col h-[400px] overflow-hidden">
-            <div className="absolute right-8">
-                <Button
-                    className="relative rounded-none btn-delete transform translate-x-full hover:bg-red-600  hover:translate-x-8 hover:duration-300 hover:ease-in-out hover:transition active:translate-y-2 "
-                    icon={<TrashIcon className="absolute left-2 w-5" />}
-                    text="Sterge"
-                    onClick={handleDelete}
-                />
-            </div>
+            {access && (
+                <div className="absolute right-8 flex flex-col gap-2">
+                    <Button
+                        className="relative btn-delete transform translate-x-full hover:bg-red-600  hover:translate-x-8 hover:duration-300 hover:ease-in-out hover:transition active:translate-y-2 "
+                        icon={<TrashIcon className="absolute left-2 w-5" />}
+                        text="Sterge"
+                        onClick={handleDelete}
+                    />
+                    <Button
+                        className="relative btn-edit transform translate-x-full hover:bg-yellow-600 hover:translate-x-8 hover:duration-300 hover:ease-in-out hover:transition active:translate-y-2 "
+                        icon={<PencilSquareIcon className="absolute left-2 w-5" />}
+                        text="Editeaza"
+                        onClick={() => setOpen(true)}
+                    />
+                </div>
+            )}
             {logo ? (
                 <img ref={logoRef} src={logo} className="m-auto flex-0  h-[80px]" alt="Company" />
             ) : (
@@ -70,6 +102,15 @@ export function CompanyCard({ data }) {
             >
                 Vizualizeaza WebSite
             </a>
+            <Modal open={open} setOpen={setOpen}>
+                <CompanyForm
+                    company={company}
+                    scname={scname}
+                    description={description}
+                    website={website}
+                    method="PUT"
+                />
+            </Modal>
         </article>
     );
 }

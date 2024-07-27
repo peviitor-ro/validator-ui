@@ -1,15 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthContext, INITIAL_STATE } from './contexts/AuthContext';
 import { useLocalStorage } from './hooks/useLocalStorage';
 
 export function AuthProvider({ children }) {
-    const store = JSON.parse(localStorage.getItem('validator'));
+    const [authState, setAuthState] = useState({});
 
-    const [authState, setAuthState] = useState({
-        isAuthenticated: store?.accessToken && store?.refreshToken,
-        accessToken: store?.accessToken,
-        refreshToken: store?.refreshToken,
-    });
+    useEffect(() => {
+        const store = JSON.parse(localStorage.getItem('validator'));
+        if (store?.accessToken && store?.refreshToken) {
+            setAuthState({
+                isAuthenticated: true,
+                accessToken: store.accessToken,
+                refreshToken: store.refreshToken,
+                is_superuser: store.is_superuser,
+                is_staff: store.is_staff,
+            });
+        }
+    }, [authState.accessToken, authState.is_staff, authState.is_superuser, authState.refreshToken]);
 
     const { setItem, removeItem } = useLocalStorage(setAuthState, 'validator');
 
@@ -18,14 +25,26 @@ export function AuthProvider({ children }) {
             isAuthenticated: true,
             refreshToken: state.refresh,
             accessToken: state.access,
+            is_superuser: state.is_superuser,
+            is_staff: state.is_staff,
         });
 
-        setItem({ refreshToken: state.refresh, accessToken: state.access });
+        setItem({
+            refreshToken: state.refresh,
+            accessToken: state.access,
+            is_superuser: state.is_superuser,
+            is_staff: state.is_staff,
+        });
     }
 
     function updateAccessToken(accessToken) {
         setAuthState({ ...authState, accessToken });
-        setItem({ refreshToken: authState.refreshToken, accessToken });
+        setItem({
+            refreshToken: authState.refreshToken,
+            accessToken,
+            is_superuser: authState.is_superuser,
+            is_staff: authState.is_staff,
+        });
     }
 
     function logout() {

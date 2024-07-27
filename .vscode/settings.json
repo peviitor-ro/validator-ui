@@ -1,0 +1,13 @@
+{
+  "editor.fontSize": 14,
+  "editor.tabSize": 4,
+  "files.autoSave": "onFocusChange",
+  "[javascript]": {
+    "editor.tabSize": 2
+  },
+  "[javascriptreact]": {
+    "editor.tabSize": 2
+  },
+
+  "editor.detectIndentation": false
+}

@@ -5,6 +5,8 @@ export const INITIAL_STATE = {
     isAuthenticated: false,
     accessToken: null,
     refreshToken: null,
+    is_superuser: false,
+    is_staff: false,
 };
 
 export const AuthContext = createContext({

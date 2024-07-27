@@ -277,7 +277,7 @@ export function JobForm({ ...props }) {
                         id="remote"
                         onChange={changeHandler}
                         defaultValue={remote.split(',')}
-                        multiple
+                        multiple 
                     >
                         <option value="">Fara selectie</option>
                         {['remote', 'on-site', 'hybrid'].map((choice) => (

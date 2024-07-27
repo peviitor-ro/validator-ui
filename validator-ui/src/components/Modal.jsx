@@ -9,7 +9,7 @@ export function Modal({ children, ...props }) {
         },
     );
 
-    const modalContentClasses = clsx('relative bg-white rounded-md p-4', {
+    const modalContentClasses = clsx('relative bg-white rounded-md p-4 w-11/12 md:w-2/3', {
         [props.className]: props.className,
     });
 

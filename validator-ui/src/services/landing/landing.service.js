@@ -33,7 +33,7 @@ export async function clearCompany(companyName) {
 export async function syncJobs(companyName) {
     const response = await PRIVATE_API.post('jobs/sync/', { company: companyName });
     return response.status;
-};
+}
 
 export async function getDataset(companyName) {
     const response = await PRIVATE_API.get(`companies/dataset/${companyName}/`);
@@ -121,4 +121,14 @@ export async function getUsersAndCompanies(user = '') {
 export async function editUserCompanies(data) {
     const response = await PRIVATE_API.post('user/companies', data);
     return response.status;
+}
+
+export async function post(url, data) {
+    let response;
+    if (typeof data === 'object') {
+        response = await PRIVATE_API.post(url, data);
+    } else {
+        response = await PRIVATE_API.post(url, [data]);
+    }
+    return response;
 }

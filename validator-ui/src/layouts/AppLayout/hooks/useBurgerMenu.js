@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 export const useHamburgerMenu = (width) => {
     const [isOpen, setIsOpen] = useState(false);
-    // const { width } = useWindowSize();
 
     function handleToggle(state) {
         if (state) {

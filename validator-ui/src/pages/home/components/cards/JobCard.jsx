@@ -64,7 +64,7 @@ export function JobCard({ data }) {
 
     return (
         <div className={containerClasses}>
-            <Modal open={open} setOpen={setOpen} className="w-2/3">
+            <Modal open={open} setOpen={setOpen}>
                 {open && <JobForm props={job} set={setJob} setOpen={setOpen} />}
             </Modal>
             <div className="flex flex-col gap-3 ml-2">
@@ -74,7 +74,9 @@ export function JobCard({ data }) {
                         <span>
                             {city?.length > 1 ? 'Orase' : 'Oras'}:{' '}
                             {city?.length
-                                ? separateByComma([city.map((c) => c.replace('all', 'tot judetul '))])
+                                ? separateByComma([
+                                      city.map((c) => c.replace('all', 'tot judetul ')),
+                                  ])
                                 : 'Niciun oras specificat'}
                         </span>
                         <span>

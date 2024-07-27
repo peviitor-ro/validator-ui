@@ -75,10 +75,12 @@
         transition: all 150ms ease 100ms;
     }
 
-        .btn-delete {
-            @apply bg-red-500 text-card rounded-none;
-        }
-
+    .btn-delete {
+        @apply bg-red-500 text-card rounded-none;
+    }
+    .btn-edit {
+        @apply bg-yellow-500 text-card rounded-none;
+    }
 }
 
 @layer components {
