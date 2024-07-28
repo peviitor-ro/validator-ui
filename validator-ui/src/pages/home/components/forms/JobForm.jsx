@@ -1,27 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useDebounce } from '../../../../hooks/useDebounce';
-import clsx from 'clsx';
 import { useCitiesSelector } from '../../../../store/cities.selector';
 import { useCitiesQuery } from '../../../../services/landing/landing.queries';
-
 import { useJobStore } from '../../../../store/job.state';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { City } from './City';
+import { editJob } from '../../../../services/landing/landing.service';
+import Loading from '../../../../components/Loading';
+import clsx from 'clsx';
 import * as yup from 'yup';
 
-import { editJob } from '../../../../services/landing/landing.service';
-
-import Loading from '../../../../components/Loading';
-import { City } from './City';
-
+// form validation schema
 const schema = yup.object().shape({
-    job_title: yup.string().required(),
-    job_link: yup.string().url().required(),
-    city: yup.array().of(yup.string().required()),
-    county: yup.array().of(yup.string().required()),
-    remote: yup.array().of(yup.string().required()),
+    job_title: yup.string().required('Titlul jobului este obligatoriu'),
+    job_link: yup.string().url().required('Link-ul jobului este obligatoriu'),
+    city: yup.array().of(yup.string()),
+    county: yup.array().of(yup.string()),
+    remote: yup.array().of(yup.string()),
     edited: yup.boolean().required(),
 });
 
@@ -37,17 +35,21 @@ export function JobForm({ ...props }) {
     }, [propsdata]);
 
     const [loading, setLoading] = useState(false);
+
+    // form validation
     const {
         handleSubmit,
         formState: { errors },
         setError,
     } = useForm({ resolver: yupResolver(schema) });
 
+    // form submit handler
     const onSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
             const response = await editJob(propsdata);
+            // if the response is 200, update the job in the store and close the modal
             if (response === 200) {
                 let changedJob = propsdata;
                 changedJob.edited = true;
@@ -55,6 +57,7 @@ export function JobForm({ ...props }) {
                 props.set(propsdata);
                 props.setOpen(false);
             } else {
+                // if the response is not 200, set an error message
                 setError('job_title', { type: 'manual', message: 'A aparut o eroare' });
             }
         } catch (error) {
@@ -69,12 +72,17 @@ export function JobForm({ ...props }) {
         handleSubmit(onSubmit(e));
     };
 
+    // city search
     const { search, setSearch } = useCitiesSelector();
     const debounceSearch = useDebounce(search);
+
+    // fetch cities
     const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } = useCitiesQuery(
         10,
         search,
     );
+
+    // infinite scroll
     const { ref, inView } = useInView();
 
     useEffect(() => {
@@ -87,6 +95,7 @@ export function JobForm({ ...props }) {
         setSearch(city?.[0]);
     }, [setSearch, city]);
 
+    // form change handler
     const changeHandler = (e) => {
         if (e.target.id === 'remote') {
             const options = e.target.options;
@@ -102,6 +111,7 @@ export function JobForm({ ...props }) {
         setPropsData({ ...propsdata, [e.target.id]: e.target.value });
     };
 
+    // city select handler
     const handleCitySelect = (e) => {
         const [selectedCity, selectedCounty] = e.target.getAttribute('value').split(',');
         const cities = new Set([selectedCity, ...city]);
@@ -110,12 +120,14 @@ export function JobForm({ ...props }) {
         setOpen(false);
     };
 
+    // city search ref
     const selectRef = useRef(null);
 
     const handlerCityOnChange = (e) => {
         setSearch(e.target.value);
     };
 
+    // close dropdown on click outside
     document.addEventListener('click', (e) => {
         if (e.target.id !== 'search') {
             setOpen(false);
@@ -138,9 +150,7 @@ export function JobForm({ ...props }) {
                 <div className="flex flex-col">
                     <label>Titlu</label>
                     <input
-                        className="
-                        border-input h-full w-full p-2
-                    "
+                        className="border-input h-full w-full p-2"
                         id="job_title"
                         placeholder="Titlu"
                         // errorMessage={errors.title?.message}
@@ -161,22 +171,12 @@ export function JobForm({ ...props }) {
                         disabled
                     />
                 </div>
-                <div
-                    className="
-                    border-input h-full w-full p-2
-                "
-                >
+                <div className="border-input h-full w-full p-2">
                     <label>Localitatea</label>
-                    <div
-                        className="
-                        relative
-                    "
-                    >
+                    <div className="relative">
                         <div className="flex items-center ">
                             <input
-                                className="
-                            border-input h-full w-full p-2
-                        "
+                                className="border-input h-full w-full p-2"
                                 ref={selectRef}
                                 type="text"
                                 name="Search"
@@ -200,14 +200,7 @@ export function JobForm({ ...props }) {
                             </button>
                         </div>
 
-                        <ul
-                            className={dropdownClasses}
-                            onScroll={(e) => {
-                                console.log(e);
-                            }}
-                            name="city_search"
-                            id="city_search"
-                        >
+                        <ul className={dropdownClasses} name="city_search" id="city_search">
                             {data?.pages
                                 .map((page) => page.data)
                                 .flat()
@@ -235,23 +228,21 @@ export function JobForm({ ...props }) {
                             >
                                 {isFetchingNextPage ? (
                                     <>
-                                        <span className="text-xl">Loading more ...</span>
+                                        <span className="text-sm">
+                                            Se incarca mai multe orase ...
+                                        </span>
                                         <Loading className="w-28" />
                                     </>
                                 ) : hasNextPage ? (
-                                    'Load Newer'
+                                    'Se incarca mai multe orase'
                                 ) : (
                                     ''
                                 )}
                             </button>
                         </ul>
                     </div>
-                    <div
-                        className="
-                        flex flex-col gap-1 text-xs text-gray-500 mt-2
-                    "
-                    >
-                        <p className="flex gap-1">
+                    <div className="flex flex-col gap-1 text-xs text-gray-500 mt-2">
+                        <div className="flex gap-1 flex-wrap">
                             {city?.length > 1 ? 'Orase' : 'Oras'}:{' '}
                             {city?.length
                                 ? city.map((city) => (
@@ -263,7 +254,7 @@ export function JobForm({ ...props }) {
                                       />
                                   ))
                                 : 'Niciun oras specificat'}
-                        </p>
+                        </div>
                         <p>
                             {county?.length > 1 ? 'Judete' : 'Judet'}:{' '}
                             {county?.length ? county.join(', ') : 'Niciun judet specificat'}
@@ -277,7 +268,7 @@ export function JobForm({ ...props }) {
                         id="remote"
                         onChange={changeHandler}
                         defaultValue={remote.split(',')}
-                        multiple 
+                        multiple
                     >
                         <option value="">Fara selectie</option>
                         {['remote', 'on-site', 'hybrid'].map((choice) => (

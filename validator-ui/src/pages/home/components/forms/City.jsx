@@ -31,20 +31,16 @@ export function City({ cityProp, propsData, setPropsData }) {
             }
         }
 
-        setPropsData({ ...propsData, city: city.filter((c) => c !== cityName)
-            
-            , county: 
-            county.filter((c) => !removedCounty.includes(c)) 
+        setPropsData({
+            ...propsData,
+            city: city.filter((c) => c !== cityName),
 
-        })
-
-
+            county: county.filter((c) => !removedCounty.includes(c)),
+        });
     };
 
     return (
-        <div
-            className="border-input border-gray-300 px-1 flex items-center justify-between"
-        >
+        <div className="border-input border-gray-300 px-1 flex items-center justify-between">
             {cityProp}{' '}
             <button onClick={handleRemoveCity}>
                 <XMarkIcon className="h-4 w-4 text-gray-500 cursor-pointer" />
