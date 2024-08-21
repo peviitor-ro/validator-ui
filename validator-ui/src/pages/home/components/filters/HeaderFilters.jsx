@@ -1,22 +1,16 @@
 import { useState } from 'react';
-
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-
-import { useCompanyOptionsSelector } from '../../../../store/company.selectors';
-import { SORT_OPTIONS } from './constants';
-
 import { InputField } from '../../../../components/InputField/InputField';
 import { SelectField } from '../../../../components/SelectField';
 import { Button } from '../../../../components/Button';
 import { Modal } from '../../../../components/Modal';
-import { CompanyForm } from '../forms/CompanyForm';
 
 export function Home({ children }) {
     return <main className="flex flex-col gap-4 p-4 lg:gap-10 lg:p-10">{children}</main>;
 }
 
-Home.Header = function H() {
-    const { search, order, setOrder, setSearch } = useCompanyOptionsSelector();
+Home.Header = function H({ title, formComponent, selector, options }) {
+    const { search, order, setOrder, setSearch } = selector();
     const [open, setOpen] = useState(false);
 
     return (
@@ -24,9 +18,7 @@ Home.Header = function H() {
             id="search-container"
             className="flex flex-col gap-2 border-b border-disabled pb-4 lg:flex-row lg:pb-6 lg:items-center"
         >
-            <h1 id="companies-title" className="text-3xl font-semibold text-primary">
-                Companii
-            </h1>
+            <h1 className="text-3xl font-semibold text-primary">{title}</h1>
 
             <InputField
                 id="search"
@@ -37,12 +29,12 @@ Home.Header = function H() {
                 leftIcon={<MagnifyingGlassIcon className="h-5" />}
                 showError={false}
             />
-            <SelectField options={SORT_OPTIONS} value={order} onChange={setOrder} />
+            <SelectField options={options} value={order} onChange={setOrder} />
 
             <Button className="w-full lg:w-auto" text="Adaugă" onClick={() => setOpen(true)} />
 
             <Modal open={open} setOpen={setOpen} title="Adaugă companie">
-                <CompanyForm />
+                {formComponent}
             </Modal>
         </div>
     );

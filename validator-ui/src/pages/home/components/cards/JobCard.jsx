@@ -100,20 +100,22 @@ export function JobCard({ data }) {
                     </span>
                 </div>
                 <div
-                    className="flex gap-4 text-sm text-gray-700 dark:text-gray-400
+                    className="flex flex-col lg:flex-row
+                    gap-4 text-xs text-gray-700 dark:text-gray-400 lg:text-sm
                     "
                 >
                     {!published ? (
                         <button
                             onClick={handlePublish}
-                            className="rounded-full border px-3 py-2 cursor-pointer hover:bg-green-500 hover:text-white active:translate-y-1 w-[100px]"
+                            className="rounded-full border px-3 py-2 cursor-pointer hover:bg-green-500 hover:text-white active:translate-y-1 lg:w-[100px]
+                            "
                         >
                             {loading ? <Loading className="w-5" /> : 'Publicati'}
                         </button>
                     ) : (
                         <button
                             onClick={handleDelete}
-                            className="rounded-full border px-3 py-2 cursor-pointer bg-red-500 text-white hover:bg-red-600 active:translate-y-1 w-[100px]"
+                            className="rounded-full border px-3 py-2 cursor-pointer bg-red-500 text-white hover:bg-red-600 active:translate-y-1 lg:w-[100px]"
                         >
                             {loading ? <Loading className="w-5" /> : 'Stergeti'}
                         </button>

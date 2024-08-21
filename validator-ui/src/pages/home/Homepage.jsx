@@ -1,20 +1,18 @@
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-
 import { useDebounce } from '../../hooks/useDebounce';
-
 import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
 import { useCompanyOptionsSelector } from '../../store/company.selectors';
-
 import { Cards } from './components/cards/Cards';
-import { Home } from './components/filters/CompanyFilter';
+import { Home } from './components/filters/HeaderFilters';
 import { NoResultFound } from './components/NoResultFound';
 import { CompanyCard } from './components/cards/CompanyCard';
 import { Container } from '../../components/Container';
-
+import { CompanyForm } from './components/forms/CompanyForm';
+import { NoMoreResults } from './components/NoMoreResults';
+import { SORT_OPTIONS } from './components/filters/constants';
 import useWindowSize from '../../hooks/useWindowSize';
 import Loading from '../../components/Loading';
-import { NoMoreResults } from './components/NoMoreResults';
 import PropTypes from 'prop-types';
 
 // TODO: Generic error component ??,
@@ -41,7 +39,12 @@ export const Template = ({
 
     return (
         <Home>
-            <Home.Header />
+            <Home.Header
+                title={'Companii'}
+                formComponent={<CompanyForm />}
+                selector={useCompanyOptionsSelector}
+                options={SORT_OPTIONS}
+            />
 
             {status === 'pending' ? (
                 <Container className="flex">
@@ -76,7 +79,9 @@ export const Template = ({
                             >
                                 {isFetchingNextPage ? (
                                     <>
-                                        <span className="text-xl">Loading more ...</span>
+                                        <span className="text-xl">
+                                            Se încarcă mai multe companii ...
+                                        </span>
                                         <Loading className="w-28" />
                                     </>
                                 ) : hasNextPage ? (

@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useParams, useNavigate } from 'react-router-dom';
-
 import { useDebounce } from '../../hooks/useDebounce';
-
 import { useJobsInfiniteQuery } from '../../services/landing/landing.queries';
 import { useJobsOptionsSelector } from '../../store/jobs.selectors';
 import { clearCompany, syncJobs } from '../../services/landing/landing.service';
-
+import { JOBS_OPTIONS } from './components/filters/constants';
 import { Cards } from './components/cards/Cards';
 import { JobCard } from './components/cards/JobCard';
-import { Home } from './components/filters/JobsFilter';
+import { Home } from './components/filters/HeaderFilters';
 import { Analitycs } from './components/Analitycs';
-
+import { Container } from '../../components/Container';
 import Loading from '../../components/Loading';
 
 import { ChevronDoubleLeftIcon } from '@heroicons/react/24/outline';
@@ -67,7 +65,7 @@ export function JobsPage() {
         }
     };
 
-    if (status === 'loading') {
+    if (status === 'pending') {
         return (
             <Container className="flex">
                 <Loading className="w-28 m-auto" />
@@ -75,76 +73,84 @@ export function JobsPage() {
         );
     } else if (status === 'error') {
         navigate('/');
-    }
-    return (
-        <>
-            <Home>
-                <Home.Header data={data} company={company} />
-                <Analitycs company={company} />
-                <div>
-                    <div className="flex flex-col gap-4 ">
-                        {data?.pages.map((page, index) => {
-                            const uniqueKey = `job_${index}`;
-                            return <Cards key={uniqueKey} data={page.data} component={JobCard} />;
-                        })}
+    } else {
+        return (
+            <>
+                <Home>
+                    <Home.Header
+                        title={`Joburi Disponibile ${company}`}
+                        formComponent={<p>In curs de dezvoltare </p>}
+                        selector={useJobsOptionsSelector}
+                        options={JOBS_OPTIONS}
+                    />
+                    <Analitycs company={company} />
+                    <div>
+                        <div className="flex flex-col gap-4 ">
+                            {data?.pages.map((page, index) => {
+                                const uniqueKey = `job_${index}`;
+                                return (
+                                    <Cards key={uniqueKey} data={page.data} component={JobCard} />
+                                );
+                            })}
+                        </div>
+                        <button
+                            ref={ref}
+                            onClick={() => fetchNextPage()}
+                            disabled={!hasNextPage || isFetchingNextPage}
+                            className="m-auto"
+                        >
+                            {isFetchingNextPage ? (
+                                <>
+                                    <span className="text-xl">Se incarca mai multe joburi ...</span>
+                                    <Loading className="w-28" />
+                                </>
+                            ) : hasNextPage ? (
+                                'Se incarca mai multe joburi'
+                            ) : (
+                                'Nu mai sunt joburi de incarcat'
+                            )}
+                        </button>
                     </div>
+                </Home>
+                {/* Sidebar */}
+                {/* Move this to a separate component */}
+                <div
+                    className={`flex flex-col pt-20 justify-start gap-4 fixed top-0 right-0 transform p-4 h-screen z-1000 border-l-2  transition-all duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
+                >
                     <button
-                        ref={ref}
-                        onClick={() => fetchNextPage()}
-                        disabled={!hasNextPage || isFetchingNextPage}
-                        className="m-auto"
+                        className="transform -translate-x-full w-10 absolute"
+                        onClick={() => setOpen(!open)}
                     >
-                        {isFetchingNextPage ? (
-                            <>
-                                <span className="text-xl">Loading more ...</span>
-                                <Loading className="w-28" />
-                            </>
-                        ) : hasNextPage ? (
-                            'Load More'
-                        ) : (
-                            'Nothing more to load'
-                        )}
+                        <div className="opacity-80 bg-gray-900 w-6 h-6 rounded-l-md text-white hover:bg-red-500">
+                            <ChevronDoubleLeftIcon
+                                className={`w-6 h-6  text-white px-1 cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
+                            />
+                        </div>
+                    </button>
+                    <div className="absolute top-0 right-0 w-full h-full opacity-80 bg-gray-900 z-0"></div>
+
+                    <button
+                        className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-red-500 text-white active:translate-y-1 z-10 hover:bg-red-400 w-[100px] text-[10px]"
+                        title="Sterge toate joburile din productie"
+                        onClick={handleclearCompany}
+                    >
+                        {loading ? <Loading className="w-5" /> : 'Sterge joburile din productie'}
+                    </button>
+                    <button
+                        className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-green-500 text-white active:translate-y-1 z-10 hover:bg-green-400 w-[100px] text-[10px]"
+                        title="Publica toate joburile"
+                    >
+                        Publica toate joburile
+                    </button>
+                    <button
+                        className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-yellow-500 text-white active:translate-y-1 z-10 hover:bg-yellow-400 w-[100px] text-[10px]"
+                        title="Sinconizeaza joburile"
+                        onClick={handleSyncJobs}
+                    >
+                        {syncLoading ? <Loading className="w-5" /> : 'Sincronizeaza joburile'}
                     </button>
                 </div>
-            </Home>
-            {/* Sidebar */}
-            {/* Move this to a separate component */}
-            <div
-                className={`flex flex-col pt-20 justify-start gap-4 fixed top-0 right-0 transform p-4 h-screen z-1000 border-l-2  transition-all duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
-            >
-                <button
-                    className="transform -translate-x-full w-10 absolute"
-                    onClick={() => setOpen(!open)}
-                >
-                    <div className="opacity-80 bg-gray-900 w-6 h-6 rounded-l-md text-white hover:bg-red-500">
-                        <ChevronDoubleLeftIcon
-                            className={`w-6 h-6  text-white px-1 cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-                        />
-                    </div>
-                </button>
-                <div className="absolute top-0 right-0 w-full h-full opacity-80 bg-gray-900 z-0"></div>
-
-                <button
-                    className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-red-500 text-white active:translate-y-1 z-10 hover:bg-red-400 w-[100px] text-[10px]"
-                    title="Sterge toate joburile din productie"
-                    onClick={handleclearCompany}
-                >
-                    {loading ? <Loading className="w-5" /> : 'Sterge joburile din productie'}
-                </button>
-                <button
-                    className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-green-500 text-white active:translate-y-1 z-10 hover:bg-green-400 w-[100px] text-[10px]"
-                    title="Publica toate joburile"
-                >
-                    Publica toate joburile
-                </button>
-                <button
-                    className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-yellow-500 text-white active:translate-y-1 z-10 hover:bg-yellow-400 w-[100px] text-[10px]"
-                    title="Sinconizeaza joburile"
-                    onClick={handleSyncJobs}
-                >
-                    {syncLoading ? <Loading className="w-5" /> : 'Sincronizeaza joburile'}
-                </button>
-            </div>
-        </>
-    );
+            </>
+        );
+    }
 }

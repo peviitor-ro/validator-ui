@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import { Chart } from 'chart.js';
 import {
     PointElement,
     CategoryScale,
@@ -9,6 +7,8 @@ import {
     Title,
     Tooltip,
 } from 'chart.js';
+import { useEffect, useState } from 'react';
+import { Chart } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { PresentationChartLineIcon } from '@heroicons/react/24/outline';
 
@@ -82,7 +82,7 @@ export function Analitycs(company) {
     };
 
     return (
-        <div className="flex justify-center w-2/3 h-[400px] m-auto bg-white p-4 rounded-md shadow-md">
+        <div className="flex justify-center w-full lg:w-3/4 h-[400px] m-auto bg-white p-4 rounded-md shadow-md">
             {loading ? (
                 <Loading className="w-28 m-auto" />
             ) : dataset.length === 0 ? (
