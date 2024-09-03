@@ -3,28 +3,27 @@ import { PhotoIcon, TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outl
 import { NavLink } from 'react-router-dom';
 import { removeCompany } from '../../../../services/landing/landing.service';
 import { Button } from '../../../../components/Button';
-import { useAuthContext } from '../../../../contexts/AuthContext';
 import { Modal } from '../../../../components/Modal';
 import { CompanyForm } from '../forms/CompanyForm';
 import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
+import { useUserCompaniesSelector } from '../../../../store/userCompanies.selector';
 
 export function CompanyCard({ data }) {
     const { company, scname, description, logo, website, jobsCount } = data;
 
     // get the user context
-    const { is_superuser, is_staff } = useAuthContext();
-
+    const store = JSON.parse(localStorage.getItem('validator'));
     const [open, setOpen] = useState(false);
 
     // check if the user has access
     const [access, setAccess] = useState(false);
 
     useEffect(() => {
-        if (is_superuser || is_staff) {
+        if (store?.is_superuser || store?.is_staff) {
             setAccess(true);
         }
-    }, [is_superuser, is_staff]);
+    }, [store]);
 
     // handle the delete action
     function handleDelete() {
