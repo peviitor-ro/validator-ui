@@ -1,8 +1,19 @@
 import { PRIVATE_API } from '../Api';
 
+function encodedParams(params) {
+    return Object.keys(params)
+        .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+        .join('&');
+}
+
 export async function getCompanies(page, size, order = '', search = '') {
     const response = await PRIVATE_API.get(
-        `companies/?page=${page}&page_size=${size}&order=${order}&search=${search}`,
+        `companies/?${encodedParams({
+            page,
+            page_size: size,
+            order,
+            search,
+        })}`,
     );
 
     return {

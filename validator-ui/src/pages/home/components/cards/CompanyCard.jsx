@@ -7,23 +7,12 @@ import { Modal } from '../../../../components/Modal';
 import { CompanyForm } from '../forms/CompanyForm';
 import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
-import { useUserCompaniesSelector } from '../../../../store/userCompanies.selector';
 
 export function CompanyCard({ data }) {
-    const { company, scname, description, logo, website, jobsCount } = data;
+    const { company, scname, description, logo, website, jobsCount, published_jobs, have_access } =
+        data;
 
-    // get the user context
-    const store = JSON.parse(localStorage.getItem('validator'));
     const [open, setOpen] = useState(false);
-
-    // check if the user has access
-    const [access, setAccess] = useState(false);
-
-    useEffect(() => {
-        if (store?.is_superuser || store?.is_staff) {
-            setAccess(true);
-        }
-    }, [store]);
 
     // handle the delete action
     function handleDelete() {
@@ -54,7 +43,7 @@ export function CompanyCard({ data }) {
 
     return (
         <article className="relative card flex flex-col h-[400px] overflow-hidden">
-            {access && (
+            {have_access && (
                 <div className="absolute right-8 flex flex-col gap-2">
                     <Button
                         className="relative btn-delete transform translate-x-full hover:bg-red-600  hover:translate-x-8 hover:duration-300 hover:ease-in-out hover:transition active:translate-y-2 "
@@ -84,10 +73,14 @@ export function CompanyCard({ data }) {
                 <p className="text-center mb-12">No description</p>
             )}
 
+            <div>
+                <p className="text-center mb-2">Joburi publicate: {published_jobs ?? 0}</p>
+            </div>
+
             <NavLink
                 to={`/jobs/${company}`}
                 className={clsx('btn btn-primary active-link text-center mb-2', {
-                    'btn-disabled': !jobsCount,
+                    'btn-disabled': !jobsCount || !have_access,
                 })}
             >
                 Vizualizeaza Joburi ({jobsCount ?? 0})
