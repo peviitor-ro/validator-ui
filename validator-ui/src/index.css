@@ -46,9 +46,26 @@
     .btn-primary {
         @apply bg-primary text-card;
     }
+    .btn-red {
+        @apply bg-red-500 text-card;
+    }
+
+    .btn-green {
+        @apply bg-green-500 text-card;
+    }
+
+    .btn-red-outlined {
+        @apply border-red-500 text-red-500 border;
+        background-color: inherit;
+    }
 
     .btn-primary-outlined {
         @apply border-primary text-primary border;
+        background-color: inherit;
+    }
+
+    .btn-outlined {
+        @apply border text-card border;
         background-color: inherit;
     }
 
@@ -81,6 +98,14 @@
     .btn-edit {
         @apply bg-yellow-500 text-card rounded-none;
     }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none; /* Ascunde scrollbar-ul în Chrome, Safari și alte browsere WebKit */
+}
+.no-scrollbar {
+    -ms-overflow-style: none; /* Ascunde scrollbar-ul în Internet Explorer și Edge */
+    scrollbar-width: none; /* Ascunde scrollbar-ul în Firefox */
 }
 
 @layer components {
