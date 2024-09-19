@@ -19,10 +19,12 @@ export function useJobsInfiniteQuery(company, size, order, search) {
     });
 }
 
-export function useScrapersQuery() {
-    return useQuery({
-        queryKey: ['scrapers'],
-        queryFn: getScrapers,
+export function useScrapersQuery(order, search) {
+    return useInfiniteQuery({
+        queryKey: ['scrapers', order, search],
+        queryFn: ({ pageParam }) => getScrapers(pageParam, order, search),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => lastPage.nextId ?? undefined,
     });
 }
 

@@ -79,10 +79,20 @@ export async function publishJob(data) {
     return response.status;
 }
 
-export async function getScrapers() {
-    const response = await PRIVATE_API.get('scraper/add/');
+export async function getScrapers(page, order, search = '') {
+    const response = await PRIVATE_API.get(
+        `scraper/add/?${encodedParams({
+            page,
+            order,
+            search,
+        })}`,
+    );
 
-    return response.data;
+    return {
+        data: response.data.results ?? [],
+        nextId: response.data.next ? page + 1 : null,
+        count: response.data?.count ?? 0,
+    };
 }
 
 export async function getScraperFiles(scraperName) {

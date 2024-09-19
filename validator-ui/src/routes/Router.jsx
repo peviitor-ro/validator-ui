@@ -11,6 +11,8 @@ import { CapthchaProvider } from './CapthchaProvider';
 import { routes } from './routes';
 import { JobsPage } from '../pages/home/JobsPage';
 import { Account } from '../pages/account/Account';
+import { Scraperpage } from '../pages/home/Scraperpage';
+import { Filespage } from '../pages/home/Filespage';
 
 export function Router() {
     const { isAuthenticated } = useAuthContext();
@@ -51,6 +53,8 @@ export function Router() {
                 >
                     <Route index element={<Homepage />} />
                     <Route path="account" element={<Account />} />
+                    <Route path="scraper" element={<Scraperpage />} />
+                    <Route path="scraper/:scraperName" element={<Filespage />} />
                     <Route path="jobs/:company" element={<JobsPage />} />
                 </Route>
 

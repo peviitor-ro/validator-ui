@@ -1,52 +1,67 @@
 import { useState } from 'react';
 import { runScraperFile } from '../../../../services/landing/landing.service';
 import { ExclamationTriangleIcon, CheckIcon, DocumentTextIcon } from '@heroicons/react/20/solid';
-import Loading from '../../../../components/Loading';
+import { handleFetch } from './Folders';
+import { setStatusComponent } from './Folders';
+import { Spinner } from '../../../../components/Spinner';
+import { Loader } from '../../../../components/Loader';
 
 export function File({ data, endpoint }) {
     const [status, setStatus] = useState('idle');
 
-    function handleRun() {
-        setStatus('pending');
-        runScraperFile(endpoint, data.name)
-            .then((data) => {
-                console.log(data);
-                if (data.success) {
-                    setStatus('resolved');
-                } else {
-                    setStatus(data.error);
-                }
-            })
-            .catch((error) => {
-                setStatus(error.message);
-            });
-    }
+    const handleRunFile = handleFetch.bind(
+        null,
+        runScraperFile.bind(null, endpoint, data.name),
+        setStatus,
+    );
+    let statusFetch = setStatusComponent(
+        status,
+        ['pending', 'error', 'idle'],
+        [
+            <Loader message="Se ruleaza" imgStyle="w-32" />,
+            <ExclamationTriangleIcon className="h-32 text-red-500" />,
+            <DocumentTextIcon className="w-32 text-blue-500" />,
+        ],
+    );
 
-    let runStatusButton;
-    switch (status) {
-        case 'pending':
-            runStatusButton = <Loading className="w-5" />;
-            break;
-        case 'resolved':
-            runStatusButton = <CheckIcon className="h-5 text-green-500" title="Success" />;
-            break;
-        case 'idle':
-            runStatusButton = '';
-            break;
-        default:
-            runStatusButton = (
-                <ExclamationTriangleIcon
-                    className="h-5 text-red-500"
-                    title={status === 'error' ? `Error: ${status}` : status}
-                />
-            );
-    }
+    let statusButton = setStatusComponent(
+        status,
+        ['pending', 'idle', 'resolved', 'error'],
+        [
+            <span className="w-5 h-5">
+                <Spinner />
+            </span>,
+            null,
+            <CheckIcon className="h-5 text-white" title="Success" />,
+            <ExclamationTriangleIcon
+                className="h-5 text-white"
+                title={handleRunFile == 'error' ? handleRunFile.error : handleRunFile.success}
+            />,
+        ],
+    );
 
     return (
-        <button className="flex items-center gap-2 text-gray-500 mb-2" onClick={handleRun}>
-            <DocumentTextIcon className="h-5 text-blue-500" />
+        <div className="flex flex-col items-center justify-around bg-white rounded-md shadow-md my-2 h-[400px] w-[300px] card">
+            {statusFetch}
             <p className="ml-2">{data.name}</p>
-            {runStatusButton}
-        </button>
+            <button
+                className={`flex items-center gap-2 w-full btn text-center mb-2 ${status === 'error' ? 'btn-red' : 'btn-green'}`}
+                onClick={handleRunFile}
+                disabled={statusButton === 'pending'}
+            >
+                {statusButton}
+
+                <p className="w-full text-white">
+                    {
+                        {
+                            pending: 'Asteapta',
+                            idle: 'Ruleaza',
+                            resolved: 'Ruleaza',
+                            error: 'Eroare',
+                        }[status]
+                    }
+                </p>
+            </button>
+        </div>
     );
 }

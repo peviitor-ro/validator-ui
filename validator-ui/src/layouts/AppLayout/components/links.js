@@ -8,6 +8,10 @@ export const NAV_LINKS = Object.freeze([
         url: '/',
     },
     {
+        name: 'Scraperi',
+        url: '/scraper',
+    },
+    {
         name: 'Cautare',
         url: window.location,
         onClick: () => {

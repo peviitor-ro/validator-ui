@@ -22,3 +22,10 @@ export const JOBS_OPTIONS = [
     { value: 'date_asc', name: 'Data (asc.)' },
     { value: 'date_desc', name: 'Data (desc.)' },
 ];
+
+export const SCRAPER_OPTION = [
+    { value: 'all', name: 'Toate' },
+    { value: 'Python', name: 'Python' },
+    { value: 'Jmeter', name: 'Jmeter' },
+    { value: 'JavaScript', name: 'JavaScript' },
+];
