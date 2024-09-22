@@ -144,6 +144,18 @@ export async function editUserCompanies(data) {
     return response.status;
 }
 
+export async function addUser(user) {
+    const response = await PRIVATE_API.post('add', { email: user });
+
+    return response.status;
+}
+
+export async function deleteUser(user) {
+    const response = await PRIVATE_API.post('delete', { email: user });
+
+    return response.status;
+}
+
 export async function post(url, data) {
     let response;
     if (typeof data === 'object') {
