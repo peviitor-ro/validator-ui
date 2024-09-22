@@ -27,7 +27,7 @@ export function AccountForm({ loading, setLoading, alertMessage, setAlertMessage
                 </h2>
                 <form className="flex flex-col gap-4 text-gray-500">
                     <div>
-                        <label htmlFor="email_account">Selecteaza Utilizator</label>
+                        <label htmlFor="email_account">Adauga Utilizator</label>
                         <input
                             type="email"
                             id="email_account"
