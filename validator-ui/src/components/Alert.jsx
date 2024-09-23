@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 
-export function Alert({ message, type }) {
-    const [visible, setVisible] = useState(true);
-
+export function Alert({ message, type, visible, setVisible }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             setVisible(false);
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, []);
+    }, [visible, setVisible]);
 
     return visible ? (
         <div

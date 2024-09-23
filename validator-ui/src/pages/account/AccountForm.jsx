@@ -2,7 +2,16 @@ import { Spinner } from '../../components/Spinner';
 import { addUser } from '../../services/landing/landing.service';
 import { Alert } from '../../components/Alert';
 
-export function AccountForm({ loading, setLoading, alertMessage, setAlertMessage }) {
+export function AccountForm({
+    loading,
+    setLoading,
+    alertMessage,
+    setAlertMessage,
+    alert,
+    setAlert,
+    alertType,
+    setAlertType,
+}) {
     const handleClick = async () => {
         setLoading(true);
         try {
@@ -13,14 +22,26 @@ export function AccountForm({ loading, setLoading, alertMessage, setAlertMessage
                 window.location.reload();
             }
             setAlertMessage('A aparut o eroare');
+            setAlertType('error');
+            setAlert(true);
         } catch (error) {
             setLoading(false);
+            setAlertMessage('A aparut o eroare');
+            setAlertType('error');
+            setAlert(true);
         }
     };
 
     return (
         <>
-            {alertMessage && <Alert message={alertMessage} type="error" />}
+            {alert && (
+                <Alert
+                    message={alertMessage}
+                    type={alertType}
+                    visible={alert}
+                    setVisible={setAlert}
+                />
+            )}
             <div className="flex flex-col gap-4 m-2 p-2 border bg-white rounded-md shadow-md">
                 <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">
                     Adaugare cont

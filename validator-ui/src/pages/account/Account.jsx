@@ -22,6 +22,8 @@ export function Account() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState('success');
 
     const fetchUsersAndCompanies = async () => {
         setLoading(true);
@@ -52,6 +54,10 @@ export function Account() {
                     setLoading={setLoading}
                     alertMessage={alertMessage}
                     setAlertMessage={setAlertMessage}
+                    alert={alert}
+                    setAlert={setAlert}
+                    alertType={alertType}
+                    setAlertType={setAlertType}
                 />
             )}
             <CompanyAccess
@@ -66,6 +72,10 @@ export function Account() {
                 setLoading={setLoading}
                 alertMessage={alertMessage}
                 setAlertMessage={setAlertMessage}
+                alert={alert}
+                setAlert={setAlert}
+                alertType={alertType}
+                setAlertType={setAlertType}
             />
         </div>
     );

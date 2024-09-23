@@ -21,10 +21,11 @@ export function CompanyAccess({
     setLoading,
     alertMessage,
     setAlertMessage,
+    alert,
+    setAlert,
+    alertType,
+    setAlertType,
 }) {
-    const [alert, setAlert] = useState(false);
-    const [alertType, setAlertType] = useState('success');
-
     const onsSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -137,7 +138,14 @@ export function CompanyAccess({
 
     return (
         <>
-            {alert && <Alert message={alertMessage} type={alertType} />}
+            {alert && (
+                <Alert
+                    message={alertMessage}
+                    type={alertType}
+                    visible={alert}
+                    setVisible={setAlert}
+                />
+            )}
             {loading && (
                 <div className="flex items-center justify-center fixed bg-gray-500 bg-opacity-50 top-0 left-0 w-[100vw] h-[100vh] z-50">
                     <div className="flex flex-col items-center justify-center bg-white rounded-md shadow-md p-4">
