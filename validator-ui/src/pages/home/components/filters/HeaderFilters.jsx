@@ -5,11 +5,36 @@ import { SelectField } from '../../../../components/SelectField';
 import { Button } from '../../../../components/Button';
 import { Modal } from '../../../../components/Modal';
 
+/**
+ * Home component that serves as a container for child elements.
+ *
+ * @param {Object} props - The properties object.
+ * @param {React.ReactNode} props.children - The child elements to be rendered within the Home component.
+ * @returns {JSX.Element} The rendered Home component.
+ */
 export function Home({ children }) {
     return <main className="flex flex-col gap-4 p-4 lg:gap-10 lg:p-10">{children}</main>;
 }
 
+/**
+ * Header component for the Home component.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} props.title - The title to be displayed in the header.
+ * @param {React.ReactNode} props.formComponent - The form component to be rendered inside the modal.
+ * @param {Function} props.selector - The selector function that returns search, order, setOrder, and setSearch.
+ * @param {Array} props.options - The options for the SelectField component.
+ * @returns {JSX.Element} The rendered Header component.
+ */
 Home.Header = function H({ title, formComponent, selector, options }) {
+    /**
+     * Destructures the search, order, setOrder, and setSearch properties from the selector function.
+     *
+     * @constant {string} search - The search query string.
+     * @constant {string} order - The current order state.
+     * @function setOrder - Function to update the order state.
+     * @function setSearch - Function to update the search query string.
+     */
     const { search, order, setOrder, setSearch } = selector();
     const [open, setOpen] = useState(false);
 

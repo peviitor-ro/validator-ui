@@ -1,6 +1,17 @@
 import clsx from 'clsx';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
+/**
+ * Modal component that displays a modal dialog.
+ *
+ * @param {Object} props - The properties object.
+ * @param {boolean} props.open - Determines if the modal is open or not.
+ * @param {Function} props.setOpen - Function to toggle the modal open state.
+ * @param {string} [props.className] - Additional class names for the modal content.
+ * @param {React.ReactNode} props.children - The content to be displayed inside the modal.
+ *
+ * @returns {JSX.Element} The rendered modal component.
+ */
 export function Modal({ children, ...props }) {
     const modalClasses = clsx(
         'fixed w-screen h-screen bg-gray-500 bg-opacity-60 top-0 left-0 z-50 flex justify-center items-center',
