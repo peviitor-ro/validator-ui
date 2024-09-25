@@ -1,21 +1,47 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { PhotoIcon, TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
-import { removeCompany } from '../../../../services/landing/landing.service';
+import { post } from '../../../../services/landing/landing.service';
+import { routes } from '../../../../routes/routes';
 import { Button } from '../../../../components/Button';
 import { Modal } from '../../../../components/Modal';
 import { CompanyForm } from '../forms/CompanyForm';
 import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
 
+/**
+ * CompanyCard component displays detailed information about a company.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.data - The company data object.
+ * @param {string} props.data.company - The name of the company.
+ * @param {string} props.data.scname - The short name of the company.
+ * @param {string} props.data.description - The description of the company.
+ * @param {string} props.data.logo - The URL of the company's logo.
+ * @param {string} props.data.website - The URL of the company's website.
+ * @param {number} props.data.jobsCount - The total number of jobs available at the company.
+ * @param {number} props.data.published_jobs - The number of published jobs at the company.
+ * @param {boolean} props.data.have_access - Indicates if the user has access to the company's data.
+ * @returns {JSX.Element} The rendered CompanyCard component.
+ */
 export function CompanyCard({ data }) {
     const { company, scname, description, logo, website, jobsCount, published_jobs, have_access } =
         data;
 
     const [open, setOpen] = useState(false);
 
-    // handle the delete action
-    function handleDelete() {
+    /**
+     * Handles the deletion of a company.
+     *
+     * This function shows a confirmation dialog to the user. If the user confirms,
+     * it proceeds to remove the company. Upon successful deletion (status 200),
+     * the page is reloaded.
+     *
+     * @function handleDelete
+     * @returns {void}
+     */
+    async function handleDelete() {
         // show a confirmation dialog
         const results = window.confirm('Esti sigur ca vrei sa stergi aceasta companie?');
 
@@ -25,17 +51,13 @@ export function CompanyCard({ data }) {
         }
 
         // remove the company
-        const responseStatus = removeCompany(company);
-        responseStatus.then((status) => {
-            if (status === 200) {
-                window.location.reload();
-            }
-        });
+        const response = await post(routes.COMPANY_DELETE, { company });
+        if (response.status === 200) {
+            window.location.reload();
+        }
     }
 
     const logoRef = useRef(null);
-
-    // handle the image error
     logoRef.current?.addEventListener('error', () => {
         logoRef.current.src = photo;
         logoRef.current.onerror = null;
@@ -73,9 +95,9 @@ export function CompanyCard({ data }) {
                 <p className="text-center mb-12">No description</p>
             )}
 
-            <div>
-                <p className="text-center mb-2">Joburi publicate: {published_jobs ?? 0}</p>
-            </div>
+            <p className="text-sm text-center font-bold mb-2">
+                Joburi publicate: {published_jobs ?? 0}
+            </p>
 
             <NavLink
                 to={`/jobs/${company}`}
