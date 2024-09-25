@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDebounce } from '../../hooks/useDebounce';
 import { useJobsInfiniteQuery } from '../../services/landing/landing.queries';
 import { useJobsOptionsSelector } from '../../store/jobs.selectors';
 import { clearCompany, syncJobs } from '../../services/landing/landing.service';
+import { infiniteScroll } from '../../hooks/infiniteScroll';
 import { JOBS_OPTIONS } from './components/filters/constants';
 import { Cards } from './components/cards/Cards';
 import { JobCard } from './components/cards/JobCard';
@@ -19,23 +18,15 @@ export function JobsPage() {
     const { company } = useParams();
     const navigate = useNavigate();
 
-    const { ref, inView } = useInView();
-
-    const { order, search } = useJobsOptionsSelector();
-    const debounceSearch = useDebounce(search);
-
-    const { data, status, isFetchingNextPage, fetchNextPage, hasNextPage } = useJobsInfiniteQuery(
+    const { data, status, button } = infiniteScroll(
+        useJobsOptionsSelector,
+        useJobsInfiniteQuery,
+        'Se incarca mai multe joburi ...',
+        'Se incarca mai multe joburi',
+        'Nu mai sunt joburi de incarcat',
         company,
         10,
-        order,
-        debounceSearch,
     );
-
-    useEffect(() => {
-        if (inView) {
-            fetchNextPage();
-        }
-    }, [fetchNextPage, inView]);
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -93,23 +84,7 @@ export function JobsPage() {
                                 );
                             })}
                         </div>
-                        <button
-                            ref={ref}
-                            onClick={() => fetchNextPage()}
-                            disabled={!hasNextPage || isFetchingNextPage}
-                            className="m-auto"
-                        >
-                            {isFetchingNextPage ? (
-                                <>
-                                    <span className="text-xl">Se incarca mai multe joburi ...</span>
-                                    <Loading className="w-28" />
-                                </>
-                            ) : hasNextPage ? (
-                                'Se incarca mai multe joburi'
-                            ) : (
-                                'Nu mai sunt joburi de incarcat'
-                            )}
-                        </button>
+                        {button}
                     </div>
                 </Home>
                 {/* Sidebar */}

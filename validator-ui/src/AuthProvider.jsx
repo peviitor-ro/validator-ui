@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AuthContext, INITIAL_STATE } from './contexts/AuthContext';
 import { useLocalStorage } from './hooks/useLocalStorage';
 

@@ -4,7 +4,16 @@ import { routes } from '../../routes/routes';
 import PropTypes from 'prop-types';
 
 /**
- * Renders the Unautorized template component when the user is not authorized to access a page.
+ * Template component renders a generic page with a symbol, title, description, and link.
+ *
+ * @param {Object} props - The properties object.
+ * @param {React.Element} props.icon - The icon element to be displayed.
+ * @param {string} props.title - The title text to be displayed.
+ * @param {string} props.description - The description text to be displayed.
+ * @param {Object} props.link - The link object containing the URL and link text.
+ * @param {string} props.link.to - The URL to navigate to when the link is clicked.
+ * @param {string} props.link.text - The text to be displayed for the link.
+ * @returns {JSX.Element} The rendered Template component.
  */
 export const Template = ({ icon, title, description, link }) => {
     return (
@@ -17,6 +26,12 @@ export const Template = ({ icon, title, description, link }) => {
     );
 };
 
+/**
+ * Unautorized component renders a template indicating that the user does not have permission to access the requested content.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component.
+ */
 export default function Unautorized() {
     return (
         <Template
