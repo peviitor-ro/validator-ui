@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
 
+/**
+ * Custom hook that provides the current window size.
+ *
+ * @returns {Object} An object containing the width and height of the window.
+ * @returns {number} width - The current width of the window.
+ * @returns {number} height - The current height of the window.
+ */
 export default function useWindowSize() {
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
