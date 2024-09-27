@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 import { PhotoIcon, TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
-import { Alert } from '../../../../components/Alert';
 import { NavLink } from 'react-router-dom';
 import { post } from '../../../../services/landing/landing.service';
 import { routes } from '../../../../routes/routes';
@@ -9,7 +8,6 @@ import { Modal } from '../../../../components/Modal';
 import { CompanyForm } from '../forms/CompanyForm';
 import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
-import { set } from 'react-hook-form';
 
 /**
  * CompanyCard component displays detailed information about a company.
@@ -27,14 +25,11 @@ import { set } from 'react-hook-form';
  * @param {boolean} props.data.have_access - Indicates if the user has access to the company's data.
  * @returns {JSX.Element} The rendered CompanyCard component.
  */
-export function CompanyCard({ data, setCompanies }) {
+export function CompanyCard({ data, setCompanies, setAlertOpen, setAlertMessage, setAlertType }) {
     const { company, scname, description, logo, website, jobsCount, published_jobs, have_access } =
         data;
 
     const [open, setOpen] = useState(false);
-    const [alertOpen, setAlertOpen] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertType, setAlertType] = useState('success');
 
     /**
      * Handles the deletion of a company.
@@ -86,12 +81,6 @@ export function CompanyCard({ data, setCompanies }) {
 
     return (
         <article className="relative card flex flex-col h-[400px] overflow-hidden">
-            <Alert
-                message={alertMessage}
-                type={alertType}
-                visible={alertOpen}
-                setVisible={setAlertOpen}
-            />
             {have_access && (
                 <div className="absolute right-8 flex flex-col gap-2">
                     <Button
@@ -145,11 +134,12 @@ export function CompanyCard({ data, setCompanies }) {
             </a>
             <Modal open={open} setOpen={setOpen}>
                 <CompanyForm
-                    company={company}
-                    scname={scname}
-                    description={description}
-                    website={website}
+                    companyData={data}
                     method="PUT"
+                    setCompanies={setCompanies}
+                    setAlertOpen={setAlertOpen}
+                    setAlertMessage={setAlertMessage}
+                    setAlertType={setAlertType}
                 />
             </Modal>
         </article>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../../../../components/Button';
 import { post } from '../../../../services/landing/landing.service';
 import { useForm } from 'react-hook-form';
@@ -95,13 +95,43 @@ const Input = ({
     );
 };
 
-export function CompanyForm({ company, scname, website, description, method = 'POST' }) {
-    // Define the loading state
+export function CompanyForm({
+    companyData,
+    method = 'POST',
+    setCompanies,
+    setAlertOpen,
+    setAlertMessage,
+    setAlertType,
+}) {
+    // state for the form data
+    const [data, setData] = useState({
+        company: '',
+        scname: '',
+        website: '',
+        description: '',
+    });
+
+    // update the form data when the company data changes
+    useEffect(() => {
+        if (companyData) {
+            setData(companyData);
+        }
+    }, [companyData]);
+
+    const { company, scname, website, description } = data;
+
     /**
      * State variable to manage the loading state of the component.
      * @type {boolean}
      */
     const [loading, setLoading] = useState(false);
+
+    const setAlert = (message, type) => {
+        setLoading(false);
+        setAlertOpen(true);
+        setAlertMessage(message);
+        setAlertType(type);
+    };
 
     /**
      * Destructures handleSubmit, errors, and setError from the useForm hook.
@@ -151,16 +181,23 @@ export function CompanyForm({ company, scname, website, description, method = 'P
      * @function onSubmit
      *
      * @description
-     * This function is triggered when the form is submitted. It prevents the default form submission behavior,
-     * destructures the form data, validates the company name, and makes an API request to either add or update
-     * a company. If the company name is not provided, it sets an error message. If the API request is successful,
-     * the page is reloaded. If there is an error during the API request, it sets an error message indicating that
-     * the company already exists.
+     * This function handles the form submission for adding or updating a company. It validates the form inputs,
+     * makes an API request to either add or update the company, and updates the state accordingly. If the company
+     * already exists, it updates the existing company details; otherwise, it adds a new company. It also handles
+     * setting error messages and loading states.
      *
-     * @throws Will set an error message if the company name is not provided or if the company already exists.
+     * @throws Will throw an error if the API request fails.
      */
     const onSubmit = async (e) => {
         e.preventDefault();
+
+        // clear imputs
+        function clearInputs() {
+            e.target.company.value = '';
+            e.target.scname.value = '';
+            e.target.website.value = '';
+            e.target.description.value = '';
+        }
 
         // Destructure the form data
         const companyInput = e.target.company.value;
@@ -179,7 +216,7 @@ export function CompanyForm({ company, scname, website, description, method = 'P
 
         // Make the API request
         try {
-            const data = {
+            const obj = {
                 company: company,
                 update: {
                     company: companyInput,
@@ -193,13 +230,47 @@ export function CompanyForm({ company, scname, website, description, method = 'P
             setLoading(true);
             const response =
                 method === 'POST'
-                    ? await post(routes.COMPANY_ADD, data.update)
-                    : await post(routes.COMPANY_UPDATE, data);
+                    ? await post(routes.COMPANY_ADD, obj.update)
+                    : await post(routes.COMPANY_UPDATE, obj);
+
             // Check the response status
-            if (response.status === 201 || response.status === 200) {
-                window.location.reload();
+            // If the status is not 201 or 200, set an error message
+            if (response.status !== 201 && response.status !== 200) {
+                setAlert('Ceva nu a mers bine', 'error');
+                return;
             }
+
+            // Update the company if it already exists
+            if (response.status === 200) {
+                setCompanies((companies) =>
+                    companies.map((c) =>
+                        c.company === company
+                            ? {
+                                  company: companyInput,
+                                  scname: scname,
+                                  website: website,
+                                  description: description,
+                                  jobsCount: c.jobsCount,
+                                  published_jobs: c.published_jobs,
+                                  have_access: c.have_access,
+                              }
+                            : c,
+                    ),
+                );
+
+                setAlert('Compania a fost actualizata cu succes', 'success');
+                return;
+            }
+
+            // Add the company if it does not exist
+            setCompanies((companies) => [
+                { ...obj.update, jobsCount: 0, published_jobs: 0, have_access: true },
+                ...companies,
+            ]);
+            setAlert('Compania a fost creata cu succes', 'success');
+            clearInputs();
         } catch (error) {
+            console.error(error);
             setLoading(false);
 
             // Set the error message
@@ -215,45 +286,47 @@ export function CompanyForm({ company, scname, website, description, method = 'P
     };
 
     return (
-        <Form
-            handleOnSubmit={handleOnSubmit}
-            loading={loading}
-            titleText="Adauga companie"
-            errors={errors}
-        >
-            <Input
-                labelText="Nume"
-                inputType="text"
-                inputId="company"
-                className={errorClass}
-                placeholder="Numele companiei"
-                defaultValue={company}
-            />
-            <Input
-                labelText="Denumirea Societatii"
-                inputType="text"
-                inputId="scname"
-                className="border-input h-full w-full p-2"
-                placeholder="Denumirea societatii"
-                defaultValue={scname}
-            />
-            <Input
-                labelText="Website"
-                inputType="text"
-                inputId="website"
-                className="border-input h-full w-full p-2"
-                placeholder="Website-ul companiei"
-                defaultValue={website}
-            />
+        <>
+            <Form
+                handleOnSubmit={handleOnSubmit}
+                loading={loading}
+                titleText="Adauga companie"
+                errors={errors}
+            >
+                <Input
+                    labelText="Nume"
+                    inputType="text"
+                    inputId="company"
+                    className={errorClass}
+                    placeholder="Numele companiei"
+                    defaultValue={company}
+                />
+                <Input
+                    labelText="Denumirea Societatii"
+                    inputType="text"
+                    inputId="scname"
+                    className="border-input h-full w-full p-2"
+                    placeholder="Denumirea societatii"
+                    defaultValue={scname}
+                />
+                <Input
+                    labelText="Website"
+                    inputType="text"
+                    inputId="website"
+                    className="border-input h-full w-full p-2"
+                    placeholder="Website-ul companiei"
+                    defaultValue={website}
+                />
 
-            <Input
-                labelText="Descriere"
-                inputType="textarea"
-                inputId="description"
-                className="border-input h-full w-full p-2"
-                placeholder="Descriere companiei"
-                defaultValue={description}
-            />
-        </Form>
+                <Input
+                    labelText="Descriere"
+                    inputType="textarea"
+                    inputId="description"
+                    className="border-input h-full w-full p-2"
+                    placeholder="Descriere companiei"
+                    defaultValue={description}
+                />
+            </Form>
+        </>
     );
 }

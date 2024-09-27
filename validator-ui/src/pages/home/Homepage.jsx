@@ -3,6 +3,7 @@ import { useCompaniesInfiniteQuery } from '../../services/landing/landing.querie
 import { useCompanyOptionsSelector } from '../../store/company.selectors';
 import { infiniteScroll } from '../../hooks/infiniteScroll';
 import { LoadingPage } from '../../components/LoadingPage';
+import { Alert } from '../../components/Alert';
 import { Home } from './components/filters/HeaderFilters';
 import { NoResultFound } from './components/NoResultFound';
 import { CompanyCard } from './components/cards/CompanyCard';
@@ -50,8 +51,20 @@ export function Homepage() {
         getPageSize(width),
     );
 
+    /**
+     * State hook to manage the list of companies.
+     *
+     * @type {Array}
+     * @default []
+     */
     const [companies, setCompanies] = useState([]);
 
+    // State hooks for alert message and type
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
+
+    // Update the companies list when the data changes
     useEffect(() => {
         if (data?.pages[0].data?.length > 0) {
             setCompanies(data.pages.map((page) => page.data).flat());
@@ -62,9 +75,23 @@ export function Homepage() {
         <Home>
             <Home.Header
                 title={'Companii'}
-                formComponent={<CompanyForm />}
+                formComponent={
+                    <CompanyForm
+                        setCompanies={setCompanies}
+                        setAlertOpen={setAlertOpen}
+                        setAlertMessage={setAlertMessage}
+                        setAlertType={setAlertType}
+                    />
+                }
                 selector={useCompanyOptionsSelector}
                 options={SORT_OPTIONS}
+            />
+
+            <Alert
+                message={alertMessage}
+                type={alertType}
+                visible={alertOpen}
+                setVisible={setAlertOpen}
             />
 
             {status === 'pending' ? (
@@ -85,6 +112,9 @@ export function Homepage() {
                                             key={uniqueKey}
                                             data={company}
                                             setCompanies={setCompanies}
+                                            setAlertOpen={setAlertOpen}
+                                            setAlertMessage={setAlertMessage}
+                                            setAlertType={setAlertType}
                                         />
                                     );
                                 })}
