@@ -1,27 +1,27 @@
+import React, { useEffect, useState } from 'react';
 import { useCompaniesInfiniteQuery } from '../../services/landing/landing.queries';
 import { useCompanyOptionsSelector } from '../../store/company.selectors';
 import { infiniteScroll } from '../../hooks/infiniteScroll';
 import { LoadingPage } from '../../components/LoadingPage';
-import { Cards } from './components/cards/Cards';
+import { Alert } from '../../components/Alert';
 import { Home } from './components/filters/HeaderFilters';
 import { NoResultFound } from './components/NoResultFound';
 import { CompanyCard } from './components/cards/CompanyCard';
-import { Container } from '../../components/Container';
 import { CompanyForm } from './components/forms/CompanyForm';
 import { SORT_OPTIONS } from './components/filters/constants';
 import useWindowSize from '../../hooks/useWindowSize';
-import Loading from '../../components/Loading';
 
 /**
- * Renders the Homepage component.
- *
- * This component uses the `useWindowSize` hook to get the current window width and the `infiniteScroll` function
- * to handle infinite scrolling of company data. It displays a header with a title and a form component, and
- * conditionally renders loading, error, or data components based on the status of the infinite scroll operation.
+ * The Homepage component is responsible for rendering the main page of the application.
+ * It handles infinite scrolling to load company data and displays it in a grid layout.
  *
  * @component
- *
  * @returns {JSX.Element} The rendered Homepage component.
+ *
+ * @example
+ * return (
+ *   <Homepage />
+ * )
  */
 export function Homepage() {
     const { width } = useWindowSize();
@@ -45,23 +45,57 @@ export function Homepage() {
     const { data, status, error, button } = infiniteScroll(
         useCompanyOptionsSelector,
         useCompaniesInfiniteQuery,
-        'Se incarca mai multe companii ...',
+        'Se incarca mai multe companii',
         'Se incarca mai multe companii',
         'Nu mai sunt companii de incarcat',
         getPageSize(width),
     );
 
+    /**
+     * State hook to manage the list of companies.
+     *
+     * @type {Array}
+     * @default []
+     */
+    const [companies, setCompanies] = useState([]);
+
+    // State hooks for alert message and type
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
+
+    // Update the companies list when the data changes
+    useEffect(() => {
+        if (data?.pages[0].data?.length > 0) {
+            setCompanies(data.pages.map((page) => page.data).flat());
+        }
+    }, [data]);
+
     return (
         <Home>
             <Home.Header
                 title={'Companii'}
-                formComponent={<CompanyForm />}
+                formComponent={
+                    <CompanyForm
+                        setCompanies={setCompanies}
+                        setAlertOpen={setAlertOpen}
+                        setAlertMessage={setAlertMessage}
+                        setAlertType={setAlertType}
+                    />
+                }
                 selector={useCompanyOptionsSelector}
                 options={SORT_OPTIONS}
             />
 
+            <Alert
+                message={alertMessage}
+                type={alertType}
+                visible={alertOpen}
+                setVisible={setAlertOpen}
+            />
+
             {status === 'pending' ? (
-                <LoadingPage message={'Se incarca companiile ...'} />
+                <LoadingPage message={'Se incarca companiile'} />
             ) : status === 'error' ? (
                 <span>Eroare: {error.message}</span>
             ) : (
@@ -71,13 +105,16 @@ export function Homepage() {
                     ) : (
                         <>
                             <div className="grid grid-cols-minmax gap-6">
-                                {data?.pages.map((page, index) => {
+                                {companies.map((company, index) => {
                                     const uniqueKey = `company_${index}`;
                                     return (
-                                        <Cards
+                                        <CompanyCard
                                             key={uniqueKey}
-                                            data={page.data}
-                                            component={CompanyCard}
+                                            data={company}
+                                            setCompanies={setCompanies}
+                                            setAlertOpen={setAlertOpen}
+                                            setAlertMessage={setAlertMessage}
+                                            setAlertType={setAlertType}
                                         />
                                     );
                                 })}

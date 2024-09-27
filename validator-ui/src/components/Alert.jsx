@@ -1,5 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
+/**
+ * Alert component that displays a message based on the type and visibility.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} props.message - The message to display in the alert.
+ * @param {string} props.type - The type of alert, either 'error' or 'success'.
+ * @param {boolean} props.visible - Determines if the alert is visible.
+ * @param {Function} props.setVisible - Function to set the visibility of the alert.
+ *
+ * @returns {JSX.Element|null} The Alert component or null if not visible.
+ */
 export function Alert({ message, type, visible, setVisible }) {
     useEffect(() => {
         const timer = setTimeout(() => {

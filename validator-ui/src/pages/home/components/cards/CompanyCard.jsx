@@ -25,7 +25,7 @@ import photo from '../../../../assets/svgs/photo.svg';
  * @param {boolean} props.data.have_access - Indicates if the user has access to the company's data.
  * @returns {JSX.Element} The rendered CompanyCard component.
  */
-export function CompanyCard({ data }) {
+export function CompanyCard({ data, setCompanies, setAlertOpen, setAlertMessage, setAlertType }) {
     const { company, scname, description, logo, website, jobsCount, published_jobs, have_access } =
         data;
 
@@ -50,11 +50,27 @@ export function CompanyCard({ data }) {
             return;
         }
 
+        /**
+         * Sets the alert state with the provided message and type.
+         *
+         * @param {string} message - The message to display in the alert.
+         * @param {string} type - The type of the alert (e.g., 'success', 'error').
+         */
+        const setAlert = (message, type) => {
+            setAlertOpen(true);
+            setAlertMessage(message);
+            setAlertType(type);
+        };
+
         // remove the company
         const response = await post(routes.COMPANY_DELETE, { company });
-        if (response.status === 200) {
-            window.location.reload();
+        if (response.status !== 200) {
+            setAlert('A aparut o eroare la stergerea companiei.', 'error');
+            return;
         }
+
+        setCompanies((prev) => prev.filter((item) => item.company !== company));
+        setAlert('Compania a fost stearsa cu succes.', 'success');
     }
 
     const logoRef = useRef(null);
@@ -92,7 +108,7 @@ export function CompanyCard({ data }) {
             {description ? (
                 <p className="line-clamp-2 mb-6 break-all">{description}</p>
             ) : (
-                <p className="text-center mb-12">No description</p>
+                <p className="text-center mb-12">Nici o descriere disponibila.</p>
             )}
 
             <p className="text-sm text-center font-bold mb-2">
@@ -118,11 +134,12 @@ export function CompanyCard({ data }) {
             </a>
             <Modal open={open} setOpen={setOpen}>
                 <CompanyForm
-                    company={company}
-                    scname={scname}
-                    description={description}
-                    website={website}
+                    companyData={data}
                     method="PUT"
+                    setCompanies={setCompanies}
+                    setAlertOpen={setAlertOpen}
+                    setAlertMessage={setAlertMessage}
+                    setAlertType={setAlertType}
                 />
             </Modal>
         </article>

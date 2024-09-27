@@ -1,5 +1,5 @@
 import { NoMoreResults } from '../pages/home/components/NoMoreResults';
-import Loading from '../components/Loading';
+import { LoadingPage } from '../components/LoadingPage';
 
 /**
  * Button component that handles fetching the next page of data.
@@ -32,8 +32,7 @@ export function Button({
         >
             {isFetchingNextPage ? (
                 <>
-                    <span className="text-xl">{buttonText}</span>
-                    <Loading className="w-28" />
+                    <LoadingPage message={buttonText} />
                 </>
             ) : hasNextPage ? (
                 fetchNextPageText

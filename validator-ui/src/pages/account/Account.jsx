@@ -3,7 +3,6 @@ import { CompanyAccess } from './CompanyAccess';
 import { AccountForm } from './AccountForm';
 import { useUserCompaniesSelector } from '../../store/userCompanies.selector';
 import { getUsersAndCompanies } from '../../services/landing/landing.service';
-import { Alert } from '../../components/Alert';
 
 export function Account() {
     const {
