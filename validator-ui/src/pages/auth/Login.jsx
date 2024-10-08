@@ -31,13 +31,6 @@ const schema = z
 export const Template = ({ onSubmit, register, errors, isLoading }) => {
     return (
         <Container className="flex items-center justify-around px-6">
-            <img
-                className="absolute object-cover transform hidden md:block translate-x-1/2 -translate-y-1/2"
-                src={rocket}
-                width="400"
-                height="400"
-                alt="Logo"
-            />
             <Form onSubmit={onSubmit}>
                 <Form.Title text="Conectare" />
                 <Form.Description text="Introdu adresa de email pentru a primi un link de conectare." />
