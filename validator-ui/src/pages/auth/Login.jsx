@@ -7,9 +7,7 @@ import { Container } from '../../components/Container';
 import { routes } from '../../routes/routes';
 import { useLoginMutation } from '../../services/auth/auth.queries';
 import Form from '../../components/Form';
-
 import * as z from 'zod';
-import rocket from '../../assets/svgs/rocket.svg';
 import PropTypes from 'prop-types';
 
 const schema = z

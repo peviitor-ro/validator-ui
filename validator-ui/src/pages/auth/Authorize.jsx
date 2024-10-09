@@ -4,6 +4,7 @@ import { GenericPage } from '../../components/GenericPage';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { useAuthStateQuery } from '../../services/auth/auth.queries';
 import Loading from '../../components/Loading';
+import { LoadingPage } from '../../components/LoadingPage';
 
 import Unautorized from './Unautorized';
 import PropTypes from 'prop-types';
@@ -78,11 +79,9 @@ export function Authorize() {
 
     if (isLoading) {
         return (
-            <Template
-                icon={<Loading />}
-                titleText="Incarcare"
-                descriptionText="Va dura doar un moment"
-            />
+            <LoadingPage message="Verificare autentificare">
+                <Loading />
+            </LoadingPage>
         );
     }
 

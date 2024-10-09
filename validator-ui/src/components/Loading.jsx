@@ -1,126 +1,142 @@
-export default function Loading({ className }) {
+import React, { useRef, forwardRef } from 'react';
+import { cn } from '../lib/utils';
+import { AnimatedBeam } from './ui/animated-beam';
+import {
+    UserIcon,
+    ServerIcon,
+    CircleStackIcon,
+    ExclamationTriangleIcon,
+} from '@heroicons/react/24/outline';
+
+// default values for the animated beam objects
+const animatedBeamObjects = {
+    user: {
+        name: 'user',
+        icon: <UserIcon />,
+        position: 'left',
+        ref: null,
+    },
+    validator: {
+        name: 'valicator',
+        icon: <ServerIcon />,
+        position: 'middle',
+        ref: null,
+    },
+    'validator-error': {
+        name: 'validator-error',
+        icon: <ExclamationTriangleIcon />,
+        position: 'middle',
+        ref: null,
+    },
+    'validator-database': {
+        name: 'validator-database',
+        icon: <CircleStackIcon />,
+        position: 'right',
+        ref: null,
+    },
+    solr: {
+        name: 'solr',
+        icon: <CircleStackIcon />,
+        position: 'right',
+        ref: null,
+    },
+};
+
+/**
+ * Circle component renders a div with specific styles and optional children.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} props.className - Additional class names to apply to the div.
+ * @param {React.ReactNode} props.children - The content to be rendered inside the div.
+ * @param {React.Ref} ref - The ref to be forwarded to the div element.
+ *
+ * @returns {JSX.Element} The rendered Circle component.
+ */
+const Circle = forwardRef(({ className, children }, ref) => {
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style={{
-                margin: 'auto',
-                background: 'inherit',
-                display: 'block',
-                shapeRendering: 'auto',
-            }}
-            viewBox="0 0 100 100"
-            className={className}
-            preserveAspectRatio="xMidYMid"
+        <div
+            ref={ref}
+            className={cn(
+                'z-10 flex size-12 items-center justify-center rounded-full border-2 border-border bg-white p-3 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)]',
+                className,
+            )}
         >
-            <circle cx="84" cy="50" r="10" fill="#e15b64">
-                <animate
-                    attributeName="r"
-                    repeatCount="indefinite"
-                    dur="0.25s"
-                    calcMode="spline"
-                    keyTimes="0;1"
-                    values="10;0"
-                    keySplines="0 0.5 0.5 1"
-                    begin="0s"
-                ></animate>
-                <animate
-                    attributeName="fill"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="discrete"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="#e15b64;#abbd81;#f8b26a;#f47e60;#e15b64"
-                    begin="0s"
-                ></animate>
-            </circle>
-            <circle cx="16" cy="50" r="10" fill="#e15b64">
-                <animate
-                    attributeName="r"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="0;0;10;10;10"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="0s"
-                ></animate>
-                <animate
-                    attributeName="cx"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="16;16;16;50;84"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="0s"
-                ></animate>
-            </circle>
-            <circle cx="50" cy="50" r="10" fill="#f47e60">
-                <animate
-                    attributeName="r"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="0;0;10;10;10"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="-0.25s"
-                ></animate>
-                <animate
-                    attributeName="cx"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="16;16;16;50;84"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="-0.25s"
-                ></animate>
-            </circle>
-            <circle cx="84" cy="50" r="10" fill="#f8b26a">
-                <animate
-                    attributeName="r"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="0;0;10;10;10"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="-0.5s"
-                ></animate>
-                <animate
-                    attributeName="cx"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="16;16;16;50;84"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="-0.5s"
-                ></animate>
-            </circle>
-            <circle cx="16" cy="50" r="10" fill="#abbd81">
-                <animate
-                    attributeName="r"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="0;0;10;10;10"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="-0.75s"
-                ></animate>
-                <animate
-                    attributeName="cx"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    calcMode="spline"
-                    keyTimes="0;0.25;0.5;0.75;1"
-                    values="16;16;16;50;84"
-                    keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-                    begin="-0.75s"
-                ></animate>
-            </circle>
-        </svg>
+            {children}
+        </div>
+    );
+});
+
+Circle.displayName = 'Circle';
+
+/**
+ * Loading component that displays animated beams and circles.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} [props.className] - Additional class names for the container.
+ * @param {Array} [props.lst=[{ name: 'user' }, { name: 'validator' }, { name: 'validator-database' }]] - List of items to be displayed with their respective names.
+ *
+ * @returns {JSX.Element} The Loading component.
+ */
+export default function Loading({
+    className,
+    lst = [{ name: 'user' }, { name: 'validator' }, { name: 'validator-database' }],
+}) {
+    const containerRef = useRef(null);
+    const right = [];
+    const middle = [];
+    const left = [];
+
+    lst.map((item) => {
+        const div = useRef(null);
+        animatedBeamObjects[item.name].ref = div;
+
+        if (animatedBeamObjects[item.name].position === 'right') {
+            right.push(animatedBeamObjects[item.name]);
+        } else if (animatedBeamObjects[item.name].position === 'middle') {
+            middle.push(animatedBeamObjects[item.name]);
+        } else {
+            left.push(animatedBeamObjects[item.name]);
+        }
+    });
+
+    return (
+        <div className={cn('flex items-center justify-center', className)} ref={containerRef}>
+            <div className="relative flex items-center justify-center gap-10 max-w-sm">
+                <div className="flex flex-col justify-center gap-2">
+                    {right.map((item) => (
+                        <Circle key={item.name} ref={item.ref}>
+                            {item.icon}
+                        </Circle>
+                    ))}
+                </div>
+                <div className="flex flex-col justify-center">
+                    {middle.map((item) => (
+                        <Circle key={item.name} ref={item.ref} className="size-16">
+                            {item.icon}
+                        </Circle>
+                    ))}
+                </div>
+                <div className="flex flex-col justify-center">
+                    {left.map((item) => (
+                        <Circle key={item.name} ref={item.ref}>
+                            {item.icon}
+                        </Circle>
+                    ))}
+                </div>
+
+                {lst.map((item) => {
+                    return (
+                        <AnimatedBeam
+                            key={item.name}
+                            containerRef={containerRef}
+                            fromRef={animatedBeamObjects[item.name].ref}
+                            toRef={animatedBeamObjects[lst[1].name].ref}
+                            reverse
+                            delay={0}
+                        />
+                    );
+                })}
+            </div>
+        </div>
     );
 }
