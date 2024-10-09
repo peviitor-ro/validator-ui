@@ -3,7 +3,63 @@ import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Container } from './Container';
+import RetroGrid from './ui/retro-grid';
 
+/**
+ * Symbol component for the GenericPage.
+ *
+ * @param {Object} props - The component props.
+ * @param {React.ReactNode} props.icon - The icon to be displayed.
+ * @returns {JSX.Element} The rendered Symbol component.
+ */
+
+/**
+ * Title component for the GenericPage.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.text - The title text to be displayed.
+ * @param {string} [props.className] - Additional class names to apply to the title.
+ * @returns {JSX.Element} The rendered Title component.
+ */
+
+/**
+ * Description component for the GenericPage.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.text - The description text to be displayed.
+ * @returns {JSX.Element} The rendered Description component.
+ */
+
+/**
+ * Link component for the GenericPage.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.to - The path to link to.
+ * @param {React.ReactNode} [props.icon] - The icon to be displayed. Defaults to ArrowLeftIcon.
+ * @param {string} props.text - The link text to be displayed.
+ * @returns {JSX.Element} The rendered Link component.
+ */
+
+/**
+ * ExternalLink component for the GenericPage.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.href - The URL to link to.
+ * @param {string} props.target - The target attribute specifies where to open the linked document.
+ * @param {React.ReactNode} [props.icon] - The icon to be displayed. Defaults to ArrowTopRightOnSquareIcon.
+ * @param {string} props.text - The link text to be displayed.
+ * @returns {JSX.Element} The rendered ExternalLink component.
+ */
+
+/**
+ * Action component for the GenericPage.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.onClick - The function to be called when the button is clicked.
+ * @param {React.ReactNode} [props.icon] - The icon to be displayed. Defaults to ArrowTopRightOnSquareIcon.
+ * @param {string} props.text - The button text to be displayed.
+ * @returns {JSX.Element} The rendered Action component.
+ */
 export function GenericPage({ children, className }) {
     return (
         <Container
@@ -11,7 +67,10 @@ export function GenericPage({ children, className }) {
                 [className]: className,
             })}
         >
-            {children}
+            <div className="flex flex-col items-center justify-center bg-card rounded-md p-6 drop-shadow-lg w-full max-w-md z-10 border">
+                <RetroGrid className="top-0 left-0" />
+                {children}
+            </div>
         </Container>
     );
 }
