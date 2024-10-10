@@ -54,60 +54,10 @@ export async function get(url, params = {}, type = 'data') {
     return results[type];
 }
 
-export async function removeCompany(companyName) {
-    const data = {
-        company: companyName,
-    };
-    const response = await PRIVATE_API.post('companies/delete/', data);
-
-    return response.status;
-}
-
-export async function clearCompany(companyName) {
-    const data = {
-        company: companyName,
-    };
-    const response = await PRIVATE_API.post('companies/clear/', data);
-
-    return response.status;
-}
-
-export async function syncJobs(companyName) {
-    const response = await PRIVATE_API.post('jobs/sync/', { company: companyName });
-    return response.status;
-}
-
 export async function getDataset(companyName) {
     const response = await PRIVATE_API.get(`companies/dataset/${companyName}/`);
 
     return response.data;
-}
-
-export async function getJobs(companyName, page, size, order = '', search = '') {
-    const response = await PRIVATE_API.get(
-        `jobs/get/?company=${companyName}&page=${page}&page_size=${size}&order=${order}&search=${search}`,
-    );
-
-    return {
-        data: response.data.results ?? [],
-        nextId: response.data.next ? page + 1 : null,
-        count: response.data?.count ?? 0,
-    };
-}
-
-export async function editJob(data) {
-    const response = await PRIVATE_API.post('jobs/edit/', [data]);
-    return response.status;
-}
-
-export async function removeJob(data) {
-    const response = await PRIVATE_API.post('jobs/delete/', [data]);
-    return response.status;
-}
-
-export async function publishJob(data) {
-    const response = await PRIVATE_API.post('jobs/publish/', [data]);
-    return response.status;
 }
 
 export async function getScrapers(page, order, search = '') {
@@ -150,18 +100,6 @@ export async function deleteScraper(scraperName) {
 export async function updateScraper(scraperName) {
     const response = await PRIVATE_API.post(`scraper/${scraperName}/`, { update: true });
     return response.data;
-}
-
-export async function getCities(page, size = 50, search = '') {
-    const response = await PRIVATE_API.get(
-        `orase/?page=${page}&page_size=${size}&search=${search}`,
-    );
-
-    return {
-        data: response.data.results ?? [],
-        nextId: response.data.next ? page + 1 : null,
-        count: response.data?.count ?? 0,
-    };
 }
 
 export async function getUsersAndCompanies(user = '') {
