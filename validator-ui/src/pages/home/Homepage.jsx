@@ -10,6 +10,8 @@ import { CompanyCard } from './components/cards/CompanyCard';
 import { CompanyForm } from './components/forms/CompanyForm';
 import { SORT_OPTIONS } from './components/filters/constants';
 import useWindowSize from '../../hooks/useWindowSize';
+import Loading from '../../components/Loading';
+import { Modal } from '../../components/Modal';
 
 /**
  * The Homepage component is responsible for rendering the main page of the application.
@@ -71,6 +73,17 @@ export function Homepage() {
         }
     }, [data]);
 
+    const [editedData, setEditedData] = useState({});
+    const [openModal, setOpenModal] = useState(false);
+
+    if (status === 'error') {
+        return (
+            <LoadingPage message={error.message}>
+                <Loading lst={[{ name: 'user' }, { name: 'validator-error' }]} />
+            </LoadingPage>
+        );
+    }
+
     return (
         <Home>
             <Home.Header
@@ -95,16 +108,16 @@ export function Homepage() {
             />
 
             {status === 'pending' ? (
-                <LoadingPage message={'Se incarca companiile'} />
-            ) : status === 'error' ? (
-                <span>Eroare: {error.message}</span>
+                <LoadingPage message={'Se incarca companiile'}>
+                    <Loading />
+                </LoadingPage>
             ) : (
                 <>
                     {!data?.pages[0].data?.length ? (
                         <NoResultFound />
                     ) : (
                         <>
-                            <div className="grid grid-cols-minmax gap-6">
+                            <div className="grid grid-cols-minmax gap-6 px-4 lg:px-6">
                                 {companies.map((company, index) => {
                                     const uniqueKey = `company_${index}`;
                                     return (
@@ -115,6 +128,8 @@ export function Homepage() {
                                             setAlertOpen={setAlertOpen}
                                             setAlertMessage={setAlertMessage}
                                             setAlertType={setAlertType}
+                                            setEditedData={setEditedData}
+                                            setOpenModal={setOpenModal}
                                         />
                                     );
                                 })}
@@ -124,6 +139,16 @@ export function Homepage() {
                     )}
                 </>
             )}
+            <Modal open={openModal} setOpen={setOpenModal}>
+                <CompanyForm
+                    companyData={editedData}
+                    method="PUT"
+                    setCompanies={setCompanies}
+                    setAlertOpen={setAlertOpen}
+                    setAlertMessage={setAlertMessage}
+                    setAlertType={setAlertType}
+                />
+            </Modal>
         </Home>
     );
 }
