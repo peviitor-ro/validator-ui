@@ -5,13 +5,16 @@ import { useCitiesSelector } from '../../../../store/cities.selector';
 import { useCitiesQuery } from '../../../../services/landing/landing.queries';
 import { useJobStore } from '../../../../store/job.state';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { City } from './City';
-import { editJob } from '../../../../services/landing/landing.service';
+import { routes } from '../../../../routes/routes';
 import Loading from '../../../../components/Loading';
 import clsx from 'clsx';
 import * as yup from 'yup';
+import { Button } from '../../../../components/Button';
+import { LoadingPage } from '../../../../components/LoadingPage';
+import { post } from '../../../../services/landing/landing.service';
 
 // form validation schema
 const schema = yup.object().shape({
@@ -23,18 +26,55 @@ const schema = yup.object().shape({
     edited: yup.boolean().required(),
 });
 
-export function JobForm({ ...props }) {
+/**
+ * JobForm component for editing job details.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Object} props.jobData - Initial job data.
+ * @param {Function} props.setJobsData - Function to update the jobs data.
+ * @param {Function} props.setOpenModal - Function to control the modal state.
+ * @param {Function} props.setAlertOpen - Function to control the alert state.
+ * @param {Function} props.setAlertMessage - Function to set the alert message.
+ * @param {Function} props.setAlertType - Function to set the alert type.
+ * @returns {JSX.Element} The JobForm component.
+ *
+ * @example
+ * <JobForm
+ *   jobData={jobData}
+ *   setJobsData={setJobsData}
+ *   setOpenModal={setOpenModal}
+ *   setAlertOpen={setAlertOpen}
+ *   setAlertMessage={setAlertMessage}
+ *   setAlertType={setAlertType}
+ * />
+ */
+export function JobForm({
+    jobData,
+    setJobsData,
+    setOpenModal,
+    setAlertOpen,
+    setAlertMessage,
+    setAlertType,
+}) {
+    // State hooks for alert message and type
+    const [loading, setLoading] = useState(false);
+    const setAlert = (message, type) => {
+        setLoading(false);
+        setAlertOpen(true);
+        setAlertMessage(message);
+        setAlertType(type);
+    };
+
     const store = useJobStore();
-    const [propsdata, setPropsData] = useState(props.props);
+    const [propsdata, setPropsData] = useState(jobData);
 
     const { job_link, job_title, country, city, county, remote, edited, published, posted } =
         propsdata;
 
     useEffect(() => {
         store.setJob({ ...propsdata });
-    }, [propsdata]);
-
-    const [loading, setLoading] = useState(false);
+    }, [propsdata, jobData]);
 
     // form validation
     const {
@@ -48,33 +88,40 @@ export function JobForm({ ...props }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await editJob(propsdata);
+            const response = await post(routes.JOBS_EDIT, [propsdata]);
             // if the response is 200, update the job in the store and close the modal
-            if (response === 200) {
+            if (response.status === 200) {
                 let changedJob = propsdata;
                 changedJob.edited = true;
                 setPropsData({ ...changedJob });
-                props.set(propsdata);
-                props.setOpen(false);
+                setJobsData((prev) =>
+                    prev.map((item) => (item.job_link === propsdata.job_link ? changedJob : item)),
+                );
+
+                setOpenModal(false);
+                setAlert('Jobul a fost editat cu succes', 'success');
             } else {
                 // if the response is not 200, set an error message
                 setError('job_title', { type: 'manual', message: 'A aparut o eroare' });
+                setAlert('A aparut o eroare', 'error');
             }
         } catch (error) {
             setLoading(false);
             setError('job_title', { type: 'manual', message: error.message });
+            setAlert('A aparut o eroare', 'error');
         } finally {
             setLoading(false);
         }
     };
 
     const handleClick = (e) => {
-        handleSubmit(onSubmit(e));
+        e.preventDefault();
+        handleSubmit(onSubmit(e))();
     };
 
     // city search
     const { search, setSearch } = useCitiesSelector();
-    const debounceSearch = useDebounce(search);
+    useDebounce(search);
 
     // fetch cities
     const { data, status, error, isFetchingNextPage, fetchNextPage, hasNextPage } = useCitiesQuery(
@@ -153,9 +200,7 @@ export function JobForm({ ...props }) {
                         className="border-input h-full w-full p-2"
                         id="job_title"
                         placeholder="Titlu"
-                        // errorMessage={errors.title?.message}
                         type="text"
-                        // register={register}
                         defaultValue={job_title}
                         onChange={changeHandler}
                     />
@@ -226,18 +271,9 @@ export function JobForm({ ...props }) {
                                 disabled={!hasNextPage || isFetchingNextPage}
                                 className="m-auto"
                             >
-                                {isFetchingNextPage ? (
-                                    <>
-                                        <span className="text-sm">
-                                            Se incarca mai multe orase ...
-                                        </span>
-                                        <Loading className="w-28" />
-                                    </>
-                                ) : hasNextPage ? (
-                                    'Se incarca mai multe orase'
-                                ) : (
-                                    ''
-                                )}
+                                {status === 'pending' || isFetchingNextPage || hasNextPage ? (
+                                    <span className="text-sm">Se incarca mai multe orase ...</span>
+                                ) : null}
                             </button>
                         </ul>
                     </div>
@@ -278,16 +314,13 @@ export function JobForm({ ...props }) {
                         ))}
                     </select>
                 </div>
-
-                <div>
-                    <button
-                        className="rounded-full border px-3 py-2 cursor-pointer hover:bg-green-500 hover:text-white active:translate-y-1 w-[100px]"
-                        onClick={handleClick}
-                    >
-                        {loading ? <Loading className="w-5" /> : 'Editati'}
-                    </button>
-                </div>
+                <Button text="Editati" onClick={handleClick} />
             </form>
+            {loading && (
+                <LoadingPage message="Se editeaza Jobul">
+                    <Loading />
+                </LoadingPage>
+            )}
         </>
     );
 }

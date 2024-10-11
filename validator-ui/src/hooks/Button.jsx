@@ -1,5 +1,6 @@
 import { NoMoreResults } from '../pages/home/components/NoMoreResults';
 import { LoadingPage } from '../components/LoadingPage';
+import Loading from '../components/Loading';
 
 /**
  * Button component that handles fetching the next page of data.
@@ -24,21 +25,22 @@ export function Button({
     noPagesText,
 }) {
     return (
-        <button
-            ref={ref}
-            onClick={() => fetchNextPage()}
-            disabled={!hasNextPage || isFetchingNextPage}
-            className="m-auto"
-        >
+        <>
+            <button
+                ref={ref}
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+                className="m-auto"
+            ></button>
             {isFetchingNextPage ? (
-                <>
-                    <LoadingPage message={buttonText} />
-                </>
+                <LoadingPage message={buttonText}>
+                    <Loading />
+                </LoadingPage>
             ) : hasNextPage ? (
                 fetchNextPageText
             ) : (
                 <NoMoreResults message={noPagesText} />
             )}
-        </button>
+        </>
     );
 }
