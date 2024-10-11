@@ -13,7 +13,7 @@ import { Modal } from '../../../../components/Modal';
  * @returns {JSX.Element} The rendered Home component.
  */
 export function Home({ children }) {
-    return <main className="flex flex-col gap-4 p-4 lg:gap-10 lg:p-10">{children}</main>;
+    return <main className="flex flex-col gap-4 lg:gap-10 ">{children}</main>;
 }
 
 /**
@@ -41,7 +41,7 @@ Home.Header = function H({ title, formComponent, selector, options }) {
     return (
         <div
             id="search-container"
-            className="flex flex-col gap-2 border-b border-disabled pb-4 lg:flex-row lg:pb-6 lg:items-center"
+            className="sticky top-0 w-full z-40 flex flex-col bg-card gap-2 border-b border-disabled shadow-lg lg:flex-row lg:items-center p-2 lg:p-4"
         >
             <h1 className="text-3xl font-semibold text-primary">{title}</h1>
 
