@@ -1,38 +1,64 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
-
+import { post } from '../../../../services/landing/landing.service';
+import { routes } from '../../../../routes/routes';
 import { FolderIcon } from '@heroicons/react/20/solid';
-import { deleteScraper, updateScraper } from '../../../../services/landing/landing.service';
-import { Loader } from '../../../../components/Loader';
-import { Spinner } from '../../../../components/Spinner';
 
 import Python from '../../../../assets/svgs/Python.svg';
 import JavaScript from '../../../../assets/svgs/JavaScript.svg';
 import Jmeter from '../../../../assets/svgs/Jmeter.svg';
 
-import {
-    ExclamationTriangleIcon,
-    TrashIcon,
-    ArrowPathIcon,
-    CheckIcon,
-} from '@heroicons/react/24/outline';
+import { AnimatedCard } from '../../../../components/AnimatedCard';
+import { Trash, RefreshCcw } from 'lucide-react';
+import { LoadingPage } from '../../../../components/LoadingPage';
+import Loading from '../../../../components/Loading';
 
-export async function handleFetch(fetch, setStatus) {
+/**
+ * Handles the fetch operation and updates the status and alert accordingly.
+ *
+ * @param {Function} fetch - The fetch function to execute.
+ * @param {Function} setStatus - Function to update the status.
+ * @param {Function} setAlert - Function to set the alert message and type.
+ * @param {Function} [setScrapers=null] - Optional function to update the scrapers list.
+ * @param {string} [scraperNname=''] - The name of the scraper to be removed from the list.
+ * @returns {Promise<void>} - A promise that resolves when the fetch operation is complete.
+ */
+export async function handleFetch(
+    fetch,
+    setStatus,
+    setAlert,
+    setScrapers = null,
+    scraperNname = '',
+) {
     setStatus('pending');
     try {
         const response = await fetch();
 
-        if (response.success || response === 200) {
+        if (response.data.success && response.status === 200) {
             setStatus('resolved');
+            setAlert('Actiune efectuata cu succes', 'success');
+            if (setScrapers) {
+                setScrapers((prev) => prev.filter((scraper) => scraper.name !== scraperNname));
+            }
         } else {
             setStatus('error');
+            setAlert('A aparut o eroare', 'error');
         }
     } catch (error) {
         setStatus('error');
+        setAlert('A aparut o eroare', 'error');
     }
 }
 
+/**
+ * Determines the component to be displayed based on the given status.
+ *
+ * @param {string} status - The current status to match.
+ * @param {string[]} statuses - An array of possible statuses.
+ * @param {React.Component[]} components - An array of components corresponding to each status.
+ * @returns {React.Component} - The component that matches the given status.
+ */
 export function setStatusComponent(status, statuses, components) {
     const totalStatuses = statuses.length;
     let statusComponent = components[totalStatuses - 1];
@@ -52,64 +78,78 @@ const icons = {
     Jmeter: Jmeter,
 };
 
-export function Folder({ scraper, status, error }) {
+/**
+ * Folder component that displays information about a scraper and provides options to delete or update it.
+ *
+ * @param {Object} props - The properties object.
+ * @param {Object} props.scraper - The scraper object containing details about the scraper.
+ * @param {Function} props.setScrapers - Function to update the list of scrapers.
+ * @param {string} props.status - The status of the scraper.
+ * @param {Function} props.setAlertOpen - Function to set the alert open state.
+ * @param {Function} props.setAlertMessage - Function to set the alert message.
+ * @param {Function} props.setAlertType - Function to set the alert type.
+ *
+ * @returns {JSX.Element} The Folder component.
+ */
+export function Folder({
+    scraper,
+    setScrapers,
+    status,
+    setAlertOpen,
+    setAlertMessage,
+    setAlertType,
+}) {
+    // State hooks for alert message and type
     const [deleteStatus, setDeleteStatus] = useState('idle');
     const [updateStatus, setUpdateStatus] = useState('idle');
 
-    useEffect(() => {
-        if (deleteStatus === 'resolved') {
-            window.location.reload();
-        }
-    }, [deleteStatus]);
+    // Function to set the alert message and type
+    const setAlert = (message, type) => {
+        setAlertOpen(true);
+        setAlertMessage(message);
+        setAlertType(type);
+    };
 
-    const handleDelete = handleFetch.bind(null, () => deleteScraper(scraper.name), setDeleteStatus);
-    const handleUpdate = handleFetch.bind(null, () => updateScraper(scraper.name), setUpdateStatus);
+    // Function to handle the delete operation
+    const handleDelete = handleFetch.bind(
+        null,
+        () => post(routes.SCRAPER_DELETE, { name: scraper.name }),
 
-    let deleteStatusButon = setStatusComponent(
-        deleteStatus,
-        ['pending', 'idle', 'resolved', 'error'],
-        [
-            <span className="w-5 h-5">
-                <Spinner />
-            </span>,
-            <TrashIcon className="h-5" title="Delete" />,
-            <CheckIcon className="h-5" title="Success" />,
-            <ExclamationTriangleIcon className="h-5" />,
-        ],
+        setDeleteStatus,
+        setAlert,
+        setScrapers,
+        scraper.name,
     );
 
-    let updateStatusButon = setStatusComponent(
-        updateStatus,
-        ['pending', 'idle', 'resolved', 'error'],
-        [
-            <span className="w-5 h-5">
-                <Spinner />
-            </span>,
-            <ArrowPathIcon className="h-5" title="Update" />,
-            <CheckIcon className="h-5" title="Success" />,
-            <ExclamationTriangleIcon className="h-5" />,
-        ],
+    // Function to handle the update operation
+    const handleUpdate = handleFetch.bind(
+        null,
+        () => post(routes.SCRAPER_UPDATE + scraper.name + '/', { update: true }),
+        setUpdateStatus,
+        setAlert,
     );
 
-    let folderIcon = setStatusComponent(
-        status,
-        ['pending', 'error', 'resolved'],
-        [
-            <Loader message="Se incarca" imgStyle="w-32" />,
-            <ExclamationTriangleIcon
-                className="h-32 text-red-500"
-                title={`Error: ${error?.message}`}
-            />,
-            <FolderIcon className="h-32" title="Deschide" />,
-        ],
-    );
+    // navigation links
+    const iconsClasses = 'w-5 h-5 lg:w-7 lg:h-7';
+    const navLinks = [
+        {
+            name: 'Sterge',
+            onClick: handleDelete,
+            icon: <Trash className={iconsClasses} />,
+        },
+        {
+            name: 'Actualizeaza',
+            onClick: handleUpdate,
+            icon: <RefreshCcw className={iconsClasses} />,
+        },
+    ];
 
     return (
-        <div className="bg-white rounded-md shadow-md my-2 h-[400px] w-[300px] card">
-            <div className="flex flex-col items-center justify-between h-full">
+        <>
+            <AnimatedCard navLinks={navLinks} cardId={scraper.name} data={scraper}>
                 <div className="flex flex-col items-center gap-2 p-2 ">
                     <NavLink className="text-amber-500" to={`/scraper/${scraper.name}`}>
-                        {folderIcon}
+                        <FolderIcon className="h-32" title="Deschide" />,
                     </NavLink>
                     <p
                         className={clsx('text-xl font-semibold', {
@@ -119,8 +159,8 @@ export function Folder({ scraper, status, error }) {
                         {scraper.name}
                     </p>
                 </div>
-                <div className="flex items-center gap-2 p-2">
-                    <img className="w-5" src={icons[scraper.language]} alt={scraper.language} />
+                <div className="flex items-center justify-center gap-2 p-2">
+                    <img className="w-10" src={icons[scraper.language]} alt={scraper.language} />
                     <p
                         className={clsx('text-sm font-semibold', {
                             'text-red-500': status === 'error',
@@ -129,44 +169,36 @@ export function Folder({ scraper, status, error }) {
                         {scraper.language}
                     </p>
                 </div>
-                <div className="flex flex-col justify-center w-full h-full gap-2 mr-2">
-                    <button
-                        className="flex items-center gap-2 btn btn-green text-center mb-2 text-white"
-                        onClick={handleUpdate}
-                        disabled={updateStatus === 'pending'}
-                    >
-                        {updateStatusButon}
+            </AnimatedCard>
+            {!['idle', 'resolved', 'error'].includes(updateStatus) && (
+                <LoadingPage
+                    message={
+                        {
+                            pending: 'Se Actualizeaza',
+                            idle: 'Actualizeaza',
+                            resolved: 'Sters',
+                            error: 'Eroare',
+                        }[updateStatus]
+                    }
+                >
+                    <Loading />
+                </LoadingPage>
+            )}
 
-                        <p className="w-full text-white">
-                            {
-                                {
-                                    pending: 'Asteapta',
-                                    idle: 'Actualizeaza',
-                                    resolved: 'Actualizat',
-                                    error: 'Eroare',
-                                }[updateStatus]
-                            }
-                        </p>
-                    </button>
-                    <button
-                        className="flex items-center gap-2 btn  btn-red text-center mb-2 text-white"
-                        onClick={handleDelete}
-                        disabled={deleteStatus === 'pending'}
-                    >
-                        {deleteStatusButon}{' '}
-                        <p className="w-full text-white">
-                            {
-                                {
-                                    pending: 'Asteapta',
-                                    idle: 'Sterge',
-                                    resolved: 'Sters',
-                                    error: 'Eroare',
-                                }[deleteStatus]
-                            }
-                        </p>
-                    </button>
-                </div>
-            </div>
-        </div>
+            {!['idle', 'resolved', 'error'].includes(deleteStatus) && (
+                <LoadingPage
+                    message={
+                        {
+                            pending: 'Se Sterge',
+                            idle: 'Sterge',
+                            resolved: 'Sters',
+                            error: 'Eroare',
+                        }[deleteStatus]
+                    }
+                >
+                    <Loading />
+                </LoadingPage>
+            )}
+        </>
     );
 }

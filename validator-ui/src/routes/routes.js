@@ -21,4 +21,10 @@ export const routes = {
 
     // Cities
     CITIES: 'orase/',
+
+    // Scraper
+    SCRAPER: 'scraper/',
+    SCRAPER_ADD: 'scraper/add/',
+    SCRAPER_DELETE: 'scraper/remove/',
+    SCRAPER_UPDATE: 'scraper/',
 };

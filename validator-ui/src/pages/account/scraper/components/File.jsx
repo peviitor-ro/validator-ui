@@ -1,67 +1,63 @@
-import { useState } from 'react';
-import { runScraperFile } from '../../../../services/landing/landing.service';
-import { ExclamationTriangleIcon, CheckIcon, DocumentTextIcon } from '@heroicons/react/20/solid';
+import { useState, useEffect } from 'react';
+import { DocumentTextIcon } from '@heroicons/react/20/solid';
 import { handleFetch } from './Folders';
-import { setStatusComponent } from './Folders';
-import { Spinner } from '../../../../components/Spinner';
-import { Loader } from '../../../../components/Loader';
+import { post } from '../../../../services/landing/landing.service';
+import { AnimatedCard } from '../../../../components/AnimatedCard';
+import { Play } from 'lucide-react';
+import { LoadingPage } from '../../../../components/LoadingPage';
+import Loading from '../../../../components/Loading';
 
-export function File({ data, endpoint }) {
+/**
+ * Component representing a file with associated actions and status.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.data - The data related to the file.
+ * @param {string} props.data.name - The name of the file.
+ * @param {string} props.endpoint - The endpoint to post the file data.
+ * @param {Function} props.setAlert - Function to set alert messages.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
+export function File({ data, endpoint, setAlert }) {
     const [status, setStatus] = useState('idle');
 
+    useEffect(() => {
+        if (status === 'error') {
+            setAlert('A aparut o eroare', 'error');
+        }
+    }, [status]);
+
+    // handle run file
     const handleRunFile = handleFetch.bind(
         null,
-        runScraperFile.bind(null, endpoint, data.name),
+        () => post(endpoint, { file: data.name }),
         setStatus,
-    );
-    let statusFetch = setStatusComponent(
-        status,
-        ['pending', 'error', 'idle'],
-        [
-            <Loader message="Se ruleaza" imgStyle="w-32" />,
-            <ExclamationTriangleIcon className="h-32 text-red-500" />,
-            <DocumentTextIcon className="w-32 text-blue-500" />,
-        ],
+        setAlert,
     );
 
-    let statusButton = setStatusComponent(
-        status,
-        ['pending', 'idle', 'resolved', 'error'],
-        [
-            <span className="w-5 h-5">
-                <Spinner />
-            </span>,
-            null,
-            <CheckIcon className="h-5 text-white" title="Success" />,
-            <ExclamationTriangleIcon
-                className="h-5 text-white"
-                title={handleRunFile == 'error' ? handleRunFile.error : handleRunFile.success}
-            />,
-        ],
-    );
+    // navigation links
+    const iconsClasses = 'w-5 h-5 lg:w-7 lg:h-7';
+    const navLinks = [
+        {
+            name: 'Ruleaza',
+            onClick: handleRunFile,
+            icon: <Play className={iconsClasses} />,
+        },
+    ];
 
     return (
-        <div className="flex flex-col items-center justify-around bg-white rounded-md shadow-md my-2 h-[400px] w-[300px] card">
-            {statusFetch}
-            <p className="ml-2">{data.name}</p>
-            <button
-                className={`flex items-center gap-2 w-full btn text-center mb-2 ${status === 'error' ? 'btn-red' : 'btn-green'}`}
-                onClick={handleRunFile}
-                disabled={statusButton === 'pending'}
-            >
-                {statusButton}
-
-                <p className="w-full text-white">
-                    {
-                        {
-                            pending: 'Asteapta',
-                            idle: 'Ruleaza',
-                            resolved: 'Ruleaza',
-                            error: 'Eroare',
-                        }[status]
-                    }
-                </p>
-            </button>
-        </div>
+        <>
+            <AnimatedCard navLinks={navLinks} cardId={data.name} data={data}>
+                <div className="flex flex-col items-center gap-2 p-2">
+                    <DocumentTextIcon className="w-32 text-blue-500" />
+                    <p className="ml-2 font-semibold text-xl text-center">{data.name}</p>
+                </div>
+            </AnimatedCard>
+            {!['idle', 'resolved', 'error'].includes(status) ? (
+                <LoadingPage message={`Se ruleaza scraperul ${data.name}`}>
+                    <Loading />
+                </LoadingPage>
+            ) : null}
+        </>
     );
 }
