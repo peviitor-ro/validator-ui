@@ -3,6 +3,8 @@ import { useNavbar } from '../contexts/Navbarcontext';
 import { BorderBeam } from './ui/border-beam';
 import RetroGrid from './ui/retro-grid';
 import clsx from 'clsx';
+import { GridPattern } from './ui/grid-pattern';
+import { cn } from '../lib/utils';
 
 /**
  * Card component that displays a card with interactive features.
@@ -70,13 +72,34 @@ export function AnimatedCard({ children, navLinks, cardId, data, setEditedData =
                 setEditedData(data);
             }}
         >
-            {activeCard === cardId && (
+            {activeCard === cardId ? (
                 <>
-                    <RetroGrid className="top-0 left-0" />
+                    <RetroGrid className="top-0 left-0 z-20" />
                     <BorderBeam />
                 </>
+            ) : (
+                <GridPattern
+                    squares={[
+                        [4, 4],
+                        [5, 1],
+                        [8, 2],
+                        [5, 3],
+                        [5, 5],
+                        [10, 10],
+                        [12, 15],
+                        [15, 10],
+                        [10, 15],
+                        [15, 10],
+                        [10, 15],
+                        [15, 10],
+                    ]}
+                    className={cn(
+                        '[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]',
+                        'inset-x-0 inset-y-[-20%] h-[100%] skew-y-12',
+                    )}
+                />
             )}
-            {children}
+            <div className={cn('flex flex-col h-full w-full z-10')}>{children}</div>
         </div>
     );
 }
