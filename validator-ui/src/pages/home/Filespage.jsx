@@ -71,7 +71,7 @@ export function Filespage() {
 
     useEffect(() => {
         if (data) {
-            setFiles(data.files);
+            setFiles(data.data.files);
         }
     }, [data]);
 
@@ -129,7 +129,7 @@ export function Filespage() {
                         <File
                             key={index}
                             data={file}
-                            endpoint={data.endpoint}
+                            endpoint={data.data.endpoint}
                             setAlert={setAlert}
                         />
                     );

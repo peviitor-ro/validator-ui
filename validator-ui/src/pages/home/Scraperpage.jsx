@@ -119,10 +119,10 @@ export const Scraperpage = () => {
                     )}
                     {status === 'success' && (
                         <>
-                            {scrapers.map((scraper) => {
+                            {scrapers.map((scraper, index) => {
                                 return (
                                     <Folder
-                                        key={scraper.id}
+                                        key={index}
                                         scraper={scraper}
                                         setScrapers={setScrapers}
                                         status={status}

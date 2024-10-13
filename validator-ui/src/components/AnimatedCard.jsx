@@ -89,9 +89,6 @@ export function AnimatedCard({ children, navLinks, cardId, data, setEditedData =
                         [12, 15],
                         [15, 10],
                         [10, 15],
-                        [15, 10],
-                        [10, 15],
-                        [15, 10],
                     ]}
                     className={cn(
                         '[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]',
