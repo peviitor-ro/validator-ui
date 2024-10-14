@@ -8,6 +8,7 @@ import { cn } from '../../../../lib/utils';
 import { Paintbrush, RefreshCcwDot, PenIcon, Trash, Globe, PenLine } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../../../routes/routes';
+import { set } from 'react-hook-form';
 
 /**
  * Badge component that displays a text inside a styled div with a grid pattern background.
@@ -97,6 +98,16 @@ export function JobCard({
     const [clearLoading, setClearLoading] = useState(false);
     const handleClearCompany = async () => {
         await actionButtons({ company: company }, routes.COMPANY_CLEAR, setAlert, setClearLoading);
+        setJobs((prev) =>
+            prev.map((item) =>
+                item.company === company
+                    ? {
+                          ...item,
+                          published: false,
+                      }
+                    : item,
+            ),
+        );
     };
 
     // sync jobs
@@ -240,7 +251,7 @@ export function JobCard({
                     </div>
                 </div>
             </AnimatedCard>
-            {clearLoading || syncLoading || deleteLoading ? (
+            {clearLoading || syncLoading || deleteLoading || updateLoading ? (
                 <LoadingPage message={message}>
                     <Loading />
                 </LoadingPage>
