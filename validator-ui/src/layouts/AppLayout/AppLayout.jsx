@@ -6,6 +6,26 @@ import { Dock, DockIcon, dockVariants } from '../../components/ui/dock';
 import { useNavbar } from '../../contexts/Navbarcontext';
 import { HomeIcon, LogOut } from 'lucide-react';
 
+/**
+ * AppLayout component that provides the main layout for the application.
+ * It includes a navigation dock with various icons and links.
+ *
+ * @component
+ * @example
+ * return (
+ *   <AppLayout />
+ * )
+ *
+ * @returns {JSX.Element} The rendered AppLayout component.
+ *
+ * @description
+ * The AppLayout component uses several hooks to manage authentication, navigation, and navbar links.
+ * It renders a container with an Outlet for nested routes and a sticky dock at the bottom with navigation icons.
+ *
+ * @hook useAuthContext - Provides the logout function.
+ * @hook useNavigate - Provides the navigate function for routing.
+ * @hook useNavbar - Provides the links for the navigation dock.
+ */
 export function AppLayout() {
     const { logout } = useAuthContext();
 

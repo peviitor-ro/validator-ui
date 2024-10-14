@@ -3,6 +3,24 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
+/**
+ * AnimatedList component that animates the display of its children elements.
+ *
+ * @component
+ * @example
+ * <AnimatedList className="my-class" delay={1500}>
+ *   <div>Item 1</div>
+ *   <div>Item 2</div>
+ *   <div>Item 3</div>
+ * </AnimatedList>
+ *
+ * @param {Object} props - The component props.
+ * @param {string} [props.className] - Additional class names to apply to the container.
+ * @param {React.ReactNode} props.children - The child elements to be animated.
+ * @param {number} [props.delay=1000] - The delay in milliseconds between each animation step.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 export const AnimatedList = React.memo(({ className, children, delay = 1000 }) => {
     const [index, setIndex] = useState(0);
     const childrenArray = React.Children.toArray(children);
@@ -35,6 +53,13 @@ export const AnimatedList = React.memo(({ className, children, delay = 1000 }) =
 
 AnimatedList.displayName = 'AnimatedList';
 
+/**
+ * AnimatedListItem component renders a motion.div with animation properties.
+ *
+ * @param {Object} props - The properties object.
+ * @param {React.ReactNode} props.children - The child elements to be rendered inside the motion.div.
+ * @returns {JSX.Element} The rendered motion.div component with animations.
+ */
 export function AnimatedListItem({ children }) {
     const animations = {
         initial: { scale: 0, opacity: 0 },

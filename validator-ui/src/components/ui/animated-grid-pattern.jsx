@@ -5,6 +5,24 @@ import { motion } from 'framer-motion';
 
 import { cn } from '../../lib/utils';
 
+/**
+ * GridPattern component renders an animated grid pattern using SVG and React.
+ *
+ * @param {Object} props - The properties object.
+ * @param {number} [props.width=40] - The width of each grid square.
+ * @param {number} [props.height=40] - The height of each grid square.
+ * @param {number} [props.x=-1] - The x-coordinate offset for the pattern.
+ * @param {number} [props.y=-1] - The y-coordinate offset for the pattern.
+ * @param {number} [props.strokeDasharray=0] - The stroke dash array for the grid lines.
+ * @param {number} [props.numSquares=50] - The number of squares to generate.
+ * @param {string} [props.className] - Additional class names for the SVG element.
+ * @param {number} [props.maxOpacity=0.5] - The maximum opacity for the animated squares.
+ * @param {number} [props.duration=4] - The duration of the animation for each square.
+ * @param {number} [props.repeatDelay=0.5] - The delay between animation repeats.
+ * @param {Object} [props.props] - Additional properties to spread on the SVG element.
+ *
+ * @returns {JSX.Element} The rendered SVG element with the animated grid pattern.
+ */
 export function GridPattern({
     width = 40,
     height = 40,

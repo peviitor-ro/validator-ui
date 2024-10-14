@@ -5,6 +5,27 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '../../lib/utils';
 
+/**
+ * Configuration object for the Globe component.
+ *
+ * @typedef {Object} GlobeConfig
+ * @property {number} width - The width of the globe.
+ * @property {number} height - The height of the globe.
+ * @property {Function} onRender - Callback function to be called on render.
+ * @property {number} devicePixelRatio - The device pixel ratio.
+ * @property {number} phi - The phi angle for the globe's rotation.
+ * @property {number} theta - The theta angle for the globe's rotation.
+ * @property {number} dark - The darkness level of the globe.
+ * @property {number} diffuse - The diffuse lighting level of the globe.
+ * @property {number} mapSamples - The number of map samples.
+ * @property {number} mapBrightness - The brightness of the map.
+ * @property {number[]} baseColor - The base color of the globe in RGB format.
+ * @property {number[]} markerColor - The color of the markers in RGB format.
+ * @property {number[]} glowColor - The color of the globe's glow in RGB format.
+ * @property {Object[]} markers - Array of marker objects.
+ * @property {number[]} markers[].location - The latitude and longitude of the marker.
+ * @property {number} markers[].size - The size of the marker.
+ */
 const GLOBE_CONFIG = {
     width: 800,
     height: 800,
@@ -22,6 +43,15 @@ const GLOBE_CONFIG = {
     markers: [{ location: [44.4268, 26.1025], size: 0.05 }],
 };
 
+/**
+ * Globe component renders an interactive globe using a canvas element.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} [props.className] - Additional class names for the container div.
+ * @param {Object} [props.config=GLOBE_CONFIG] - Configuration object for the globe.
+ *
+ * @returns {JSX.Element} The rendered Globe component.
+ */
 export default function Globe({ className, config = GLOBE_CONFIG }) {
     let phi = 0;
     let width = 0;

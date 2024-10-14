@@ -5,7 +5,7 @@ import { useCitiesSelector } from '../../../../store/cities.selector';
 import { useCitiesQuery } from '../../../../services/landing/landing.queries';
 import { useJobStore } from '../../../../store/job.state';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { City } from './City';
 import { routes } from '../../../../routes/routes';

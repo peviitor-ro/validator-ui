@@ -14,6 +14,29 @@ import { Account } from '../pages/account/Account';
 import { Scraperpage } from '../pages/home/Scraperpage';
 import { Filespage } from '../pages/home/Filespage';
 
+/**
+ * Router component that defines the application's routing structure.
+ *
+ * This component uses `BrowserRouter` to manage the routing and `Routes` to define
+ * individual routes. It includes both public routes and routes that require authentication.
+ *
+ * Public Routes:
+ * - Login: Redirects to the home page if authenticated, otherwise renders the Login component wrapped in a CapthchaProvider.
+ * - Authorized: Redirects to the home page if authenticated, otherwise renders the Authorize component.
+ * - Confirm Email: Redirects to the home page if authenticated, otherwise renders the EmailConfirmation component.
+ *
+ * Authenticated Routes:
+ * - Home: Renders the AppLayout component wrapped in an AuthGuard.
+ * - Account: Renders the Account component.
+ * - Scraper: Renders the Scraperpage component.
+ * - Scraper Details: Renders the Filespage component based on the scraper name.
+ * - Jobs: Renders the JobsPage component based on the company name.
+ *
+ * Fallback Route:
+ * - Not Found: Renders the NotFoundRoute component for any undefined routes.
+ *
+ * @returns {JSX.Element} The Router component with defined routes.
+ */
 export function Router() {
     const { isAuthenticated } = useAuthContext();
 

@@ -3,6 +3,29 @@ import { motion } from 'framer-motion';
 
 import { cn } from '../../lib/utils';
 
+/**
+ * AnimatedBeam component renders an animated SVG beam between two reference points.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} [props.className] - Additional class names for the SVG element.
+ * @param {React.RefObject} props.containerRef - Reference to the container element.
+ * @param {React.RefObject} props.fromRef - Reference to the starting element.
+ * @param {React.RefObject} props.toRef - Reference to the ending element.
+ * @param {number} [props.curvature=0] - Curvature of the beam path.
+ * @param {boolean} [props.reverse=false] - Whether to reverse the gradient direction.
+ * @param {number} [props.duration=Math.random() * 3 + 4] - Duration of the gradient animation.
+ * @param {number} [props.delay=0] - Delay before the gradient animation starts.
+ * @param {string} [props.pathColor='gray'] - Color of the beam path.
+ * @param {number} [props.pathWidth=2] - Width of the beam path.
+ * @param {number} [props.pathOpacity=0.2] - Opacity of the beam path.
+ * @param {string} [props.gradientStartColor='#ffaa40'] - Start color of the gradient.
+ * @param {string} [props.gradientStopColor='#9c40ff'] - Stop color of the gradient.
+ * @param {number} [props.startXOffset=0] - X offset for the starting point.
+ * @param {number} [props.startYOffset=0] - Y offset for the starting point.
+ * @param {number} [props.endXOffset=0] - X offset for the ending point.
+ * @param {number} [props.endYOffset=0] - Y offset for the ending point.
+ * @returns {JSX.Element} The rendered SVG element with the animated beam.
+ */
 export const AnimatedBeam = ({
     className,
     containerRef,

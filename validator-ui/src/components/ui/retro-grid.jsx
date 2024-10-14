@@ -1,5 +1,14 @@
 import { cn } from '../../lib/utils';
 
+/**
+ * RetroGrid component renders a grid with a retro style background.
+ *
+ * @param {Object} props - The properties object.
+ * @param {string} [props.className] - Additional class names to apply to the grid container.
+ * @param {number} [props.angle=65] - The angle of the grid rotation in degrees.
+ *
+ * @returns {JSX.Element} The rendered RetroGrid component.
+ */
 export default function RetroGrid({ className, angle = 65 }) {
     return (
         <div

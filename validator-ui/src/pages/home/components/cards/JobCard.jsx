@@ -8,7 +8,6 @@ import { cn } from '../../../../lib/utils';
 import { Paintbrush, RefreshCcwDot, PenIcon, Trash, Globe, PenLine } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../../../routes/routes';
-import { set } from 'react-hook-form';
 
 /**
  * Badge component that displays a text inside a styled div with a grid pattern background.

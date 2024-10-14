@@ -1,6 +1,20 @@
 import { useId } from 'react';
-
 import { cn } from '../../lib/utils';
+
+/**
+ * GridPattern component renders an SVG grid pattern with optional squares.
+ *
+ * @param {Object} props - The properties object.
+ * @param {number} [props.width=40] - The width of the grid pattern.
+ * @param {number} [props.height=40] - The height of the grid pattern.
+ * @param {number} [props.x=-1] - The x-coordinate offset for the pattern.
+ * @param {number} [props.y=-1] - The y-coordinate offset for the pattern.
+ * @param {string} [props.strokeDasharray='0'] - The stroke dash array for the grid lines.
+ * @param {Array} [props.squares] - An array of coordinates for additional squares to render.
+ * @param {string} [props.className] - Additional class names to apply to the SVG element.
+ * @param {Object} props - Additional properties to spread on the SVG element.
+ * @returns {JSX.Element} The rendered SVG grid pattern.
+ */
 export function GridPattern({
     width = 40,
     height = 40,

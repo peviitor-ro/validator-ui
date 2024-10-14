@@ -3,6 +3,16 @@ import { useJobStore } from '../../../../store/job.state';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { useCitiesQuery } from '../../../../services/landing/landing.queries';
 
+/**
+ * City component to display and manage city data.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.cityProp - The name of the city.
+ * @param {Object} props.propsData - The current state of the props data.
+ * @param {Function} props.setPropsData - Function to update the props data.
+ *
+ * @returns {JSX.Element} The rendered City component.
+ */
 export function City({ cityProp, propsData, setPropsData }) {
     const city = useJobStore((state) => state.city);
     const county = useJobStore((state) => state.county);

@@ -13,6 +13,19 @@ const dockVariants = cva(
     'supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10 mx-auto flex h-[58px] w-max lg:gap-2 rounded-2xl border p-2 backdrop-blur-md',
 );
 
+/**
+ * A React component that renders a dock with magnification effects on its children.
+ *
+ * @component
+ * @param {Object} props - The properties object.
+ * @param {string} [props.className] - Additional class names for the dock.
+ * @param {React.ReactNode} props.children - The children elements to be rendered inside the dock.
+ * @param {number} [props.magnification=DEFAULT_MAGNIFICATION] - The magnification level for the dock icons.
+ * @param {number} [props.distance=DEFAULT_DISTANCE] - The distance for the magnification effect.
+ * @param {string} [props.direction='bottom'] - The direction of the dock ('top', 'middle', 'bottom').
+ * @param {React.Ref} ref - The ref to be forwarded to the motion.div element.
+ * @returns {React.ReactElement} The rendered dock component.
+ */
 const Dock = React.forwardRef(
     (
         {
