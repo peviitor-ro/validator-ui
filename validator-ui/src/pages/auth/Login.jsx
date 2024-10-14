@@ -28,7 +28,7 @@ const schema = z
  */
 export const Template = ({ onSubmit, register, errors, isLoading }) => {
     return (
-        <Container className="flex items-center justify-around px-6">
+        <Container className="flex items-center justify-around md:px-6">
             <Form onSubmit={onSubmit}>
                 <Form.Title text="Conectare" />
                 <Form.Description text="Introdu adresa de email pentru a primi un link de conectare." />
