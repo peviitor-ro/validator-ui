@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { routes } from '../../routes/routes';
-import { getScraperFiles, get } from './landing.service';
+import { get } from './landing.service';
 
 export function useCompaniesInfiniteQuery(page_size, order, search) {
     return useInfiniteQuery({
@@ -46,7 +46,7 @@ export function useScrapersQuery(order, search) {
 export function useScraperFilesQuery(scraperName) {
     return useQuery({
         queryKey: ['scraperFiles', scraperName],
-        queryFn: () => getScraperFiles(scraperName),
+        queryFn: () => get(routes.SCRAPER + scraperName + '/', {}, 'response'),
     });
 }
 

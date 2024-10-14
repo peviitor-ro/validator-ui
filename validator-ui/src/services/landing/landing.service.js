@@ -49,6 +49,7 @@ export async function get(url, params = {}, type = 'data') {
             count: response.data?.count ?? 0,
         },
         staus: response.status,
+        response: response,
     };
 
     return results[type];
@@ -60,31 +61,14 @@ export async function getDataset(companyName) {
     return response.data;
 }
 
-export async function getScraperFiles(scraperName) {
-    const response = await PRIVATE_API.get(`scraper/${scraperName}/`);
-
-    return response.data;
-}
-
 export async function getUsersAndCompanies(user = '') {
     const response = await PRIVATE_API.get(`user/companies${user ? `?user=${user}` : ''}`);
 
     return response.data;
 }
 
-export async function editUserCompanies(data) {
-    const response = await PRIVATE_API.post('user/companies', data);
-    return response.status;
-}
-
 export async function addUser(user) {
     const response = await PRIVATE_API.post('add', { email: user });
-
-    return response.status;
-}
-
-export async function deleteUser(user) {
-    const response = await PRIVATE_API.post('delete', { email: user });
 
     return response.status;
 }

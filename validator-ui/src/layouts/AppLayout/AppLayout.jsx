@@ -15,9 +15,8 @@ export function AppLayout() {
 
     return (
         <Container>
-            {/* <Header /> */}
             <Outlet />
-            <div className="fixed flex flex-col items-center bottom-0 sm:flex justify-center w-full z-10">
+            <div className="sticky flex flex-col items-center bottom-0 sm:flex justify-center w-full z-10">
                 <Dock className="shadow-lg mb-4 bg-card">
                     <DockIcon
                         variant={dockVariants.HOME}

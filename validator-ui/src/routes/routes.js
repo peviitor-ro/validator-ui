@@ -27,4 +27,11 @@ export const routes = {
     SCRAPER_ADD: 'scraper/add/',
     SCRAPER_DELETE: 'scraper/remove/',
     SCRAPER_UPDATE: 'scraper/',
+
+    // User
+    USER: 'user/',
+    USER_COMPANIES: 'user/companies',
+    USER_ADD: 'add',
+    USER_DELETE: 'delete',
+    USER_EDIT: 'edit',
 };
