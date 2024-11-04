@@ -1,23 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useJobsInfiniteQuery } from '../../services/landing/landing.queries';
 import { useJobsOptionsSelector } from '../../store/jobs.selectors';
-import { clearCompany, syncJobs } from '../../services/landing/landing.service';
 import { infiniteScroll } from '../../hooks/infiniteScroll';
 import { JOBS_OPTIONS } from './components/filters/constants';
-import { Cards } from './components/cards/Cards';
 import { JobCard } from './components/cards/JobCard';
 import { Home } from './components/filters/HeaderFilters';
 import { Analitycs } from './components/Analitycs';
-import { Container } from '../../components/Container';
+import { LoadingPage } from '../../components/LoadingPage';
+import { Modal } from '../../components/Modal';
+import { JobForm } from './components/forms/JobForm';
+import { Alert } from '../../components/Alert';
 import Loading from '../../components/Loading';
 
-import { ChevronDoubleLeftIcon } from '@heroicons/react/24/outline';
-
+/**
+ * JobsPage component renders a page displaying available jobs for a specific company.
+ * It handles infinite scrolling, job data fetching, and job management functionalities.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered JobsPage component.
+ *
+ * @example
+ * <JobsPage />
+ *
+ * @description
+ * - Uses `useParams` to get the company name from the URL.
+ * - Uses `useNavigate` to navigate to different pages.
+ * - Uses `infiniteScroll` to fetch job data with infinite scrolling.
+ * - Manages job data state with `useState` and `useEffect`.
+ * - Displays loading and error states based on the status of the data fetching.
+ * - Renders job cards, an alert component, and a modal for job form.
+ *
+ * @function
+ * @name JobsPage
+ */
 export function JobsPage() {
+    // Get the company name from the URL
     const { company } = useParams();
+
+    // Navigate to a different page
     const navigate = useNavigate();
 
+    // Destructure the result of the `infiniteScroll` function call
     const { data, status, button } = infiniteScroll(
         useJobsOptionsSelector,
         useJobsInfiniteQuery,
@@ -29,103 +53,79 @@ export function JobsPage() {
     );
 
     const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [syncLoading, setSyncLoading] = useState(false);
 
-    const handleclearCompany = async () => {
-        setLoading(true);
-        try {
-            await clearCompany(company);
-            window.location.reload();
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
+    // State hook to manage the list of jobs
+    const [jobsData, setJobsData] = useState([]);
+    useEffect(() => {
+        if (data?.pages[0].data?.length > 0) {
+            setJobsData(data.pages.map((page) => page.data).flat());
         }
-    };
+    }, [data]);
 
-    const handleSyncJobs = async () => {
-        setSyncLoading(true);
-        try {
-            await syncJobs(company);
-            window.location.reload();
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setSyncLoading(false);
-        }
-    };
+    // State hooks for alert message and type
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
+
+    const [editedData, setEditedData] = useState({});
 
     if (status === 'pending') {
         return (
-            <Container className="flex">
-                <Loading className="w-28 m-auto" />
-            </Container>
+            <LoadingPage message={'Se incarca joburile'}>
+                <Loading />
+            </LoadingPage>
         );
     } else if (status === 'error') {
         navigate('/');
     } else {
         return (
-            <>
-                <Home>
-                    <Home.Header
-                        title={`Joburi Disponibile ${company}`}
-                        formComponent={<p>In curs de dezvoltare </p>}
-                        selector={useJobsOptionsSelector}
-                        options={JOBS_OPTIONS}
-                    />
-                    <Analitycs company={company} />
-                    <div>
-                        <div className="flex flex-col gap-4 ">
-                            {data?.pages.map((page, index) => {
-                                const uniqueKey = `job_${index}`;
-                                return (
-                                    <Cards key={uniqueKey} data={page.data} component={JobCard} />
-                                );
-                            })}
-                        </div>
-                        {button}
-                    </div>
-                </Home>
-                {/* Sidebar */}
-                {/* Move this to a separate component */}
-                <div
-                    className={`flex flex-col pt-20 justify-start gap-4 fixed top-0 right-0 transform p-4 h-screen z-1000 border-l-2  transition-all duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
-                >
-                    <button
-                        className="transform -translate-x-full w-10 absolute"
-                        onClick={() => setOpen(!open)}
-                    >
-                        <div className="opacity-80 bg-gray-900 w-6 h-6 rounded-l-md text-white hover:bg-red-500">
-                            <ChevronDoubleLeftIcon
-                                className={`w-6 h-6  text-white px-1 cursor-pointer ${open ? 'rotate-180' : 'rotate-0'}`}
-                            />
-                        </div>
-                    </button>
-                    <div className="absolute top-0 right-0 w-full h-full opacity-80 bg-gray-900 z-0"></div>
+            <Home>
+                <Home.Header
+                    title={`Joburi Disponibile ${company}`}
+                    formComponent={<p>In curs de dezvoltare </p>}
+                    selector={useJobsOptionsSelector}
+                    options={JOBS_OPTIONS}
+                />
+                <Alert
+                    message={alertMessage}
+                    type={alertType}
+                    visible={alertOpen}
+                    setVisible={setAlertOpen}
+                />
 
-                    <button
-                        className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-red-500 text-white active:translate-y-1 z-10 hover:bg-red-400 w-[100px] text-[10px]"
-                        title="Sterge toate joburile din productie"
-                        onClick={handleclearCompany}
-                    >
-                        {loading ? <Loading className="w-5" /> : 'Sterge joburile din productie'}
-                    </button>
-                    <button
-                        className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-green-500 text-white active:translate-y-1 z-10 hover:bg-green-400 w-[100px] text-[10px]"
-                        title="Publica toate joburile"
-                    >
-                        Publica toate joburile
-                    </button>
-                    <button
-                        className="flex gap-2 justify-center items-center rounded-md border p-1 cursor-pointer bg-yellow-500 text-white active:translate-y-1 z-10 hover:bg-yellow-400 w-[100px] text-[10px]"
-                        title="Sinconizeaza joburile"
-                        onClick={handleSyncJobs}
-                    >
-                        {syncLoading ? <Loading className="w-5" /> : 'Sincronizeaza joburile'}
-                    </button>
+                <Analitycs company={company} />
+
+                <div className="grid grid-cols-minmax gap-6 px-4 lg:px-6">
+                    {jobsData.map((page, index) => {
+                        const uniqueKey = `job_${index}`;
+                        return (
+                            <JobCard
+                                key={uniqueKey}
+                                data={page}
+                                setJobs={setJobsData}
+                                setAlertOpen={setAlertOpen}
+                                setAlertMessage={setAlertMessage}
+                                setAlertType={setAlertType}
+                                setEditedData={setEditedData}
+                                setOpenModal={setOpen}
+                            />
+                        );
+                    })}
                 </div>
-            </>
+                {button}
+                <Modal open={open} setOpen={setOpen}>
+                    {open && (
+                        <JobForm
+                            jobData={editedData}
+                            setJobsData={setJobsData}
+                            setOpenModal={setOpen}
+                            setAlertOpen={setAlertOpen}
+                            setAlertMessage={setAlertMessage}
+                            setAlertType={setAlertType}
+                        />
+                    )}
+                </Modal>
+            </Home>
         );
     }
 }

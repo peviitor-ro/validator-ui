@@ -8,6 +8,13 @@ const scriptProps = {
     nonce: undefined,
 };
 
+/**
+ * CapthchaProvider component that wraps its children with GoogleReCaptchaProvider.
+ *
+ * @param {Object} props - The component props.
+ * @param {React.ReactNode} props.children - The child components to be wrapped by the provider.
+ * @returns {JSX.Element} The GoogleReCaptchaProvider wrapping the children.
+ */
 export function CapthchaProvider({ children }) {
     return (
         <GoogleReCaptchaProvider

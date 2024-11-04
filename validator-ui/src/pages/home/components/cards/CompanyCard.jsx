@@ -1,61 +1,62 @@
-import { useRef, useState } from 'react';
-import { PhotoIcon, TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { post } from '../../../../services/landing/landing.service';
 import { routes } from '../../../../routes/routes';
-import { Button } from '../../../../components/Button';
-import { Modal } from '../../../../components/Modal';
-import { CompanyForm } from '../forms/CompanyForm';
+import { AnimatedCard } from '../../../../components/AnimatedCard';
+import { PhotoIcon } from '@heroicons/react/24/outline';
+import { Trash, PenIcon, Globe } from 'lucide-react';
 import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
 
 /**
- * CompanyCard component displays detailed information about a company.
+ * Component representing a card for a company with various actions and information.
  *
  * @component
- * @param {Object} props - The component props.
- * @param {Object} props.data - The company data object.
- * @param {string} props.data.company - The name of the company.
- * @param {string} props.data.scname - The short name of the company.
- * @param {string} props.data.description - The description of the company.
- * @param {string} props.data.logo - The URL of the company's logo.
- * @param {string} props.data.website - The URL of the company's website.
- * @param {number} props.data.jobsCount - The total number of jobs available at the company.
- * @param {number} props.data.published_jobs - The number of published jobs at the company.
- * @param {boolean} props.data.have_access - Indicates if the user has access to the company's data.
+ * @param {Object} props - The properties object.
+ * @param {Object} props.data - The data object containing company information.
+ * @param {Function} props.setCompanies - Function to update the list of companies.
+ * @param {Function} props.setAlertOpen - Function to set the alert open state.
+ * @param {Function} props.setAlertMessage - Function to set the alert message.
+ * @param {Function} props.setAlertType - Function to set the alert type.
+ * @param {Function} props.setEditedData - Function to set the edited data.
+ * @param {Function} props.setOpenModal - Function to set the modal open state.
+ *
  * @returns {JSX.Element} The rendered CompanyCard component.
  */
-export function CompanyCard({ data, setCompanies, setAlertOpen, setAlertMessage, setAlertType }) {
+export function CompanyCard({
+    data,
+    setCompanies,
+    setAlertOpen,
+    setAlertMessage,
+    setAlertType,
+    setEditedData,
+    setOpenModal,
+}) {
     const { company, scname, description, logo, website, jobsCount, published_jobs, have_access } =
         data;
-
-    const [open, setOpen] = useState(false);
 
     /**
      * Handles the deletion of a company.
      *
-     * This function shows a confirmation dialog to the user. If the user confirms,
-     * it proceeds to remove the company. Upon successful deletion (status 200),
-     * the page is reloaded.
+     * This function performs the following steps:
+     * 1. Shows a confirmation dialog to the user.
+     * 2. If the user confirms, it proceeds to delete the company.
+     * 3. Displays an alert message based on the success or failure of the deletion.
      *
+     * @async
      * @function handleDelete
-     * @returns {void}
+     * @returns {Promise<void>} A promise that resolves when the deletion process is complete.
      */
     async function handleDelete() {
         // show a confirmation dialog
-        const results = window.confirm('Esti sigur ca vrei sa stergi aceasta companie?');
+        const results = window.confirm(`Esti sigur ca vrei sa stergi compania ${company}?`);
 
         // if the user cancels the action, return
         if (!results) {
             return;
         }
 
-        /**
-         * Sets the alert state with the provided message and type.
-         *
-         * @param {string} message - The message to display in the alert.
-         * @param {string} type - The type of the alert (e.g., 'success', 'error').
-         */
+        // show an alert message
         const setAlert = (message, type) => {
             setAlertOpen(true);
             setAlertMessage(message);
@@ -73,30 +74,45 @@ export function CompanyCard({ data, setCompanies, setAlertOpen, setAlertMessage,
         setAlert('Compania a fost stearsa cu succes.', 'success');
     }
 
+    // handle the case when the logo is not available
     const logoRef = useRef(null);
     logoRef.current?.addEventListener('error', () => {
         logoRef.current.src = photo;
         logoRef.current.onerror = null;
     });
 
+    // navigation links
+    const iconsClasses = 'w-5 h-5 lg:w-7 lg:h-7';
+    const navLinks = [
+        {
+            name: 'Editeaza',
+            onClick: () => setOpenModal(true),
+            icon: <PenIcon className={iconsClasses} />,
+        },
+        {
+            name: 'Sterge',
+            onClick: handleDelete,
+            icon: <Trash className={iconsClasses} />,
+        },
+        {
+            name: 'Vizualizeaza Website',
+            url: website,
+            icon: <Globe className={iconsClasses} />,
+        },
+    ];
+
+    // remove the first two links if the user does not have access
+    if (!have_access) {
+        navLinks.splice(0, 2);
+    }
+
     return (
-        <article className="relative card flex flex-col h-[400px] overflow-hidden">
-            {have_access && (
-                <div className="absolute right-8 flex flex-col gap-2">
-                    <Button
-                        className="relative btn-delete transform translate-x-full hover:bg-red-600  hover:translate-x-8 hover:duration-300 hover:ease-in-out hover:transition active:translate-y-2 "
-                        icon={<TrashIcon className="absolute left-2 w-5" />}
-                        text="Sterge"
-                        onClick={handleDelete}
-                    />
-                    <Button
-                        className="relative btn-edit transform translate-x-full hover:bg-yellow-600 hover:translate-x-8 hover:duration-300 hover:ease-in-out hover:transition active:translate-y-2 "
-                        icon={<PencilSquareIcon className="absolute left-2 w-5" />}
-                        text="Editeaza"
-                        onClick={() => setOpen(true)}
-                    />
-                </div>
-            )}
+        <AnimatedCard
+            navLinks={navLinks}
+            cardId={company}
+            data={data}
+            setEditedData={setEditedData}
+        >
             {logo ? (
                 <img ref={logoRef} src={logo} className="m-auto flex-0  h-[80px]" alt="Company" />
             ) : (
@@ -123,25 +139,6 @@ export function CompanyCard({ data, setCompanies, setAlertOpen, setAlertMessage,
             >
                 Vizualizeaza Joburi ({jobsCount ?? 0})
             </NavLink>
-
-            <a
-                href={website}
-                className={clsx('btn btn-primary-outlined text-center', {
-                    'btn-disabled-outlined': !jobsCount,
-                })}
-            >
-                Vizualizeaza WebSite
-            </a>
-            <Modal open={open} setOpen={setOpen}>
-                <CompanyForm
-                    companyData={data}
-                    method="PUT"
-                    setCompanies={setCompanies}
-                    setAlertOpen={setAlertOpen}
-                    setAlertMessage={setAlertMessage}
-                    setAlertType={setAlertType}
-                />
-            </Modal>
-        </article>
+        </AnimatedCard>
     );
 }

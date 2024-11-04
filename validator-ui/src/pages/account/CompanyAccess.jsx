@@ -1,14 +1,34 @@
 import { useEffect, useState } from 'react';
 import { Alert } from '../../components/Alert';
-import { Loader } from '../../components/Loader';
+import { LoadingPage } from '../../components/LoadingPage';
 import { Spinner } from '../../components/Spinner';
 import Loading from '../../components/Loading';
-import {
-    editUserCompanies,
-    getScraperFiles,
-    deleteUser,
-} from '../../services/landing/landing.service';
+import { get, post } from '../../services/landing/landing.service';
+import { routes } from '../../routes/routes';
 
+/**
+ * Component for managing company and scraper access for users.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.is_superuser - Indicates if the current user is a superuser.
+ * @param {boolean} props.is_staff - Indicates if the current user is a staff member.
+ * @param {Array} props.users - List of users.
+ * @param {Array} props.companies - List of companies.
+ * @param {Array} props.scrapers - List of scrapers.
+ * @param {string} props.email - The email of the selected user.
+ * @param {Function} props.setEmail - Function to set the email of the selected user.
+ * @param {boolean} props.loading - Indicates if the component is in a loading state.
+ * @param {Function} props.setLoading - Function to set the loading state.
+ * @param {string} props.alertMessage - The message to display in the alert.
+ * @param {Function} props.setAlertMessage - Function to set the alert message.
+ * @param {boolean} props.alert - Indicates if the alert is visible.
+ * @param {Function} props.setAlert - Function to set the alert visibility.
+ * @param {string} props.alertType - The type of the alert (e.g., 'success', 'error').
+ * @param {Function} props.setAlertType - Function to set the alert type.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 export function CompanyAccess({
     is_superuser,
     is_staff,
@@ -26,6 +46,7 @@ export function CompanyAccess({
     alertType,
     setAlertType,
 }) {
+    // Function to handle form submission
     const onsSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -48,10 +69,10 @@ export function CompanyAccess({
             is_superuser,
             is_staff,
         };
-        const response = await editUserCompanies(JSON.stringify(data));
+        const response = await post(routes.USER_COMPANIES, data);
 
         setAlert(true);
-        if (response === 200) {
+        if (response.status === 200) {
             setAlertMessage('Modificari salvate cu succes');
             setAlertType('success');
         } else {
@@ -66,6 +87,7 @@ export function CompanyAccess({
         onsSubmit(e);
     };
 
+    // Function to handle search
     const [userIsStaff, setUserIsStaff] = useState(false);
 
     useEffect(() => {
@@ -87,6 +109,7 @@ export function CompanyAccess({
         });
     };
 
+    // Function to handle scraper search
     const handleScraperSearch = async (e) => {
         const choices = window.confirm(
             `Doriti ca sistemul sa selecteze companiile din ${e.target.value}?`,
@@ -95,8 +118,8 @@ export function CompanyAccess({
         if (choices) {
             setLoading(true);
             try {
-                const response = await getScraperFiles(e.target.value);
-                const companiesLst = response.files.map((file) => file.name.split('.')[0]);
+                const response = await get(routes.SCRAPER + e.target.value + '/', {}, 'response');
+                const companiesLst = response.data.files.map((file) => file.name.split('.')[0]);
                 const companySelect = document.getElementById('company');
                 const companyOptions = Array.from(companySelect.options);
 
@@ -108,18 +131,19 @@ export function CompanyAccess({
                 setLoading(false);
             } catch (error) {
                 setAlert(true);
-                setAlertMessage('A aparut o eroare');
+                setAlertMessage(error);
                 setAlertType('error');
                 setLoading(false);
             }
         }
     };
 
+    // Function to handle delete
     const handleDelete = async (e) => {
         setLoading(true);
-        const response = await deleteUser(email);
+        const response = await post(routes.USER_DELETE, { email });
         try {
-            if (response === 200) {
+            if (response.status === 200) {
                 window.location.reload();
             } else {
                 setAlert(true);
@@ -138,20 +162,11 @@ export function CompanyAccess({
 
     return (
         <>
-            {alert && (
-                <Alert
-                    message={alertMessage}
-                    type={alertType}
-                    visible={alert}
-                    setVisible={setAlert}
-                />
-            )}
+            <Alert message={alertMessage} type={alertType} visible={alert} setVisible={setAlert} />
             {loading && (
-                <div className="flex items-center justify-center fixed bg-gray-500 bg-opacity-50 top-0 left-0 w-[100vw] h-[100vh] z-50">
-                    <div className="flex flex-col items-center justify-center bg-white rounded-md shadow-md p-4">
-                        <Loader message="Se incarca" imgStyle="w-32" />
-                    </div>
-                </div>
+                <LoadingPage message={'Se incarca'}>
+                    <Loading />
+                </LoadingPage>
             )}
             {is_superuser || is_staff ? (
                 <div className="flex flex-col gap-4 m-2 p-2 border bg-white rounded-md shadow-md">
@@ -178,11 +193,7 @@ export function CompanyAccess({
                             </select>
                         </div>
 
-                        <div
-                            className="
-                        flex flex-col gap-2
-                        "
-                        >
+                        <div className="flex flex-col gap-2">
                             <label htmlFor="company">Selecteaza Companii</label>
                             <input
                                 type="text"
@@ -289,7 +300,16 @@ export function CompanyAccess({
                                     onClick={handleDelete}
                                     disabled={loading}
                                 >
-                                    {loading ? <Loading className="w-5" /> : 'Stergeti'}
+                                    {loading ? (
+                                        <p className="flex items-center gap-2 text-white ">
+                                            <span className="w-5 h-5">
+                                                <Spinner />
+                                            </span>{' '}
+                                            Asteapta
+                                        </p>
+                                    ) : (
+                                        'Stergeti'
+                                    )}
                                 </button>
                             )}
                         </div>

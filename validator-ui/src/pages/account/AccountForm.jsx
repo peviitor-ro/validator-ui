@@ -2,6 +2,21 @@ import { Spinner } from '../../components/Spinner';
 import { addUser } from '../../services/landing/landing.service';
 import { Alert } from '../../components/Alert';
 
+/**
+ * AccountForm component handles the form submission for adding a new user account.
+ *
+ * @param {Object} props - The properties object.
+ * @param {boolean} props.loading - Indicates if the form is in a loading state.
+ * @param {Function} props.setLoading - Function to set the loading state.
+ * @param {string} props.alertMessage - The message to be displayed in the alert.
+ * @param {Function} props.setAlertMessage - Function to set the alert message.
+ * @param {boolean} props.alert - Indicates if the alert is visible.
+ * @param {Function} props.setAlert - Function to set the alert visibility.
+ * @param {string} props.alertType - The type of the alert (e.g., 'error', 'success').
+ * @param {Function} props.setAlertType - Function to set the alert type.
+ *
+ * @returns {JSX.Element} The rendered AccountForm component.
+ */
 export function AccountForm({
     loading,
     setLoading,

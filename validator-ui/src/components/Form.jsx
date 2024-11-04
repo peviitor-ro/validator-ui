@@ -1,5 +1,7 @@
 import { Button } from './Button';
 import { InputField } from './InputField/InputField';
+import RetroGrid from './ui/retro-grid';
+import Globe from './ui/globe';
 
 /**
  * A form component.
@@ -10,13 +12,29 @@ import { InputField } from './InputField/InputField';
  * @returns {JSX.Element} The rendered form component.
  */
 export default function Form({ children, ...rest }) {
+    const year = new Date().getFullYear();
     return (
-        <form
-            className="flex flex-col bg-card rounded-md p-6 drop-shadow-lg w-full max-w-md z-10"
-            {...rest}
-        >
-            {children}
-        </form>
+        <>
+            <form
+                className="relative flex bg-card rounded-md p-6 drop-shadow-lg w-full max-w-xl z-10 border"
+                {...rest}
+            >
+                <RetroGrid className="top-0 left-0" />
+                <div className="w-full">{children}</div>
+
+                <Globe className="hidden md:block relative mx-auto right-0" />
+            </form>
+            <span className="fixed bottom-2 text-sm text-gray-500 mt-4 text-center">
+                <div>
+                    Vrei să publici un anunț? Trimite-ne un email{' '}
+                    <a href="mailto:aocpeviitor@gmail.com" className="text-blue-500">
+                        aici
+                    </a>{' '}
+                    și îți vom crea un cont.
+                </div>
+                <div>© {year} Asociația Oportunități și Cariere</div>
+            </span>
+        </>
     );
 }
 

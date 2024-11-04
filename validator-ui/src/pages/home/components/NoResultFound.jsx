@@ -2,6 +2,18 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { GenericPage } from '../../../components/GenericPage';
 import { useCompanyOptionsSelector } from '../../../store/company.selectors';
 
+/**
+ * NoResultFound component renders a page indicating no results were found.
+ * It displays different messages based on whether the company list is empty or not.
+ *
+ * @component
+ * @example
+ * return (
+ *   <NoResultFound />
+ * )
+ *
+ * @returns {JSX.Element} The NoResultFound component.
+ */
 export function NoResultFound() {
     const { isEmpty, reset } = useCompanyOptionsSelector();
 
