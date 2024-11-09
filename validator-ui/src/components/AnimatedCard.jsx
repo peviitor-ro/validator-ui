@@ -23,14 +23,6 @@ export function AnimatedCard({ children, navLinks, cardId, data, setEditedData =
     const cardRef = useRef(null);
     const [activeCard, setActiveCard] = useState(null);
 
-    useEffect(() => {
-        if (activeCard === cardId) {
-            setLinks(navLinks);
-        } else {
-            resetLinks();
-        }
-    }, [activeCard]);
-
     const handleCardClick = (cardId) => {
         setActiveCard(cardId);
     };
@@ -39,12 +31,11 @@ export function AnimatedCard({ children, navLinks, cardId, data, setEditedData =
         const handleClickOutside = (e) => {
             if (cardRef.current && !cardRef.current.contains(e.target)) {
                 setActiveCard(null);
+                resetLinks();
             }
 
             if (activeCard === cardId) {
                 setLinks(navLinks);
-            } else {
-                resetLinks();
             }
         };
 

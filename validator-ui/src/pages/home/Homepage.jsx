@@ -27,23 +27,8 @@ import { Modal } from '../../components/Modal';
  */
 export function Homepage() {
     const { width } = useWindowSize();
-    /**
-     * Destructures the result of the `infiniteScroll` function call.
-     *
-     * @constant
-     * @type {Object}
-     * @property {Array} data - The data returned by the infinite scroll.
-     * @property {string} status - The status of the infinite scroll operation.
-     * @property {Error} error - Any error encountered during the infinite scroll operation.
-     * @property {boolean} button - Indicates the state of the button in the infinite scroll operation.
-     *
-     * @param {Function} useCompanyOptionsSelector - Selector function for company options.
-     * @param {Function} useCompaniesInfiniteQuery - Query function for fetching companies with infinite scroll.
-     * @param {string} loadingMessage - Message displayed while loading more companies.
-     * @param {string} loadingMoreMessage - Message displayed while loading more companies.
-     * @param {string} noMoreDataMessage - Message displayed when there are no more companies to load.
-     * @param {number} pageSize - The size of each page of data to be loaded.
-     */
+
+    // Destructure the result of the `infiniteScroll` function call
     const { data, status, error, button } = infiniteScroll(
         useCompanyOptionsSelector,
         useCompaniesInfiniteQuery,
@@ -53,12 +38,7 @@ export function Homepage() {
         getPageSize(width),
     );
 
-    /**
-     * State hook to manage the list of companies.
-     *
-     * @type {Array}
-     * @default []
-     */
+    // State hook to manage the list of companies
     const [companies, setCompanies] = useState([]);
 
     // State hooks for alert message and type

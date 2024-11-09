@@ -4,10 +4,6 @@ export const NAV_LINKS = Object.freeze([
         url: '/account',
     },
     {
-        name: 'Companii',
-        url: '/',
-    },
-    {
         name: 'Scraperi',
         url: '/scraper',
     },

@@ -72,7 +72,7 @@ export function infiniteScroll(
         if (inView) {
             fetchNextPage();
         }
-    }, [fetchNextPage, inView]);
+    }, [inView]);
 
     /**
      * Creates a Button component with infinite scroll functionality.
