@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Loading from '../../../../components/Loading';
 import { LoadingPage } from '../../../../components/LoadingPage';
 import { AnimatedCard } from '../../../../components/AnimatedCard';
-import { GridPattern } from '../../../../components/ui/animated-grid-pattern';
 import { post } from '../../../../services/landing/landing.service';
 import { cn } from '../../../../lib/utils';
 import { Paintbrush, RefreshCcwDot, PenIcon, Trash, Globe, PenLine } from 'lucide-react';
@@ -25,13 +24,6 @@ function Badge({ text, className }) {
 
     return (
         <div className={classes}>
-            <GridPattern
-                className="absolute top-0 left-0 rounded-tl-lg rounded-tr-lg text-white stroke-none"
-                width={5}
-                height={5}
-                duration={1}
-                repeatDelay={0.1}
-            />
             <p className="font-semibold text-white z-10">{text}</p>
         </div>
     );
@@ -49,9 +41,9 @@ function Badge({ text, className }) {
 async function actionButtons(data, url, setAlertCallback, setLoading) {
     setLoading(true);
     try {
-        const response = await post(url, data);
+        const { status } = await post(url, data);
         setAlertCallback('Actiune efectuata cu succes', 'success');
-        return response.status;
+        return status;
     } catch (error) {
         setAlertCallback('A aparut o eroare', 'error');
     } finally {
@@ -75,27 +67,13 @@ async function actionButtons(data, url, setAlertCallback, setLoading) {
  *
  * @returns {JSX.Element} The rendered JobCard component.
  */
-export function JobCard({
-    data,
-    setJobs,
-    setAlertOpen,
-    setAlertMessage,
-    setAlertType,
-    setEditedData,
-    setOpenModal,
-}) {
+export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }) {
     const { job_link, job_title, country, city, county, remote, edited, published, posted } = data;
     const { company } = useParams();
 
-    const setAlert = (message, type) => {
-        setAlertOpen(true);
-        setAlertMessage(message);
-        setAlertType(type);
-    };
-
     // clear job from production
     const [clearLoading, setClearLoading] = useState(false);
-    const handleClearCompany = async () => {
+    const clearJob = async () => {
         await actionButtons({ company: company }, routes.COMPANY_CLEAR, setAlert, setClearLoading);
         setJobs((prev) =>
             prev.map((item) =>
@@ -109,15 +87,25 @@ export function JobCard({
         );
     };
 
+    // clear company
+    const handleClearCompany = useCallback(() => {
+        clearJob();
+    });
+
     // sync jobs
     const [syncLoading, setSyncLoading] = useState(false);
-    const handleSyncJobs = async () => {
+    const syncJob = async () => {
         await actionButtons({ company: company }, routes.JOBS_SYNC, setAlert, setSyncLoading);
     };
 
+    // sync jobs
+    const handleSyncJobs = useCallback(() => {
+        syncJob();
+    });
+
     // delete job
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const handleDelete = async () => {
+    const deleteJob = async () => {
         const response = await actionButtons(
             [data],
             routes.JOBS_DELETE,
@@ -125,13 +113,18 @@ export function JobCard({
             setDeleteLoading,
         );
         if (response === 200) {
-            setJobs((prev) => prev.filter((item) => item.job_link !== data.job_link));
+            setJobs((prev) => prev.filter((item) => item.job_link !== job_link));
         }
     };
 
+    // delete job
+    const handleDelete = useCallback(() => {
+        deleteJob();
+    });
+
     // publish job
     const [updateLoading, setUpdateLoading] = useState(false);
-    const handlePublish = async (e) => {
+    const publishJob = async () => {
         const response = await actionButtons(
             [data],
             routes.JOBS_PUBLISH,
@@ -141,7 +134,7 @@ export function JobCard({
         if (response === 200) {
             setJobs((prev) =>
                 prev.map((item) =>
-                    item.job_link === data.job_link
+                    item.job_link === job_link
                         ? {
                               ...item,
                               published: true,
@@ -151,6 +144,11 @@ export function JobCard({
             );
         }
     };
+
+    // publish job
+    const handlePublish = useCallback(() => {
+        publishJob();
+    });
 
     // loading message
     const message = clearLoading
@@ -200,9 +198,14 @@ export function JobCard({
 
     return (
         <>
+            {clearLoading || syncLoading || deleteLoading || updateLoading ? (
+                <LoadingPage message={message}>
+                    <Loading />
+                </LoadingPage>
+            ) : null}
             <AnimatedCard
                 navLinks={navLinks}
-                cardId={company}
+                cardId={job_link}
                 data={data}
                 setEditedData={setEditedData}
             >
@@ -250,15 +253,16 @@ export function JobCard({
                     </div>
                 </div>
             </AnimatedCard>
-            {clearLoading || syncLoading || deleteLoading || updateLoading ? (
-                <LoadingPage message={message}>
-                    <Loading />
-                </LoadingPage>
-            ) : null}
         </>
     );
 }
 
+/**
+ * Separates the elements of an array by a comma and a space.
+ *
+ * @param {Array} arr - The array of elements to be separated.
+ * @returns {string} A string with the array elements separated by a comma and a space.
+ */
 function separateByComma(arr) {
     return arr.map((c) => c).join(', ');
 }
