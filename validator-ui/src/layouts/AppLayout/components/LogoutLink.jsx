@@ -3,6 +3,13 @@ import { NavLink } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/AuthContext';
 import { routes } from '../../../routes/routes';
 
+/**
+ * LogoutLink component renders a navigation link that triggers the logout function.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.className - Additional class names for styling the link.
+ * @returns {JSX.Element} The rendered LogoutLink component.
+ */
 export function LogoutLink({ className }) {
     const { logout } = useAuthContext();
 

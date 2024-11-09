@@ -46,7 +46,6 @@ export function AppLayout() {
                         className="text-gray-500 hover:text-red-500"
                     />
                     {links?.map(({ name, url, onClick, icon }, key) => {
-                        if (name === 'Companii') return null;
                         return (
                             <DockIcon
                                 key={key}
