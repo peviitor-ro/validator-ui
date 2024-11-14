@@ -77,7 +77,7 @@ export function Filespage() {
 
     // Function to handle the search input change and filter files
     const handelChange = (e) => {
-        const filteredFiles = data?.files.filter((file) => {
+        const filteredFiles = data?.data.files.filter((file) => {
             return file.name.toLowerCase().includes(e.toLowerCase());
         });
         setFiles(filteredFiles);
