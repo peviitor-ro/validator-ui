@@ -1,14 +1,19 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext } from 'react';
 import { NAV_LINKS } from '../layouts/AppLayout/components/links';
-import { CircleUser, CodeIcon, SearchIcon, Book, BadgeInfo } from 'lucide-react';
+
+import account from '../assets/icons/account.png';
+import code from '../assets/icons/code.png';
+import search from '../assets/icons/search.png';
+import info from '../assets/icons/info.png';
+import documents from '../assets/icons/documents.png';
 
 const iconsClasses = 'w-5 h-5 lg:w-7 lg:h-7';
 const images = {
-    Cont: <CircleUser className={iconsClasses} />,
-    Scraperi: <CodeIcon className={iconsClasses} />,
-    Cautare: <SearchIcon className={iconsClasses} />,
-    Despre: <BadgeInfo className={iconsClasses} />,
-    Documentatie: <Book className={iconsClasses} />,
+    Cont: <img src={account} alt="Cont" className={iconsClasses} />,
+    Scraperi: <img src={code} alt="Scraperi" className={iconsClasses} />,
+    Cautare: <img src={search} alt="Cautare" className={iconsClasses} />,
+    Despre: <img src={info} alt="Despre" className={iconsClasses} />,
+    Documentatie: <img src={documents} alt="Documentatie" className={iconsClasses} />,
 };
 
 // context for Navbar

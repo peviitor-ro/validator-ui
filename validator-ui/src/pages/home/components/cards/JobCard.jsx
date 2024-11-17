@@ -4,9 +4,15 @@ import { LoadingPage } from '../../../../components/LoadingPage';
 import { AnimatedCard } from '../../../../components/AnimatedCard';
 import { post } from '../../../../services/landing/landing.service';
 import { cn } from '../../../../lib/utils';
-import { Paintbrush, RefreshCcwDot, PenIcon, Trash, Globe, PenLine } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../../../routes/routes';
+
+import pencil from '../../../../assets/icons/pencil.png';
+import deleteIcon from '../../../../assets/icons/delete.png';
+import www from '../../../../assets/icons/www.png';
+import upload from '../../../../assets/icons/upload.png';
+import syncIcon from '../../../../assets/icons/sync.png';
+import clean from '../../../../assets/icons/clean.png';
 
 /**
  * Badge component that displays a text inside a styled div with a grid pattern background.
@@ -167,32 +173,32 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
         {
             name: 'Editeaza',
             onClick: () => setOpenModal(true),
-            icon: <PenIcon className={iconsClasses} />,
+            icon: <img src={pencil} alt="Editeaza" className={iconsClasses} />,
         },
         {
             name: 'Sterge',
             onClick: handleDelete,
-            icon: <Trash className={iconsClasses} />,
+            icon: <img src={deleteIcon} alt="Sterge" className={iconsClasses} />,
         },
         {
             name: 'Publica Jobul',
             onClick: handlePublish,
-            icon: <PenLine className={iconsClasses} />,
+            icon: <img src={upload} alt="Publica Jobul" className={iconsClasses} />,
         },
         {
             name: 'Vizualizeaza Jobul',
             url: job_link,
-            icon: <Globe className={iconsClasses} />,
+            icon: <img src={www} alt="Vizualizeaza Jobul" className={iconsClasses} />,
         },
         {
             name: 'Sterge Joburile din Productie',
             onClick: handleClearCompany,
-            icon: <Paintbrush className={iconsClasses} />,
+            icon: <img src={clean} alt="Sterge Joburile din Productie" className={iconsClasses} />,
         },
         {
             name: 'Sincronizeaza Joburile',
             onClick: handleSyncJobs,
-            icon: <RefreshCcwDot className={iconsClasses} />,
+            icon: <img src={syncIcon} alt="Sincronizeaza Joburile" className={iconsClasses} />,
         },
     ];
 
