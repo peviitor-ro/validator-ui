@@ -4,9 +4,12 @@ import { post } from '../../../../services/landing/landing.service';
 import { routes } from '../../../../routes/routes';
 import { AnimatedCard } from '../../../../components/AnimatedCard';
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import { Trash, PenIcon, Globe } from 'lucide-react';
 import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
+
+import pencil from '../../../../assets/icons/pencil.png';
+import deleteIcon from '../../../../assets/icons/delete.png';
+import www from '../../../../assets/icons/www.png';
 
 /**
  * Component representing a card for a company with various actions and information.
@@ -87,17 +90,17 @@ export function CompanyCard({
         {
             name: 'Editeaza',
             onClick: () => setOpenModal(true),
-            icon: <PenIcon className={iconsClasses} />,
+            icon: <img src={pencil} alt="Editeaza" className={iconsClasses} />,
         },
         {
             name: 'Sterge',
             onClick: handleDelete,
-            icon: <Trash className={iconsClasses} />,
+            icon: <img src={deleteIcon} alt="Sterge" className={iconsClasses} />,
         },
         {
             name: 'Vizualizeaza Website',
             url: website,
-            icon: <Globe className={iconsClasses} />,
+            icon: <img src={www} alt="Vizualizeaza Website" className={iconsClasses} />,
         },
     ];
 

@@ -3,9 +3,10 @@ import { DocumentTextIcon } from '@heroicons/react/20/solid';
 import { handleFetch } from './Folders';
 import { post } from '../../../../services/landing/landing.service';
 import { AnimatedCard } from '../../../../components/AnimatedCard';
-import { Play } from 'lucide-react';
 import { LoadingPage } from '../../../../components/LoadingPage';
 import Loading from '../../../../components/Loading';
+
+import play from '../../../../assets/icons/play.png';
 
 /**
  * Component representing a file with associated actions and status.
@@ -41,7 +42,7 @@ export function File({ data, endpoint, setAlert }) {
         {
             name: 'Ruleaza',
             onClick: handleRunFile,
-            icon: <Play className={iconsClasses} />,
+            icon: <img src={play} alt="Ruleaza" className={iconsClasses} />,
         },
     ];
 

@@ -10,9 +10,11 @@ import JavaScript from '../../../../assets/svgs/JavaScript.svg';
 import Jmeter from '../../../../assets/svgs/Jmeter.svg';
 
 import { AnimatedCard } from '../../../../components/AnimatedCard';
-import { Trash, RefreshCcw } from 'lucide-react';
 import { LoadingPage } from '../../../../components/LoadingPage';
 import Loading from '../../../../components/Loading';
+
+import deleteIcon from '../../../../assets/icons/delete.png';
+import updete from '../../../../assets/icons/update.png';
 
 /**
  * Handles the fetch operation and updates the status and alert accordingly.
@@ -135,12 +137,12 @@ export function Folder({
         {
             name: 'Sterge',
             onClick: handleDelete,
-            icon: <Trash className={iconsClasses} />,
+            icon: <img src={deleteIcon} alt="Sterge" className={iconsClasses} />,
         },
         {
             name: 'Actualizeaza',
             onClick: handleUpdate,
-            icon: <RefreshCcw className={iconsClasses} />,
+            icon: <img src={updete} alt="Actualizeaza" className={iconsClasses} />,
         },
     ];
 

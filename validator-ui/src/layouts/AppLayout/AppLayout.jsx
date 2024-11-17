@@ -4,8 +4,8 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Dock, DockIcon, dockVariants } from '../../components/ui/dock';
 import { useNavbar } from '../../contexts/Navbarcontext';
-import { HomeIcon, LogOut } from 'lucide-react';
-
+import home from '../../assets/icons/home.png';
+import power from '../../assets/icons/power.png';
 /**
  * AppLayout component that provides the main layout for the application.
  * It includes a navigation dock with various icons and links.
@@ -41,7 +41,7 @@ export function AppLayout() {
                     <DockIcon
                         variant={dockVariants.HOME}
                         onClick={() => navigate('/')}
-                        children={<HomeIcon className={iconsClasses} />}
+                        children={<img src={home} alt="home" className={iconsClasses} />}
                         title="Acasa"
                         className="text-gray-500 hover:text-red-500"
                     />
@@ -68,7 +68,7 @@ export function AppLayout() {
                     <DockIcon
                         variant={dockVariants.LOGOUT}
                         onClick={() => logout()}
-                        children={<LogOut className={iconsClasses} />}
+                        children={<img src={power} alt="power" className={iconsClasses} />}
                         title="Iesire"
                         className="text-gray-500 hover:text-red-500"
                     />
