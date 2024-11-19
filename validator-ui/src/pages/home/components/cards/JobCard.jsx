@@ -202,6 +202,10 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
         },
     ];
 
+    if (published) {
+        navLinks.splice(2, 1);
+    }
+
     return (
         <>
             {clearLoading || syncLoading || deleteLoading || updateLoading ? (
