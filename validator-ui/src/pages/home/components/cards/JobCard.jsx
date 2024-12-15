@@ -154,6 +154,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
     // publish job
     const handlePublish = useCallback(() => {
         publishJob();
+        navLinks.splice(2, 1);
     });
 
     // loading message
