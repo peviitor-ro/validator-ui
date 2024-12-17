@@ -38,6 +38,12 @@ export function JobsPage() {
     // Get the company name from the URL
     const { company } = useParams();
 
+    // Reset the filters when the company changes
+    const { reset } = useJobsOptionsSelector();
+    useEffect(() => {
+        reset();
+    }, [company, reset]);
+
     // Navigate to a different page
     const navigate = useNavigate();
 
@@ -91,13 +97,13 @@ export function JobsPage() {
                 setVisible={setAlertOpen}
             />
 
-            {status === 'pending' ? (
+            {status === 'pending' && (
                 <LoadingPage message={'Se incarca joburile'}>
                     <Loading />
                 </LoadingPage>
-            ) : status === 'error' ? (
-                navigate('/')
-            ) : (
+            )}
+            {status === 'error' && navigate('/')}
+            {status !== 'pending' && status !== 'error' && (
                 <>
                     <Analitycs company={company} />
 

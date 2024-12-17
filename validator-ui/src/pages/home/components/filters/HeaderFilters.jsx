@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { InputField } from '../../../../components/InputField/InputField';
 import { SelectField } from '../../../../components/SelectField';
 import { Button } from '../../../../components/Button';
-import { Modal } from '../../../../components/Modal';
 
 /**
  * Home component that serves as a container for child elements.
@@ -21,12 +20,11 @@ export function Home({ children }) {
  *
  * @param {Object} props - The properties object.
  * @param {string} props.title - The title to be displayed in the header.
- * @param {React.ReactNode} props.formComponent - The form component to be rendered inside the modal.
  * @param {Function} props.selector - The selector function that returns search, order, setOrder, and setSearch.
  * @param {Array} props.options - The options for the SelectField component.
  * @returns {JSX.Element} The rendered Header component.
  */
-Home.Header = function H({ title, formComponent, selector, options }) {
+Home.Header = function H({ title, selector, options }) {
     /**
      * Destructures the search, order, setOrder, and setSearch properties from the selector function.
      *
@@ -35,8 +33,28 @@ Home.Header = function H({ title, formComponent, selector, options }) {
      * @function setOrder - Function to update the order state.
      * @function setSearch - Function to update the search query string.
      */
-    const { search, order, setOrder, setSearch } = selector();
-    const [open, setOpen] = useState(false);
+    const { order, setOrder, setSearch } = selector();
+
+    // Add event listener to search input field
+    useEffect(() => {
+        const handleKeyUp = (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                setSearch(event.target.value);
+            }
+        };
+
+        const inputElement = document.getElementById('search');
+        if (inputElement) {
+            inputElement.addEventListener('keyup', handleKeyUp);
+        }
+
+        return () => {
+            if (inputElement) {
+                inputElement.removeEventListener('keyup', handleKeyUp);
+            }
+        };
+    }, []);
 
     return (
         <div
@@ -47,8 +65,6 @@ Home.Header = function H({ title, formComponent, selector, options }) {
 
             <InputField
                 id="search"
-                value={search}
-                onChange={setSearch}
                 fieldClassName="rounded-md bg-card border border-disabled focus:outline-none focus:ring-1 lg:ml-auto"
                 placeholder="Cauta aici..."
                 leftIcon={<MagnifyingGlassIcon className="h-5" />}
@@ -56,11 +72,15 @@ Home.Header = function H({ title, formComponent, selector, options }) {
             />
             <SelectField options={options} value={order} onChange={setOrder} />
 
-            <Button className="w-full lg:w-auto" text="Adaugă" onClick={() => setOpen(true)} />
-
-            <Modal open={open} setOpen={setOpen} title="Adaugă companie">
-                {formComponent}
-            </Modal>
+            <Button
+                id="search-button"
+                className="w-full lg:w-auto"
+                text="Cauta"
+                onClick={() => {
+                    const search = document.getElementById('search').value;
+                    setSearch(search);
+                }}
+            />
         </div>
     );
 };
