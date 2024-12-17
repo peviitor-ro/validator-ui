@@ -1,42 +1,40 @@
 import React, { useRef, forwardRef } from 'react';
 import { cn } from '../lib/utils';
 import { AnimatedBeam } from './ui/animated-beam';
-import {
-    UserIcon,
-    ServerIcon,
-    CircleStackIcon,
-    ExclamationTriangleIcon,
-} from '@heroicons/react/24/outline';
 
+import account from '../assets/icons/account.png';
+import database from '../assets/icons/database.png';
+import server from '../assets/icons/server.png';
+import servererror from '../assets/icons/servererror.png';
 // default values for the animated beam objects
 const animatedBeamObjects = {
     user: {
         name: 'user',
-        icon: <UserIcon />,
+        icon: account,
         position: 'left',
         ref: null,
     },
     validator: {
         name: 'valicator',
-        icon: <ServerIcon />,
+        icon: server,
         position: 'middle',
         ref: null,
     },
     'validator-error': {
         name: 'validator-error',
-        icon: <ExclamationTriangleIcon />,
+        icon: servererror,
         position: 'middle',
         ref: null,
     },
     'validator-database': {
         name: 'validator-database',
-        icon: <CircleStackIcon />,
+        icon: database,
         position: 'right',
         ref: null,
     },
     solr: {
         name: 'solr',
-        icon: <CircleStackIcon />,
+        icon: database,
         position: 'right',
         ref: null,
     },
@@ -105,21 +103,21 @@ export default function Loading({
                 <div className="flex flex-col justify-center gap-2">
                     {right.map((item) => (
                         <Circle key={item.name} ref={item.ref}>
-                            {item.icon}
+                            <img src={item.icon} alt={item.name} />
                         </Circle>
                     ))}
                 </div>
                 <div className="flex flex-col justify-center">
                     {middle.map((item) => (
                         <Circle key={item.name} ref={item.ref} className="size-16">
-                            {item.icon}
+                            <img src={item.icon} alt={item.name} />
                         </Circle>
                     ))}
                 </div>
                 <div className="flex flex-col justify-center">
                     {left.map((item) => (
                         <Circle key={item.name} ref={item.ref}>
-                            {item.icon}
+                            <img src={item.icon} alt={item.name} />
                         </Circle>
                     ))}
                 </div>
