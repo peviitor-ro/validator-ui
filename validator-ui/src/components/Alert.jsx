@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { AnimatedList, AnimatedListItem } from './ui/animated-list';
 
 /**
@@ -13,14 +12,6 @@ import { AnimatedList, AnimatedListItem } from './ui/animated-list';
  * @returns {JSX.Element|null} The Alert component or null if not visible.
  */
 export function Alert({ message, type, visible, setVisible }) {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setVisible(false);
-        }, 5000);
-
-        return () => clearTimeout(timer);
-    }, [visible, setVisible]);
-
     return visible ? (
         <AnimatedList
             className={`${
@@ -30,9 +21,16 @@ export function Alert({ message, type, visible, setVisible }) {
             } fixed top-0 right-0 mt-4 mr-4 lg:w-1/4 z-50 border px-4 py-3 rounded`}
         >
             <AnimatedListItem>
-                <strong className="font-bold">{type === 'error' ? 'Error' : 'Success'}!</strong>
-                <br />
-                <span className="block sm:inline">{message}</span>
+                <div className="flex flex-col items-center" role="alert">
+                    <strong className="font-bold">{type === 'error' ? 'Error' : 'Success'}!</strong>
+                    <span className="block sm:inline">{message}</span>
+                    <button
+                        className=" bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
+                        onClick={() => setVisible(false)}
+                    >
+                        OK!
+                    </button>
+                </div>
             </AnimatedListItem>
         </AnimatedList>
     ) : null;
