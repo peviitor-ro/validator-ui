@@ -16,7 +16,7 @@ export function LoadingPage({ message, children }) {
                 <BorderBeam />
                 <RetroGrid className="top-0 left-0 rounded-lg" />
                 {children}
-                <div className="flex items-center gap-1 text-sm overflow-hidden w-full">
+                <div className="flex items-center justify-center gap-1 text-sm overflow-hidden w-full">
                     <p className="truncate text-center" data-testid="loading-message">
                         {message}
                     </p>
