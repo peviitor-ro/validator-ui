@@ -33,12 +33,17 @@ export function AccountForm({
             const email = document.getElementById('email_account').value;
             const response = await addUser(email);
             if (response === 201) {
+                document.getElementById('email_account').value = '';
                 setLoading(false);
-                window.location.reload();
+                setAlertMessage('Contul a fost adaugat');
+                setAlertType('success');
+                setAlert(true);
+            } else {
+                setLoading(false);
+                setAlertMessage('A aparut o eroare');
+                setAlertType('error');
+                setAlert(true);
             }
-            setAlertMessage('A aparut o eroare');
-            setAlertType('error');
-            setAlert(true);
         } catch (error) {
             setLoading(false);
             setAlertMessage('A aparut o eroare');
