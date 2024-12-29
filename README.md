@@ -1,4 +1,2 @@
 # Validator-Ui
-
-Design [Figma](https://www.figma.com/file/SS81SUL5ZnytusulXYwuUG/Pe-Viitor?type=design&node-id=69%3A2523&mode=design&t=EzU5rcQ747IH1o1L-1)
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/90a58bce-c449-4957-b91b-fde435b1fe9b/deploy-status)](https://app.netlify.com/sites/adminpeviitor/deploys)
