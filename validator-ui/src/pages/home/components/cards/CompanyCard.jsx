@@ -7,6 +7,7 @@ import { PhotoIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import photo from '../../../../assets/svgs/photo.svg';
 
+import Badge from '../../../../components/Badge';
 import pencil from '../../../../assets/icons/pencil.png';
 import deleteIcon from '../../../../assets/icons/delete.png';
 import www from '../../../../assets/icons/www.png';
@@ -35,8 +36,17 @@ export function CompanyCard({
     setEditedData,
     setOpenModal,
 }) {
-    const { company, scname, description, logo, website, jobsCount, published_jobs, have_access } =
-        data;
+    const {
+        company,
+        scname,
+        description,
+        logo,
+        website,
+        jobsCount,
+        published_jobs,
+        have_access,
+        source_name,
+    } = data;
 
     /**
      * Handles the deletion of a company.
@@ -116,6 +126,11 @@ export function CompanyCard({
             data={data}
             setEditedData={setEditedData}
         >
+            {source_name && (
+                <div className="absolute top-10 w-full z-20 -rotate-45 origin-top-left">
+                    <Badge text={source_name} color="bg-blue-500" textColor="text-white" />
+                </div>
+            )}
             {logo ? (
                 <img ref={logoRef} src={logo} className="m-auto flex-0  h-[80px]" alt="Company" />
             ) : (
