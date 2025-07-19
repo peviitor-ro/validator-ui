@@ -300,7 +300,7 @@ export function JobForm({
                 <div className="flex flex-col">
                     <label htmlFor="remote">Tipul Jobului</label>
                     <select
-                        className="border-input h-full w-full p-2"
+                        className="border-input h-32 w-full p-2"
                         id="remote"
                         onChange={changeHandler}
                         defaultValue={remote.split(',')}

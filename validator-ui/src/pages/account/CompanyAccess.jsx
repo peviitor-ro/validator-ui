@@ -207,7 +207,7 @@ export function CompanyAccess({
                             <select
                                 id="company"
                                 multiple
-                                className="border-input h-full w-full p-2"
+                                className="border-input h-64 w-full p-2"
                                 size={20}
                             >
                                 {companies.map((company) =>
