@@ -55,8 +55,8 @@ export async function get(url, params = {}, type = 'data') {
     return results[type];
 }
 
-export async function getDataset(companyName) {
-    const response = await PRIVATE_API.get(`companies/dataset/${companyName}/`);
+export async function getDataset(id) {
+    const response = await PRIVATE_API.get(`companies/dataset/${id}/`);
 
     return response.data;
 }

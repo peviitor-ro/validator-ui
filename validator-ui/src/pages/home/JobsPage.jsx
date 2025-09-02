@@ -36,13 +36,12 @@ import Loading from '../../components/Loading';
  */
 export function JobsPage() {
     // Get the company name from the URL
-    const { company } = useParams();
-
+    const { id, company } = useParams();
     // Reset the filters when the company changes
     const { reset } = useJobsOptionsSelector();
     useEffect(() => {
         reset();
-    }, [company, reset]);
+    }, [id, reset]);
 
     // Navigate to a different page
     const navigate = useNavigate();
@@ -54,6 +53,7 @@ export function JobsPage() {
         'Se incarca mai multe joburi ...',
         'Se incarca mai multe joburi',
         'Nu mai sunt joburi de incarcat',
+        id,
         company,
         15,
     );
@@ -105,7 +105,7 @@ export function JobsPage() {
             {status === 'error' && navigate('/')}
             {status !== 'pending' && status !== 'error' && (
                 <>
-                    <Analitycs company={company} />
+                    <Analitycs id={id} />
 
                     <div className="grid grid-cols-minmax gap-6 px-4 lg:px-6">
                         {jobsData.map((job, index) => {

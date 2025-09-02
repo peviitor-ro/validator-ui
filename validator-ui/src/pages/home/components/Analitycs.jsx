@@ -47,7 +47,7 @@ Chart.register(
  * @requires PresentationChartLineIcon
  * @requires Line
  */
-export function Analitycs(company) {
+export function Analitycs(id) {
     // State to manage the dataset
     const [dataset, setDataset] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -55,7 +55,7 @@ export function Analitycs(company) {
     // Fetch the dataset for the company
     useEffect(() => {
         async function fetchData() {
-            const response = await getDataset(company.company);
+            const response = await getDataset(id.id);
             setLoading(false);
             setDataset(response);
         }
