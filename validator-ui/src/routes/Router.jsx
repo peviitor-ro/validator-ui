@@ -78,7 +78,7 @@ export function Router() {
                     <Route path="account" element={<Account />} />
                     <Route path="scraper" element={<Scraperpage />} />
                     <Route path="scraper/:scraperName" element={<Filespage />} />
-                    <Route path="jobs/:company" element={<JobsPage />} />
+                    <Route path="jobs/:id/:company" element={<JobsPage />} />
                 </Route>
 
                 {/* FALLBACK ROUTE */}

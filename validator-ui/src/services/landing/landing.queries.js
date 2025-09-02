@@ -18,11 +18,12 @@ export function useCompaniesInfiniteQuery(page_size, order, search) {
     });
 }
 
-export function useJobsInfiniteQuery(company, page_size, order, search) {
+export function useJobsInfiniteQuery(id, company, page_size, order, search) {
     return useInfiniteQuery({
         queryKey: ['jobs', company, order, search],
         queryFn: ({ pageParam }) =>
             get(routes.JOBS, {
+                id,
                 company,
                 page: pageParam,
                 page_size,

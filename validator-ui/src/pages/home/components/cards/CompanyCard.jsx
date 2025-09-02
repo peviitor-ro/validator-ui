@@ -37,6 +37,7 @@ export function CompanyCard({
     setOpenModal,
 }) {
     const {
+        id,
         company,
         scname,
         description,
@@ -150,7 +151,7 @@ export function CompanyCard({
             </p>
 
             <NavLink
-                to={`/jobs/${company}`}
+                to={`/jobs/${id}/${company}`}
                 className={clsx('btn btn-primary active-link text-center mb-2', {
                     'btn-disabled': !jobsCount || !have_access,
                 })}
