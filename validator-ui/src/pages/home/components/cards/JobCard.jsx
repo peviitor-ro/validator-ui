@@ -75,7 +75,10 @@ async function actionButtons(data, url, setAlertCallback, setLoading) {
  */
 export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }) {
     const { job_link, job_title, country, city, county, remote, edited, published, posted } = data;
-    const { company } = useParams();
+    const { id, company } = useParams();
+
+    const companyJobs = data;
+    data.companyId = id;
 
     // clear job from production
     const [clearLoading, setClearLoading] = useState(false);
@@ -101,7 +104,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
     // sync jobs
     const [syncLoading, setSyncLoading] = useState(false);
     const syncJob = async () => {
-        await actionButtons({ company: company }, routes.JOBS_SYNC, setAlert, setSyncLoading);
+        await actionButtons({ company: id }, routes.JOBS_SYNC, setAlert, setSyncLoading);
     };
 
     // sync jobs
@@ -113,7 +116,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
     const [deleteLoading, setDeleteLoading] = useState(false);
     const deleteJob = async () => {
         const response = await actionButtons(
-            [data],
+            [companyJobs],
             routes.JOBS_DELETE,
             setAlert,
             setDeleteLoading,
@@ -132,7 +135,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
     const [updateLoading, setUpdateLoading] = useState(false);
     const publishJob = async () => {
         const response = await actionButtons(
-            [data],
+            [companyJobs],
             routes.JOBS_PUBLISH,
             setAlert,
             setUpdateLoading,
