@@ -1,0 +1,143 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: validator-ui/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: validator-ui
+        run: npm ci
+      
+      - name: Run ESLint
+        working-directory: validator-ui
+        run: npm run lint
+      
+      - name: Run tests
+        working-directory: validator-ui
+        run: npm test -- --run
+      
+      - name: Build application
+        working-directory: validator-ui
+        run: npm run build
+
+  documentation-check:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check documentation files exist
+        run: |
+          echo "Checking for required documentation files..."
+          
+          # Check main documentation files
+          if [ ! -f "README.md" ]; then
+            echo "❌ README.md is missing!"
+            exit 1
+          fi
+          echo "✅ README.md exists"
+          
+          if [ ! -f "docs/architecture.md" ]; then
+            echo "❌ docs/architecture.md is missing!"
+            exit 1
+          fi
+          echo "✅ docs/architecture.md exists"
+          
+          if [ ! -f "docs/components-guidelines.md" ]; then
+            echo "❌ docs/components-guidelines.md is missing!"
+            exit 1
+          fi
+          echo "✅ docs/components-guidelines.md exists"
+          
+          if [ ! -f "docs/api.md" ]; then
+            echo "❌ docs/api.md is missing!"
+            exit 1
+          fi
+          echo "✅ docs/api.md exists"
+          
+          if [ ! -f "docs/contributing.md" ]; then
+            echo "❌ docs/contributing.md is missing!"
+            exit 1
+          fi
+          echo "✅ docs/contributing.md exists"
+          
+          echo "✅ All required documentation files are present!"
+      
+      - name: Check for documentation in pull requests
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Checking if documentation is updated for PRs with code changes..."
+          
+          # Get list of changed files
+          git fetch origin ${{ github.base_ref }}
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          
+          # Check if code files changed
+          CODE_CHANGED=false
+          if echo "$CHANGED_FILES" | grep -q "validator-ui/src/"; then
+            CODE_CHANGED=true
+          fi
+          
+          # Check if docs changed
+          DOCS_CHANGED=false
+          if echo "$CHANGED_FILES" | grep -q -E "(README\.md|docs/|\.stories\.)"; then
+            DOCS_CHANGED=true
+          fi
+          
+          if [ "$CODE_CHANGED" = true ] && [ "$DOCS_CHANGED" = false ]; then
+            echo "⚠️ Warning: Code changes detected but no documentation updates found."
+            echo "Please consider updating documentation if your changes require it."
+            echo "This is a warning, not a failure."
+          else
+            echo "✅ Documentation check passed!"
+          fi
+
+  build-storybook:
+    name: Build Storybook Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: validator-ui/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: validator-ui
+        run: npm ci
+      
+      - name: Build Storybook
+        working-directory: validator-ui
+        run: npm run build-storybook
+      
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-build
+          path: validator-ui/storybook-static
+          retention-days: 7

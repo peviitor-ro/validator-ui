@@ -43,7 +43,10 @@
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_46b5d3008f2cfad"
+    "chromatic": "npx chromatic --project-token=chpt_46b5d3008f2cfad",
+    "docs:serve": "npm run storybook",
+    "docs:build": "npm run build-storybook",
+    "docs:validate": "npm run lint && npm test -- --run"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.5.0",
