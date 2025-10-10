@@ -7,7 +7,13 @@ import dots from '../assets/svgs/dots.svg';
  *
  * @param {Object} props - The component props.
  * @param {string} props.message - The loading message to display.
+ * @param {React.ReactNode} props.children - Optional child elements to display (typically a spinner or loading animation).
  * @returns {JSX.Element} The rendered LoadingPage component.
+ * 
+ * @example
+ * <LoadingPage message="Loading data...">
+ *   <Loading />
+ * </LoadingPage>
  */
 export function LoadingPage({ message, children }) {
     return (
