@@ -96,17 +96,13 @@ export function CompanyAccess({
 
     const [search, setSearch] = useState('');
 
+    // Filter companies based on search term
+    const filteredCompanies = companies.filter((company) =>
+        company.company.toLowerCase().includes(search.toLowerCase()),
+    );
+
     const handleSearch = (e) => {
         setSearch(e.target.value);
-        const companySelect = document.getElementById('company');
-        const companyOptions = Array.from(companySelect.options);
-        companyOptions.forEach((option) => {
-            if (option.value.toLowerCase().includes(e.target.value.toLowerCase())) {
-                option.style.display = 'block';
-            } else {
-                option.style.display = 'none';
-            }
-        });
     };
 
     // Function to handle scraper search
@@ -210,7 +206,7 @@ export function CompanyAccess({
                                 className="border-input h-64 w-full p-2"
                                 size={20}
                             >
-                                {companies.map((company) =>
+                                {filteredCompanies.map((company) =>
                                     company.selected ? (
                                         <option
                                             key={company.company}
