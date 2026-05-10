@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useJobsInfiniteQuery } from '../../services/landing/landing.queries';
+import { get, post } from '../../services/landing/landing.service';
 import { useJobsOptionsSelector } from '../../store/jobs.selectors';
 import { infiniteScroll } from '../../hooks/infiniteScroll';
+import { routes } from '../../routes/routes';
 import { JOBS_OPTIONS } from './components/filters/constants';
 import { JobCard } from './components/cards/JobCard';
 import { Home } from './components/filters/HeaderFilters';
@@ -35,10 +37,12 @@ import Loading from '../../components/Loading';
  * @name JobsPage
  */
 export function JobsPage() {
+    const PAGE_SIZE = 15;
+
     // Get the company name from the URL
     const { id, company } = useParams();
     // Reset the filters when the company changes
-    const { reset } = useJobsOptionsSelector();
+    const { reset, order, search } = useJobsOptionsSelector();
     useEffect(() => {
         reset();
     }, [id, reset]);
@@ -55,7 +59,7 @@ export function JobsPage() {
         'Nu mai sunt joburi de incarcat',
         id,
         company,
-        15,
+        PAGE_SIZE,
     );
 
     const [open, setOpen] = useState(false);
@@ -67,13 +71,14 @@ export function JobsPage() {
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertType, setAlertType] = useState('success');
+    const [publishAllLoading, setPublishAllLoading] = useState(false);
 
     // Function to set the alert message and type
     const setAlert = useCallback((message, type) => {
         setAlertOpen(true);
         setAlertMessage(message);
         setAlertType(type);
-    });
+    }, []);
 
     useEffect(() => {
         if (data?.pages[0].data?.length > 0) {
@@ -82,6 +87,59 @@ export function JobsPage() {
     }, [data]);
 
     const [editedData, setEditedData] = useState({});
+
+    const fetchAllCompanyJobs = useCallback(async () => {
+        const allJobs = [];
+        let page = 1;
+        let nextId = 1;
+
+        while (nextId) {
+            const response = await get(routes.JOBS, {
+                id,
+                company,
+                page,
+                page_size: PAGE_SIZE,
+                order,
+                search,
+            });
+
+            allJobs.push(...response.data);
+            nextId = response.nextId;
+            page = response.nextId;
+        }
+
+        setJobsData(allJobs);
+        return allJobs;
+    }, [PAGE_SIZE, company, id, order, search]);
+
+    const handlePublishAllJobs = useCallback(async () => {
+        setPublishAllLoading(true);
+
+        try {
+            const allJobs = await fetchAllCompanyJobs();
+            const unpublishedJobs = allJobs.filter((job) => !job.published);
+
+            if (unpublishedJobs.length === 0) {
+                setAlert('Toate joburile companiei sunt deja publicate', 'success');
+                return;
+            }
+
+            await post(
+                routes.JOBS_PUBLISH,
+                unpublishedJobs.map((job) => ({
+                    ...job,
+                    companyId: id,
+                })),
+            );
+            setJobsData((prev) => prev.map((job) => ({ ...job, published: true })));
+            setAlert('Toate joburile companiei au fost publicate', 'success');
+        } catch (error) {
+            setAlert('A aparut o eroare la publicarea joburilor', 'error');
+        } finally {
+            setPublishAllLoading(false);
+        }
+    }, [fetchAllCompanyJobs, id, setAlert]);
+
     return (
         <Home>
             <Home.Header
@@ -106,6 +164,17 @@ export function JobsPage() {
             {status !== 'pending' && status !== 'error' && (
                 <>
                     <Analitycs id={id} />
+
+                    <div className="px-4 pb-4 lg:px-6">
+                        <button
+                            type="button"
+                            onClick={handlePublishAllJobs}
+                            disabled={publishAllLoading}
+                            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {publishAllLoading ? 'Se publica joburile...' : 'Publica toate joburile'}
+                        </button>
+                    </div>
 
                     <div className="grid grid-cols-minmax gap-6 px-4 lg:px-6">
                         {jobsData.map((job, index) => {
