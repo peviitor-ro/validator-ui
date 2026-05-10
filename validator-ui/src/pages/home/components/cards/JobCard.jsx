@@ -145,7 +145,6 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
     // publish job
     const handlePublish = useCallback(() => {
         publishJob();
-        navLinks.splice(2, 1);
     });
 
     // loading message
@@ -157,39 +156,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
               ? 'Se publica jobul'
               : '';
 
-    // navigation links
-    const iconsClasses = 'w-5 h-5 lg:w-7 lg:h-7';
-    const navLinks = [
-        {
-            name: 'Editeaza',
-            onClick: () => setOpenModal(true),
-            icon: <img src={pencil} alt="Editeaza" className={iconsClasses} />,
-        },
-        {
-            name: 'Sterge',
-            onClick: handleDelete,
-            icon: <img src={deleteIcon} alt="Sterge" className={iconsClasses} />,
-        },
-        {
-            name: 'Publica Jobul',
-            onClick: handlePublish,
-            icon: <img src={upload} alt="Publica Jobul" className={iconsClasses} />,
-        },
-        {
-            name: 'Vizualizeaza Jobul',
-            url: job_link,
-            icon: <img src={www} alt="Vizualizeaza Jobul" className={iconsClasses} />,
-        },
-        {
-            name: 'Sterge Joburile din Productie',
-            onClick: handleClearCompany,
-            icon: <img src={clean} alt="Sterge Joburile din Productie" className={iconsClasses} />,
-        },
-    ];
-
-    if (published) {
-        navLinks.splice(2, 1);
-    }
+    const iconsClasses = 'h-4 w-4';
 
     return (
         <>
@@ -199,14 +166,78 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
                 </LoadingPage>
             ) : null}
             <AnimatedCard
-                navLinks={navLinks}
+                navLinks={[]}
                 cardId={job_link}
                 data={data}
                 setEditedData={setEditedData}
+                disableNavbarActions
             >
                 <div className="flex flex-col justify-between h-full">
                     <div className="flex flex-col gap-3 ml-2">
                         <div className="text-lg font-semibold">{job_title}</div>
+                        <div className="flex flex-col gap-3">
+                            <div className="flex flex-wrap items-center justify-center gap-3">
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setEditedData(data);
+                                        setOpenModal(true);
+                                    }}
+                                    className="flex min-w-[110px] items-center justify-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-100"
+                                >
+                                    <img src={pencil} alt="Editeaza" className={iconsClasses} />
+                                    <span>Editeaza</span>
+                                </button>
+                                <a
+                                    href={job_link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="flex min-w-[110px] items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-medium text-sky-700 transition-colors hover:bg-sky-100"
+                                >
+                                    <img src={www} alt="Job" className={iconsClasses} />
+                                    <span>Vezi</span>
+                                </a>
+                                {!published && (
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePublish();
+                                        }}
+                                        className="flex min-w-[110px] items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+                                    >
+                                        <img src={upload} alt="Publica" className={iconsClasses} />
+                                        <span>Publica</span>
+                                    </button>
+                                )}
+                            </div>
+                            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-500">
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete();
+                                    }}
+                                    className="flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-red-50 hover:text-red-700"
+                                >
+                                    <img src={deleteIcon} alt="Sterge" className={iconsClasses} />
+                                    <span>Sterge</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleClearCompany();
+                                    }}
+                                    className="flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-violet-50 hover:text-violet-700"
+                                >
+                                    <img src={clean} alt="Sterge din productie" className={iconsClasses} />
+                                    <span>Sterge din productie</span>
+                                </button>
+                            </div>
+                        </div>
                         <div className="flex flex-col">
                             <div className="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
                                 <span>

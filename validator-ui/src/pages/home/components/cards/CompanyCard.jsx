@@ -126,6 +126,7 @@ export function CompanyCard({
             cardId={company}
             data={data}
             setEditedData={setEditedData}
+            disableNavbarActions
         >
             {source_name && (
                 <div className="absolute top-10 w-full z-20 -rotate-45 origin-top-left">
@@ -140,6 +141,34 @@ export function CompanyCard({
 
             <h3 className="text-center mb-6 uppercase">{company ?? '-'}</h3>
 
+            <div className="mb-4 flex items-center justify-center">
+                <div className="flex items-center overflow-hidden rounded-2xl border border-gray-200 bg-white/80 shadow-sm backdrop-blur-sm">
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setEditedData(data);
+                            setOpenModal(true);
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-700"
+                    >
+                        <img src={pencil} alt="Editeaza" className="h-4 w-4" />
+                        <span>Editeaza</span>
+                    </button>
+                    <div className="h-6 w-px bg-gray-200" />
+                    <a
+                        href={website}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-sky-50 hover:text-sky-700"
+                    >
+                        <img src={www} alt="Website" className="h-4 w-4" />
+                        <span>Website</span>
+                    </a>
+                </div>
+            </div>
+
             {description ? (
                 <p className="line-clamp-2 mb-6 break-all">{description}</p>
             ) : (
@@ -152,9 +181,15 @@ export function CompanyCard({
 
             <NavLink
                 to={`/jobs/${id}/${company}`}
-                className={clsx('btn btn-primary active-link text-center mb-2', {
-                    'btn-disabled': !jobsCount || !have_access,
-                })}
+                className={clsx(
+                    'mb-2 flex items-center justify-center rounded-2xl border px-4 py-3 text-sm font-medium transition-colors',
+                    {
+                        'border-red-200 bg-red-50 text-red-700 hover:bg-red-100':
+                            jobsCount && have_access,
+                        'pointer-events-none border-gray-200 bg-gray-100 text-gray-400':
+                            !jobsCount || !have_access,
+                    },
+                )}
             >
                 Vizualizeaza Joburi ({jobsCount ?? 0})
             </NavLink>

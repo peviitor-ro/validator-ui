@@ -12,6 +12,7 @@ import { SORT_OPTIONS } from './components/filters/constants';
 import useWindowSize from '../../hooks/useWindowSize';
 import Loading from '../../components/Loading';
 import { Modal } from '../../components/Modal';
+import { useNavbar } from '../../contexts/Navbarcontext';
 
 /**
  * The Homepage component is responsible for rendering the main page of the application.
@@ -27,6 +28,7 @@ import { Modal } from '../../components/Modal';
  */
 export function Homepage() {
     const { width } = useWindowSize();
+    const { resetLinks } = useNavbar();
 
     // Destructure the result of the `infiniteScroll` function call
     const { data, status, error, button } = infiniteScroll(
@@ -52,6 +54,10 @@ export function Homepage() {
             setCompanies(data.pages.map((page) => page.data).flat());
         }
     }, [data]);
+
+    useEffect(() => {
+        resetLinks();
+    }, [resetLinks]);
 
     const [editedData, setEditedData] = useState({});
     const [openModal, setOpenModal] = useState(false);

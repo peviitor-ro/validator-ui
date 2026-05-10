@@ -18,7 +18,14 @@ import { cn } from '../lib/utils';
  *
  * @returns {JSX.Element} The rendered Card component.
  */
-export function AnimatedCard({ children, navLinks, cardId, data, setEditedData = () => {} }) {
+export function AnimatedCard({
+    children,
+    navLinks,
+    cardId,
+    data,
+    setEditedData = () => {},
+    disableNavbarActions = false,
+}) {
     const { setLinks, resetLinks } = useNavbar();
     const cardRef = useRef(null);
     const [activeCard, setActiveCard] = useState(null);
@@ -31,10 +38,12 @@ export function AnimatedCard({ children, navLinks, cardId, data, setEditedData =
         const handleClickOutside = (e) => {
             if (cardRef.current && !cardRef.current.contains(e.target)) {
                 setActiveCard(null);
-                resetLinks();
+                if (!disableNavbarActions) {
+                    resetLinks();
+                }
             }
 
-            if (activeCard === cardId) {
+            if (!disableNavbarActions && activeCard === cardId) {
                 setLinks(navLinks);
             }
         };
@@ -45,7 +54,7 @@ export function AnimatedCard({ children, navLinks, cardId, data, setEditedData =
         return () => {
             window.removeEventListener('click', handleClickOutside);
         };
-    }, [activeCard]);
+    }, [activeCard, cardId, disableNavbarActions, navLinks, resetLinks, setLinks]);
 
     const cardStyle = clsx(
         'relative card flex flex-col h-[400px] border overflow-hidden cursor-pointer',
