@@ -59,28 +59,37 @@ Home.Header = function H({ title, selector, options }) {
     return (
         <div
             id="search-container"
-            className="sticky top-0 w-full z-40 flex flex-col bg-card gap-2 border-b border-disabled shadow-lg lg:flex-row lg:items-center p-2 lg:p-4"
+            className="sticky top-0 z-40 mx-4 rounded-3xl border border-white/60 bg-white/90 p-3 shadow-[0_18px_45px_-28px_rgba(15,23,42,0.45)] backdrop-blur-md lg:mx-6 lg:p-4"
         >
-            <h1 className="text-3xl font-semibold text-primary">{title}</h1>
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="space-y-1">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                        Filtrare rapida
+                    </p>
+                    <h1 className="text-2xl font-semibold text-slate-800 lg:text-3xl">{title}</h1>
+                </div>
 
-            <InputField
-                id="search"
-                fieldClassName="rounded-md bg-card border border-disabled focus:outline-none focus:ring-1 lg:ml-auto"
-                placeholder="Cauta aici..."
-                leftIcon={<MagnifyingGlassIcon className="h-5" />}
-                showError={false}
-            />
-            <SelectField options={options} value={order} onChange={setOrder} />
+                <div className="grid gap-3 lg:min-w-[680px] lg:grid-cols-[minmax(0,1.7fr)_minmax(180px,0.9fr)_auto] lg:items-center">
+                    <InputField
+                        id="search"
+                        fieldClassName="rounded-2xl border border-slate-200 bg-white/90 shadow-sm"
+                        placeholder="Cauta aici..."
+                        leftIcon={<MagnifyingGlassIcon className="h-5 text-slate-400" />}
+                        showError={false}
+                    />
+                    <SelectField options={options} value={order} onChange={setOrder} />
 
-            <Button
-                id="search-button"
-                className="w-full lg:w-auto"
-                text="Cauta"
-                onClick={() => {
-                    const search = document.getElementById('search').value;
-                    setSearch(search);
-                }}
-            />
+                    <Button
+                        id="search-button"
+                        className="w-full rounded-2xl px-6 lg:w-auto"
+                        text="Cauta"
+                        onClick={() => {
+                            const search = document.getElementById('search').value;
+                            setSearch(search);
+                        }}
+                    />
+                </div>
+            </div>
         </div>
     );
 };
