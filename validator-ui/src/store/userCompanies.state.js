@@ -5,7 +5,6 @@ export const INITIAL_USER_COMPANIES_STATE = {
     is_staff: false,
     users: [],
     companies: [],
-    scrapers: [],
 };
 
 export const useUserCompaniesStore = create((set) => ({
@@ -14,5 +13,4 @@ export const useUserCompaniesStore = create((set) => ({
     setIsStaff: (is_staff) => set(() => ({ is_staff: is_staff })),
     setUsers: (users) => set(() => ({ users: users })),
     setCompanies: (companies) => set(() => ({ companies: companies })),
-    setScrapers: (scrapers) => set(() => ({ scrapers: scrapers })),
 }));

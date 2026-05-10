@@ -11,7 +11,6 @@ import pencil from '../../../../assets/icons/pencil.png';
 import deleteIcon from '../../../../assets/icons/delete.png';
 import www from '../../../../assets/icons/www.png';
 import upload from '../../../../assets/icons/upload.png';
-import syncIcon from '../../../../assets/icons/sync.png';
 import clean from '../../../../assets/icons/clean.png';
 
 /**
@@ -101,17 +100,6 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
         clearJob();
     });
 
-    // sync jobs
-    const [syncLoading, setSyncLoading] = useState(false);
-    const syncJob = async () => {
-        await actionButtons({ company: id }, routes.JOBS_SYNC, setAlert, setSyncLoading);
-    };
-
-    // sync jobs
-    const handleSyncJobs = useCallback(() => {
-        syncJob();
-    });
-
     // delete job
     const [deleteLoading, setDeleteLoading] = useState(false);
     const deleteJob = async () => {
@@ -163,9 +151,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
     // loading message
     const message = clearLoading
         ? 'Se sterge joburile din productie'
-        : syncLoading
-          ? 'Se sincronizeaza joburile'
-          : deleteLoading
+        : deleteLoading
             ? 'Se sterge jobul'
             : updateLoading
               ? 'Se publica jobul'
@@ -199,11 +185,6 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
             onClick: handleClearCompany,
             icon: <img src={clean} alt="Sterge Joburile din Productie" className={iconsClasses} />,
         },
-        {
-            name: 'Sincronizeaza Joburile',
-            onClick: handleSyncJobs,
-            icon: <img src={syncIcon} alt="Sincronizeaza Joburile" className={iconsClasses} />,
-        },
     ];
 
     if (published) {
@@ -212,7 +193,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
 
     return (
         <>
-            {clearLoading || syncLoading || deleteLoading || updateLoading ? (
+            {clearLoading || deleteLoading || updateLoading ? (
                 <LoadingPage message={message}>
                     <Loading />
                 </LoadingPage>

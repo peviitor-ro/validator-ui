@@ -11,8 +11,6 @@ import { CapthchaProvider } from './CapthchaProvider';
 import { routes } from './routes';
 import { JobsPage } from '../pages/home/JobsPage';
 import { Account } from '../pages/account/Account';
-import { Scraperpage } from '../pages/home/Scraperpage';
-import { Filespage } from '../pages/home/Filespage';
 
 /**
  * Router component that defines the application's routing structure.
@@ -28,8 +26,6 @@ import { Filespage } from '../pages/home/Filespage';
  * Authenticated Routes:
  * - Home: Renders the AppLayout component wrapped in an AuthGuard.
  * - Account: Renders the Account component.
- * - Scraper: Renders the Scraperpage component.
- * - Scraper Details: Renders the Filespage component based on the scraper name.
  * - Jobs: Renders the JobsPage component based on the company name.
  *
  * Fallback Route:
@@ -76,8 +72,6 @@ export function Router() {
                 >
                     <Route index element={<Homepage />} />
                     <Route path="account" element={<Account />} />
-                    <Route path="scraper" element={<Scraperpage />} />
-                    <Route path="scraper/:scraperName" element={<Filespage />} />
                     <Route path="jobs/:id/:company" element={<JobsPage />} />
                 </Route>
 

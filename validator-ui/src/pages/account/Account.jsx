@@ -25,12 +25,10 @@ import { getUsersAndCompanies } from '../../services/landing/landing.service';
  * @state {boolean} is_staff - Indicates if the user is a staff member.
  * @state {Array} users - List of users.
  * @state {Array} companies - List of companies.
- * @state {Array} scrapers - List of scrapers.
  * @state {Function} setIsSuperuser - Function to set the superuser state.
  * @state {Function} setIsStaff - Function to set the staff state.
  * @state {Function} setUsers - Function to set the users state.
  * @state {Function} setCompanies - Function to set the companies state.
- * @state {Function} setScrapers - Function to set the scrapers state.
  * @state {string} email - The email used to fetch data.
  * @state {Function} setEmail - Function to set the email state.
  * @state {boolean} loading - Indicates if data is being loaded.
@@ -54,12 +52,10 @@ export function Account() {
         is_staff,
         users,
         companies,
-        scrapers,
         setIsSuperuser,
         setIsStaff,
         setUsers,
         setCompanies,
-        setScrapers,
     } = useUserCompaniesSelector();
 
     const [email, setEmail] = useState('');
@@ -68,15 +64,14 @@ export function Account() {
     const [alert, setAlert] = useState(false);
     const [alertType, setAlertType] = useState('success');
 
-    const fetchUsersAndCompanies = async () => {
+    const fetchUsersAndCompanies = async (selectedEmail = email) => {
         setLoading(true);
         try {
-            const data = await getUsersAndCompanies(email);
+            const data = await getUsersAndCompanies(selectedEmail);
             setIsSuperuser(data.is_superuser);
             setIsStaff(data.is_staff);
             setUsers(data.users);
             setCompanies(data.companies);
-            setScrapers(data.scrapers);
             setLoading(false);
         } catch (error) {
             setAlert(true);
@@ -108,9 +103,9 @@ export function Account() {
                 is_staff={is_staff}
                 users={users}
                 companies={companies}
-                scrapers={scrapers}
                 email={email}
                 setEmail={setEmail}
+                refreshUsersAndCompanies={fetchUsersAndCompanies}
                 loading={loading}
                 setLoading={setLoading}
                 alertMessage={alertMessage}
