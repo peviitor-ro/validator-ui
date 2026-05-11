@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { routes } from '../../routes/routes';
 import { get } from './landing.service';
 
@@ -32,22 +32,6 @@ export function useJobsInfiniteQuery(id, company, page_size, order, search) {
             }),
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.nextId ?? undefined,
-    });
-}
-
-export function useScrapersQuery(order, search) {
-    return useInfiniteQuery({
-        queryKey: ['scrapers', order, search],
-        queryFn: ({ pageParam }) => get(routes.SCRAPER_ADD, { page: pageParam, order, search }),
-        initialPageParam: 1,
-        getNextPageParam: (lastPage) => lastPage.nextId ?? undefined,
-    });
-}
-
-export function useScraperFilesQuery(scraperName) {
-    return useQuery({
-        queryKey: ['scraperFiles', scraperName],
-        queryFn: () => get(routes.SCRAPER + scraperName + '/', {}, 'response'),
     });
 }
 

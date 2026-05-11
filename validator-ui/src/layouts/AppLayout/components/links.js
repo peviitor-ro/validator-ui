@@ -4,10 +4,6 @@ export const NAV_LINKS = Object.freeze([
         url: '/account',
     },
     {
-        name: 'Scraperi',
-        url: '/scraper',
-    },
-    {
         name: 'Cautare',
         onClick: () => {
             const search = document.getElementById('search');
@@ -17,9 +13,5 @@ export const NAV_LINKS = Object.freeze([
     {
         name: 'Despre',
         url: 'https://oportunitatisicariere.ro/',
-    },
-    {
-        name: 'Documentatie',
-        url: 'https://adminpeviitordocs.netlify.app/',
     },
 ]);

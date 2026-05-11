@@ -1,6 +1,7 @@
 import { Spinner } from '../../components/Spinner';
 import { addUser } from '../../services/landing/landing.service';
 import { Alert } from '../../components/Alert';
+import { useState } from 'react';
 
 /**
  * AccountForm component handles the form submission for adding a new user account.
@@ -27,13 +28,15 @@ export function AccountForm({
     alertType,
     setAlertType,
 }) {
-    const handleClick = async () => {
+    const [email, setEmail] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setLoading(true);
         try {
-            const email = document.getElementById('email_account').value;
             const response = await addUser(email);
             if (response === 201) {
-                document.getElementById('email_account').value = '';
+                setEmail('');
                 setLoading(false);
                 setAlertMessage('Contul a fost adaugat');
                 setAlertType('success');
@@ -66,7 +69,7 @@ export function AccountForm({
                 <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">
                     Adaugare cont
                 </h2>
-                <form className="flex flex-col gap-4 text-gray-500">
+                <form className="flex flex-col gap-4 text-gray-500" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="email_account">Adauga Utilizator</label>
                         <input
@@ -74,12 +77,14 @@ export function AccountForm({
                             id="email_account"
                             className="border-input h-full w-full p-2"
                             placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <button
+                        type="submit"
                         className="flex items-center justify-center btn btn-green text-center w-[100px] px-4"
-                        onClick={handleClick}
-                        disabled={loading}
+                        disabled={loading || !email}
                     >
                         {loading ? (
                             <p className="flex items-center gap-2 text-white ">

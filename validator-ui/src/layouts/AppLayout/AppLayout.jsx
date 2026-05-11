@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container } from '../../components/Container';
 import { useAuthContext } from '../../contexts/AuthContext';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { Dock, DockIcon, dockVariants } from '../../components/ui/dock';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useNavbar } from '../../contexts/Navbarcontext';
 import clsx from 'clsx';
 
@@ -79,6 +78,7 @@ export function AppLayout() {
     const { logout } = useAuthContext();
 
     const navigate = useNavigate();
+    const location = useLocation();
     const { links } = useNavbar();
     const iconsClasses = 'w-5 h-5 lg:w-7 lg:h-7';
 
@@ -131,64 +131,78 @@ export function AppLayout() {
         }
     }, [active]);
 
+    const handleLinkClick = ({ url, onClick }) => {
+        if (onClick) {
+            onClick();
+            return;
+        }
+
+        if (url.includes('http')) {
+            window.open(url, '_blank');
+            return;
+        }
+
+        navigate(url);
+    };
+
+    const bottomActions = [
+        {
+            name: 'Acasa',
+            onClick: () => navigate('/'),
+            icon: <img src={home} alt="Acasa" className={iconsClasses} />,
+            active: location.pathname === '/',
+        },
+        ...links.map(({ name, url, onClick, icon }) => ({
+            name,
+            onClick: () => handleLinkClick({ url, onClick }),
+            icon,
+            active: url ? location.pathname === url : false,
+        })),
+        {
+            name: 'Notificari',
+            onClick: () => setActive(!active),
+            icon: (
+                <div className="relative">
+                    <img src={bell} alt="Notificari" className={iconsClasses} />
+                    {notifications?.length > 0 && (
+                        <div className="absolute top-0 right-0 h-2 w-2 lg:h-3 lg:w-3 bg-red-500 rounded-full"></div>
+                    )}
+                </div>
+            ),
+            active,
+        },
+        {
+            name: 'Iesire',
+            onClick: () => logout(),
+            icon: <img src={power} alt="Iesire" className={iconsClasses} />,
+            active: false,
+        },
+    ];
+
     return (
         <>
             <Notification active={active} setActive={setActive} notifications={notifications} />
             <Container>
                 <Outlet />
                 <div className="sticky flex flex-col items-center bottom-0 sm:flex justify-center w-full z-10">
-                    <Dock className="shadow-lg mb-4 bg-card">
-                        <DockIcon
-                            variant={dockVariants.HOME}
-                            onClick={() => navigate('/')}
-                            children={<img src={home} alt="home" className={iconsClasses} />}
-                            title="Acasa"
-                            className="text-gray-500 hover:text-red-500"
-                        />
-                        {links?.map(({ name, url, onClick, icon }, key) => {
-                            return (
-                                <DockIcon
-                                    key={key}
-                                    variant={dockVariants[name.toUpperCase()]}
-                                    onClick={
-                                        onClick
-                                            ? () => onClick()
-                                            : () => {
-                                                  url.includes('http')
-                                                      ? window.open(url, '_blank')
-                                                      : navigate(url);
-                                              }
-                                    }
-                                    children={icon}
-                                    title={name}
-                                    className="text-gray-500 hover:text-red-500"
-                                />
-                            );
-                        })}
-
-                        <DockIcon
-                            variant={dockVariants.NOTIFICATIONS}
-                            onClick={() => setActive(!active)}
-                            children={
-                                <div className="relative">
-                                    <img src={bell} alt="bell" className={iconsClasses} />
-                                    {notifications?.length > 0 && (
-                                        <div className="absolute top-0 right-0 h-2 w-2 lg:h-3 lg:w-3 bg-red-500 rounded-full"></div>
-                                    )}
-                                </div>
-                            }
-                            title="Notificari"
-                            className="text-gray-500 hover:text-red-500"
-                        />
-
-                        <DockIcon
-                            variant={dockVariants.LOGOUT}
-                            onClick={() => logout()}
-                            children={<img src={power} alt="power" className={iconsClasses} />}
-                            title="Iesire"
-                            className="text-gray-500 hover:text-red-500"
-                        />
-                    </Dock>
+                    <div className="mb-4 flex w-[min(100%,820px)] flex-wrap items-center justify-center gap-2 rounded-3xl border bg-card/95 p-2 shadow-lg backdrop-blur-md">
+                        {bottomActions.map(({ name, onClick, icon, active: isActive }) => (
+                            <button
+                                key={name}
+                                type="button"
+                                onClick={onClick}
+                                className={clsx(
+                                    'flex min-w-[92px] flex-1 items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium transition-colors',
+                                    isActive
+                                        ? 'bg-red-500 text-white shadow-sm'
+                                        : 'bg-white/70 text-gray-600 hover:bg-red-50 hover:text-red-500',
+                                )}
+                            >
+                                {icon}
+                                <span>{name}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </Container>
         </>
