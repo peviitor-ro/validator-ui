@@ -162,94 +162,154 @@ export function CompanyAccess({
                 </LoadingPage>
             )}
             {is_superuser || is_staff ? (
-                <div className="flex flex-col gap-4 m-2 p-2 border bg-white rounded-md shadow-md">
-                    <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">
-                        Administrare Companii
-                    </h2>
-                    <form className="flex flex-col gap-4 text-gray-500" onSubmit={onsSubmit}>
+                <div className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_45px_-28px_rgba(15,23,42,0.35)] backdrop-blur-md lg:p-6">
+                    <div className="mb-5 flex flex-col gap-3 border-b border-slate-200 pb-4 lg:flex-row lg:items-end lg:justify-between">
                         <div>
-                            <label htmlFor="email">Selecteaza Utilizator</label>
-                            <select
-                                id="email"
-                                onChange={(e) => setEmail(e.target.value)}
-                                value={email}
-                                className="border-input h-full w-full p-2"
-                            >
-                                <option value="" disabled>
-                                    Selecteaza Utilizator
-                                </option>
-                                {users.map((user, index) => (
-                                    <option key={`${user.email}-${index}`} value={user.email}>
-                                        {user.email}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="company">Selecteaza Companii</label>
-                            <p className="text-sm text-gray-400">
-                                Selectie curenta: {selectedCompanies.length}
+                            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                                Acces operational
                             </p>
-                            <input
-                                type="text"
-                                id="search"
-                                className="
-                                border-input h-full w-full p-2"
-                                placeholder="Cauta companie"
-                                value={search}
-                                onChange={handleSearch}
-                            />
-                            <select
-                                id="company"
-                                multiple
-                                value={selectedCompanies}
-                                onChange={handleCompanyChange}
-                                className="border-input h-64 w-full p-2"
-                                size={20}
-                            >
-                                {companies
-                                    .filter((company) =>
-                                        company.company.toLowerCase().includes(search.toLowerCase()),
-                                    )
-                                    .map((company, index) => (
-                                        <option key={`${company.company}-${index}`} value={company.company}>
-                                            {company.company}
-                                        </option>
-                                    ))}
-                            </select>
+                            <h2 className="text-2xl font-semibold text-slate-800">
+                                Administrare companii
+                            </h2>
+                            <p className="mt-2 text-sm text-slate-500">
+                                Selecteaza utilizatorul si configureaza companiile pe care le poate
+                                administra in platforma.
+                            </p>
                         </div>
-
-                        {is_superuser && (
-                            <div>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        id="is_superuser"
-                                        name="is_superuser"
-                                        value="is_superuser"
-                                        checked={userIsSuperuser}
-                                        onChange={(e) => setUserIsSuperuser(e.target.checked)}
-                                    />
-                                    <label htmlFor="is_superuser">Steaza ca Super Utilizator</label>
+                        <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-500">
+                            <span className="block text-xs uppercase tracking-wide text-slate-400">
+                                Selectie curenta
+                            </span>
+                            <span className="mt-1 block text-lg font-semibold text-slate-800">
+                                {selectedCompanies.length} companii
+                            </span>
+                        </div>
+                    </div>
+                    <form className="flex flex-col gap-6 text-slate-600" onSubmit={onsSubmit}>
+                        <div
+                            className={
+                                is_superuser
+                                    ? 'grid gap-6 xl:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.3fr)]'
+                                    : 'grid gap-6'
+                            }
+                        >
+                            <div className="space-y-5">
+                                <div className="space-y-2">
+                                    <label
+                                        htmlFor="email"
+                                        className="text-sm font-medium text-slate-600"
+                                    >
+                                        Selecteaza utilizator
+                                    </label>
+                                    <select
+                                        id="email"
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={email}
+                                        className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                    >
+                                        <option value="" disabled>
+                                            Selecteaza Utilizator
+                                        </option>
+                                        {users.map((user, index) => (
+                                            <option key={`${user.email}-${index}`} value={user.email}>
+                                                {user.email}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <div className="flex items-center gap-2">
+
+                                {is_superuser && (
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                        <p className="mb-3 text-sm font-medium text-slate-700">
+                                            Roluri utilizator
+                                        </p>
+                                        <div className="space-y-3">
+                                            <label className="flex items-center gap-3 rounded-xl bg-white px-3 py-2 shadow-sm">
+                                                <input
+                                                    type="checkbox"
+                                                    id="is_superuser"
+                                                    name="is_superuser"
+                                                    value="is_superuser"
+                                                    checked={userIsSuperuser}
+                                                    onChange={(e) =>
+                                                        setUserIsSuperuser(e.target.checked)
+                                                    }
+                                                    className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
+                                                />
+                                                <span className="text-sm text-slate-700">
+                                                    Seteaza ca Super Utilizator
+                                                </span>
+                                            </label>
+                                            <label className="flex items-center gap-3 rounded-xl bg-white px-3 py-2 shadow-sm">
+                                                <input
+                                                    type="checkbox"
+                                                    id="is_staff"
+                                                    name="is_staff"
+                                                    value="is_staff"
+                                                    checked={userIsStaff}
+                                                    onChange={(e) =>
+                                                        setUserIsStaff(e.target.checked)
+                                                    }
+                                                    className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
+                                                />
+                                                <span className="text-sm text-slate-700">
+                                                    Seteaza ca Staff
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-3">
+                                <div className="space-y-2">
+                                    <label
+                                        htmlFor="company"
+                                        className="text-sm font-medium text-slate-600"
+                                    >
+                                        Selecteaza companii
+                                    </label>
                                     <input
-                                        type="checkbox"
-                                        id="is_staff"
-                                        name="is_staff"
-                                        value="is_staff"
-                                        checked={userIsStaff}
-                                        onChange={(e) => setUserIsStaff(e.target.checked)}
+                                        type="text"
+                                        id="search"
+                                        className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                        placeholder="Cauta companie"
+                                        value={search}
+                                        onChange={handleSearch}
                                     />
-                                    <label htmlFor="is_staff">Seteaza ca Staff</label>
+                                </div>
+                                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-3 shadow-inner">
+                                    <select
+                                        id="company"
+                                        multiple
+                                        value={selectedCompanies}
+                                        onChange={handleCompanyChange}
+                                        className="h-72 w-full rounded-2xl border border-slate-200 bg-white p-3 text-slate-700 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                                        size={20}
+                                    >
+                                        {companies
+                                            .filter((company) =>
+                                                company.company
+                                                    .toLowerCase()
+                                                    .includes(search.toLowerCase()),
+                                            )
+                                            .map((company, index) => (
+                                                <option
+                                                    key={`${company.company}-${index}`}
+                                                    value={company.company}
+                                                >
+                                                    {company.company}
+                                                </option>
+                                            ))}
+                                    </select>
                                 </div>
                             </div>
-                        )}
-                        <div className="flex items-center gap-4">
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-3 border-t border-slate-200 pt-2">
                             <button
                                 type="submit"
-                                className="flex items-center justify-center btn btn-green text-center w-[100px] px-4"
+                                className="inline-flex min-w-[140px] items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
                                 disabled={loading || !email}
                             >
                                 {loading ? (
@@ -266,7 +326,7 @@ export function CompanyAccess({
                             {is_superuser && (
                                 <button
                                     type="button"
-                                    className="flex items-center justify-center gap-2 btn btn-red text-center w-[100px] px-4"
+                                    className="inline-flex min-w-[140px] items-center justify-center gap-2 rounded-2xl bg-red-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
                                     onClick={handleDelete}
                                     disabled={loading}
                                 >
