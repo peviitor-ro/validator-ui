@@ -184,20 +184,34 @@ export function JobForm({
     const [open, setOpen] = useState(false);
 
     const dropdownClasses = clsx(
-        'flex flex-col gap-2 absolute bg-white z-10 w-full max-h-60 overflow-y-auto border rounded-md shadow-md p-2 left-0 border-input mt-2',
+        'absolute left-0 z-10 mt-2 flex max-h-60 w-full flex-col gap-2 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_18px_45px_-28px_rgba(15,23,42,0.45)]',
         {
             hidden: !open || data?.pages[0].data.length === 0,
         },
     );
 
+    const fieldClassName =
+        'h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20';
+
+    const multiSelectClassName =
+        'h-36 w-full rounded-2xl border border-slate-200 bg-white p-3 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20';
+
     return (
         <>
-            <h1 className="text-2xl font-semibold">Editare Job</h1>
-            <form className="flex flex-col gap-2 text-gray-500">
-                <div className="flex flex-col">
-                    <label>Titlu</label>
+            <div className="border-b border-slate-200 pb-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                    Job
+                </p>
+                <h1 className="text-2xl font-semibold text-slate-800">Editare job</h1>
+                <p className="mt-2 text-sm text-slate-500">
+                    Actualizeaza datele jobului inainte de publicare pe platforma publica.
+                </p>
+            </div>
+            <form className="mt-6 flex flex-col gap-5 text-slate-600">
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-slate-600">Titlu</label>
                     <input
-                        className="border-input h-full w-full p-2"
+                        className={fieldClassName}
                         id="job_title"
                         placeholder="Titlu"
                         type="text"
@@ -205,10 +219,10 @@ export function JobForm({
                         onChange={changeHandler}
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label>Link</label>
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-slate-600">Link</label>
                     <input
-                        className="border-input h-full w-full p-2"
+                        className={fieldClassName}
                         id="job_link"
                         placeholder="Link"
                         type="text"
@@ -216,12 +230,12 @@ export function JobForm({
                         disabled
                     />
                 </div>
-                <div className="border-input h-full w-full p-2">
-                    <label>Localitatea</label>
+                <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 shadow-inner">
+                    <label className="text-sm font-medium text-slate-600">Localitatea</label>
                     <div className="relative">
-                        <div className="flex items-center ">
+                        <div className="mt-2 flex items-center">
                             <input
-                                className="border-input h-full w-full p-2"
+                                className={fieldClassName}
                                 ref={selectRef}
                                 type="text"
                                 name="Search"
@@ -240,8 +254,9 @@ export function JobForm({
                                     selectRef.current.value = '';
                                     setPropsData({ ...propsdata, city: [], county: [] });
                                 }}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
                             >
-                                <XMarkIcon className="absolute w-5  h-full top-1/2 transform -translate-y-1/2 right-2" />
+                                <XMarkIcon className="h-5 w-5" />
                             </button>
                         </div>
 
@@ -255,7 +270,7 @@ export function JobForm({
                                         <li
                                             value={[obj.name, obj.county]}
                                             key={index}
-                                            className="border-input h-full w-full p-2 cursor-pointer hover:bg-gray-200"
+                                            className="w-full cursor-pointer rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
                                             onClick={handleCitySelect}
                                         >
                                             {name.includes('tot judetul')
@@ -277,7 +292,7 @@ export function JobForm({
                             </button>
                         </ul>
                     </div>
-                    <div className="flex flex-col gap-1 text-xs text-gray-500 mt-2">
+                    <div className="mt-3 flex flex-col gap-1 text-xs text-slate-500">
                         <div className="flex gap-1 flex-wrap">
                             {city?.length > 1 ? 'Orase' : 'Oras'}:{' '}
                             {city?.length
@@ -297,10 +312,12 @@ export function JobForm({
                         </p>
                     </div>
                 </div>
-                <div className="flex flex-col">
-                    <label htmlFor="remote">Tipul Jobului</label>
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="remote" className="text-sm font-medium text-slate-600">
+                        Tipul jobului
+                    </label>
                     <select
-                        className="border-input h-32 w-full p-2"
+                        className={multiSelectClassName}
                         id="remote"
                         onChange={changeHandler}
                         defaultValue={remote.split(',')}
@@ -314,7 +331,11 @@ export function JobForm({
                         ))}
                     </select>
                 </div>
-                <Button text="Editati" onClick={handleClick} />
+                <Button
+                    text="Salveaza modificarile"
+                    onClick={handleClick}
+                    className="inline-flex min-w-[190px] items-center justify-center rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                />
             </form>
             {loading && (
                 <LoadingPage message="Se editeaza Jobul">

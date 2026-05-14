@@ -36,10 +36,23 @@ const schema = yup.object().shape({
  */
 const Form = ({ children, handleOnSubmit, loading, titleText, errors }) => {
     return (
-        <form className="flex flex-col gap-4" onSubmit={handleOnSubmit}>
-            <h2 className="text-2xl font-semibold">{titleText}</h2>
+        <form className="flex flex-col gap-6" onSubmit={handleOnSubmit}>
+            <div className="border-b border-slate-200 pb-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                    Companie
+                </p>
+                <h2 className="text-2xl font-semibold text-slate-800">{titleText}</h2>
+                <p className="mt-2 text-sm text-slate-500">
+                    Completeaza sau actualizeaza datele companiei inainte de gestionarea
+                    joburilor.
+                </p>
+            </div>
             {children}
-            <Button text="Adauga" isLoading={loading} />
+            <Button
+                text={titleText.includes('Adauga') ? 'Salveaza compania' : 'Actualizeaza compania'}
+                isLoading={loading}
+                className="inline-flex min-w-[180px] items-center justify-center rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+            />
             {errors && <p className="text-error">{errors.company?.message}</p>}
         </form>
     );
@@ -68,7 +81,7 @@ const Input = ({
 }) => {
     return (
         <div className="flex flex-col gap-2">
-            <label htmlFor={inputId} className="text-sm font-semibold">
+            <label htmlFor={inputId} className="text-sm font-medium text-slate-600">
                 {labelText}
             </label>
             {inputType === 'textarea' ? (
@@ -166,10 +179,16 @@ export function CompanyForm({
     const errorClass = clsx(
         {
             'border-error': errors.company,
-            'border-subtitle': !errors.company,
+            'border-slate-200': !errors.company,
         },
-        'border-input h-full w-full p-2',
+        'h-12 w-full rounded-2xl bg-white px-4 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20',
     );
+
+    const inputClassName =
+        'h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20';
+
+    const textareaClassName =
+        'min-h-[140px] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20';
 
     /**
      * Handles the form submission for adding or updating a company.
@@ -290,7 +309,7 @@ export function CompanyForm({
             <Form
                 handleOnSubmit={handleOnSubmit}
                 loading={loading}
-                titleText="Adauga companie"
+                titleText={method === 'POST' ? 'Adauga companie' : 'Editeaza companie'}
                 errors={errors}
             >
                 <Input
@@ -305,7 +324,7 @@ export function CompanyForm({
                     labelText="Denumirea Societatii"
                     inputType="text"
                     inputId="scname"
-                    className="border-input h-full w-full p-2"
+                    className={inputClassName}
                     placeholder="Denumirea societatii"
                     defaultValue={scname}
                 />
@@ -313,7 +332,7 @@ export function CompanyForm({
                     labelText="Website"
                     inputType="text"
                     inputId="website"
-                    className="border-input h-full w-full p-2"
+                    className={inputClassName}
                     placeholder="Website-ul companiei"
                     defaultValue={website}
                 />
@@ -322,7 +341,7 @@ export function CompanyForm({
                     labelText="Descriere"
                     inputType="textarea"
                     inputId="description"
-                    className="border-input h-full w-full p-2"
+                    className={textareaClassName}
                     placeholder="Descriere companiei"
                     defaultValue={description}
                 />
