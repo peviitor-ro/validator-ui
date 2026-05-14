@@ -65,17 +65,25 @@ export function AccountForm({
                     setVisible={setAlert}
                 />
             )}
-            <div className="flex flex-col gap-4 m-2 p-2 border bg-white rounded-md shadow-md">
-                <h2 className="text-2xl font-semibold text-gray-500 border-b-2 pb-2">
-                    Adaugare cont
-                </h2>
-                <form className="flex flex-col gap-4 text-gray-500" onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="email_account">Adauga Utilizator</label>
+            <div className="rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_45px_-28px_rgba(15,23,42,0.35)] backdrop-blur-md lg:p-6">
+                <div className="mb-5 border-b border-slate-200 pb-4">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                        Superuser
+                    </p>
+                    <h2 className="text-2xl font-semibold text-slate-800">Adaugare cont</h2>
+                    <p className="mt-2 text-sm text-slate-500">
+                        Creeaza rapid un utilizator nou care va putea primi acces la companii.
+                    </p>
+                </div>
+                <form className="flex flex-col gap-5 text-slate-600" onSubmit={handleSubmit}>
+                    <div className="space-y-2">
+                        <label htmlFor="email_account" className="text-sm font-medium text-slate-600">
+                            Adauga utilizator
+                        </label>
                         <input
                             type="email"
                             id="email_account"
-                            className="border-input h-full w-full p-2"
+                            className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -83,7 +91,7 @@ export function AccountForm({
                     </div>
                     <button
                         type="submit"
-                        className="flex items-center justify-center btn btn-green text-center w-[100px] px-4"
+                        className="inline-flex min-w-[140px] items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
                         disabled={loading || !email}
                     >
                         {loading ? (

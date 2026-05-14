@@ -84,10 +84,61 @@ export function Account() {
     useEffect(() => {
         fetchUsersAndCompanies();
     }, [email]);
+
     return (
-        <div>
-            {is_superuser && (
-                <AccountForm
+        <section className="px-4 pb-6 lg:px-6 lg:pb-10">
+            <div className="mb-6 rounded-[28px] border border-white/60 bg-white/90 p-5 shadow-[0_20px_45px_-28px_rgba(15,23,42,0.35)] backdrop-blur-md lg:p-6">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
+                    Administrare
+                </p>
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <h1 className="text-3xl font-semibold text-slate-800">Conturi si acces</h1>
+                        <p className="mt-2 max-w-3xl text-sm text-slate-500 lg:text-base">
+                            Gestioneaza utilizatorii interni, accesul lor la companii si rolurile
+                            folosite in fluxul de validare si publicare a joburilor.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 rounded-2xl bg-slate-50 p-3 text-sm text-slate-500 lg:min-w-[280px]">
+                        <div>
+                            <p className="text-xs uppercase tracking-wide text-slate-400">
+                                Utilizatori
+                            </p>
+                            <p className="mt-1 text-xl font-semibold text-slate-800">{users.length}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs uppercase tracking-wide text-slate-400">
+                                Companii
+                            </p>
+                            <p className="mt-1 text-xl font-semibold text-slate-800">
+                                {companies.length}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid gap-6 xl:grid-cols-[minmax(320px,0.9fr)_minmax(0,1.6fr)]">
+                {is_superuser && (
+                    <AccountForm
+                        loading={loading}
+                        setLoading={setLoading}
+                        alertMessage={alertMessage}
+                        setAlertMessage={setAlertMessage}
+                        alert={alert}
+                        setAlert={setAlert}
+                        alertType={alertType}
+                        setAlertType={setAlertType}
+                    />
+                )}
+                <CompanyAccess
+                    is_superuser={is_superuser}
+                    is_staff={is_staff}
+                    users={users}
+                    companies={companies}
+                    email={email}
+                    setEmail={setEmail}
+                    refreshUsersAndCompanies={fetchUsersAndCompanies}
                     loading={loading}
                     setLoading={setLoading}
                     alertMessage={alertMessage}
@@ -97,24 +148,7 @@ export function Account() {
                     alertType={alertType}
                     setAlertType={setAlertType}
                 />
-            )}
-            <CompanyAccess
-                is_superuser={is_superuser}
-                is_staff={is_staff}
-                users={users}
-                companies={companies}
-                email={email}
-                setEmail={setEmail}
-                refreshUsersAndCompanies={fetchUsersAndCompanies}
-                loading={loading}
-                setLoading={setLoading}
-                alertMessage={alertMessage}
-                setAlertMessage={setAlertMessage}
-                alert={alert}
-                setAlert={setAlert}
-                alertType={alertType}
-                setAlertType={setAlertType}
-            />
-        </div>
+            </div>
+        </section>
     );
 }
