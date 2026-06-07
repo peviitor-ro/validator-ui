@@ -12,6 +12,7 @@ import { Analitycs } from './components/Analitycs';
 import { LoadingPage } from '../../components/LoadingPage';
 import { Modal } from '../../components/Modal';
 import { JobForm } from './components/forms/JobForm';
+import { CreateJobForm } from './components/forms/CreateJobForm';
 import { Alert } from '../../components/Alert';
 import Loading from '../../components/Loading';
 
@@ -63,6 +64,7 @@ export function JobsPage() {
     );
 
     const [open, setOpen] = useState(false);
+    const [createOpen, setCreateOpen] = useState(false);
 
     // State hook to manage the list of jobs
     const [jobsData, setJobsData] = useState([]);
@@ -83,7 +85,10 @@ export function JobsPage() {
     useEffect(() => {
         if (data?.pages[0].data?.length > 0) {
             setJobsData(data.pages.map((page) => page.data).flat());
+            return;
         }
+
+        setJobsData([]);
     }, [data]);
 
     const [editedData, setEditedData] = useState({});
@@ -144,9 +149,17 @@ export function JobsPage() {
         <Home>
             <Home.Header
                 title={`Joburi Disponibile ${company}`}
-                formComponent={<p>In curs de dezvoltare </p>}
                 selector={useJobsOptionsSelector}
                 options={JOBS_OPTIONS}
+                action={
+                    <button
+                        type="button"
+                        onClick={() => setCreateOpen(true)}
+                        className="inline-flex w-full items-center justify-center rounded-2xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 lg:w-auto"
+                    >
+                        Adauga job
+                    </button>
+                }
             />
             <Alert
                 message={alertMessage}
@@ -204,6 +217,18 @@ export function JobsPage() {
                         setAlertOpen={setAlertOpen}
                         setAlertMessage={setAlertMessage}
                         setAlertType={setAlertType}
+                    />
+                )}
+            </Modal>
+
+            <Modal open={createOpen} setOpen={setCreateOpen}>
+                {createOpen && (
+                    <CreateJobForm
+                        companyId={id}
+                        companyName={company}
+                        setJobsData={setJobsData}
+                        setOpenModal={setCreateOpen}
+                        setAlert={setAlert}
                     />
                 )}
             </Modal>

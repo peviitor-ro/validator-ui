@@ -14,7 +14,10 @@ export const routes = {
 
     // Jobs
     JOBS: 'jobs/get/',
+    JOBS_DETAIL: 'jobs/get/',
     JOBS_SYNC: 'jobs/sync/',
+    JOBS_MANUAL_ADD: 'jobs/manual-add/',
+    MOBILE_JOB_DETAIL: 'mobile/',
     JOBS_DELETE: 'jobs/delete/',
     JOBS_PUBLISH: 'jobs/publish/',
     JOBS_EDIT: 'jobs/edit/',
