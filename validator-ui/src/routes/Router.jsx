@@ -11,6 +11,7 @@ import { CapthchaProvider } from './CapthchaProvider';
 import { routes } from './routes';
 import { JobsPage } from '../pages/home/JobsPage';
 import { Account } from '../pages/account/Account';
+import { JobDetailsPage } from '../pages/home/JobDetailsPage';
 
 /**
  * Router component that defines the application's routing structure.
@@ -60,6 +61,7 @@ export function Router() {
                     path={routes.CONFIRM_EMAIL}
                     element={isAuthenticated ? <Navigate to="/" /> : <EmailConfirmation />}
                 />
+                <Route path="job/:jobId" element={<JobDetailsPage />} />
 
                 {/* LOOGED IN USERS ROUTES */}
                 <Route

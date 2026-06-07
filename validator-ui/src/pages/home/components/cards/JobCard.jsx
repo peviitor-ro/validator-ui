@@ -4,7 +4,7 @@ import { LoadingPage } from '../../../../components/LoadingPage';
 import { AnimatedCard } from '../../../../components/AnimatedCard';
 import { post } from '../../../../services/landing/landing.service';
 import { cn } from '../../../../lib/utils';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { routes } from '../../../../routes/routes';
 
 import pencil from '../../../../assets/icons/pencil.png';
@@ -73,7 +73,20 @@ async function actionButtons(data, url, setAlertCallback, setLoading) {
  * @returns {JSX.Element} The rendered JobCard component.
  */
 export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }) {
-    const { job_link, job_title, country, city, county, remote, edited, published, posted } = data;
+    const {
+        job_link,
+        job_title,
+        country,
+        city,
+        county,
+        remote,
+        salary_min,
+        salary_max,
+        salary_currency,
+        edited,
+        published,
+        posted,
+    } = data;
     const { id, company } = useParams();
 
     const companyJobs = data;
@@ -157,6 +170,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
               : '';
 
     const iconsClasses = 'h-4 w-4';
+    const salaryLabel = formatSalaryLabel({ salary_min, salary_max, salary_currency });
 
     return (
         <>
@@ -172,7 +186,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
                 setEditedData={setEditedData}
                 disableNavbarActions
             >
-                <div className="flex flex-col justify-between h-full">
+                <div className="flex flex-col justify-between h-full select-text">
                     <div className="flex flex-col gap-3 ml-2">
                         <div className="text-lg font-semibold">{job_title}</div>
                         <div className="flex flex-col gap-3">
@@ -189,16 +203,14 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
                                     <img src={pencil} alt="Editeaza" className={iconsClasses} />
                                     <span>Editeaza</span>
                                 </button>
-                                <a
-                                    href={job_link}
-                                    target="_blank"
-                                    rel="noreferrer"
+                                <Link
+                                    to={`/job/${data.id}`}
                                     onClick={(e) => e.stopPropagation()}
                                     className="flex min-w-[110px] items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-medium text-sky-700 transition-colors hover:bg-sky-100"
                                 >
                                     <img src={www} alt="Job" className={iconsClasses} />
                                     <span>Vezi</span>
-                                </a>
+                                </Link>
                                 {!published && (
                                     <button
                                         type="button"
@@ -255,6 +267,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
                                         : 'Niciun judet specificat'}
                                 </span>
                                 <span>Tara: {separateByComma([country])}</span>
+                                <span>Salariu: {salaryLabel}</span>
                                 <span className="text-sm text-gray-500 dark:text-gray-400">
                                     Tipul jobului:{' '}
                                     {remote?.length
@@ -291,4 +304,57 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
  */
 function separateByComma(arr) {
     return arr.map((c) => c).join(', ');
+}
+
+function formatSalaryLabel({ salary_min, salary_max, salary_currency }) {
+    const currency = normalizeCurrencyValue(salary_currency);
+
+    if (currency === 'VOLUNTAR') {
+        return 'Voluntar';
+    }
+
+    const min = normalizeSalaryValue(salary_min);
+    const max = normalizeSalaryValue(salary_max);
+
+    if (min !== null && max !== null) {
+        return `${formatSalaryNumber(min)} - ${formatSalaryNumber(max)} ${currency}`.trim();
+    }
+
+    if (min !== null) {
+        return `${formatSalaryNumber(min)} ${currency}`.trim();
+    }
+
+    if (max !== null) {
+        return `${formatSalaryNumber(max)} ${currency}`.trim();
+    }
+
+    return 'Nu este precizat';
+}
+
+function normalizeSalaryValue(value) {
+    if (value === null || value === undefined || value === '') {
+        return null;
+    }
+
+    if (typeof value === 'string') {
+        const trimmedValue = value.trim().toLowerCase();
+        if (!trimmedValue || trimmedValue === 'null' || trimmedValue === 'undefined') {
+            return null;
+        }
+    }
+
+    const numericValue = Number(value);
+    return Number.isNaN(numericValue) ? null : numericValue;
+}
+
+function normalizeCurrencyValue(value) {
+    if (!value) {
+        return '';
+    }
+
+    return String(value).trim().toUpperCase();
+}
+
+function formatSalaryNumber(value) {
+    return new Intl.NumberFormat('ro-RO').format(value);
 }

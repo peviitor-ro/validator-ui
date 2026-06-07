@@ -96,7 +96,7 @@ export function AnimatedCard({
                     )}
                 />
             )}
-            <div className={cn('flex flex-col h-full w-full z-10')}>{children}</div>
+            <div className={cn('flex flex-col h-full w-full z-10 select-text')}>{children}</div>
         </div>
     );
 }

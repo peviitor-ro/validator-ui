@@ -69,8 +69,21 @@ export function JobForm({
     const store = useJobStore();
     const [propsdata, setPropsData] = useState(jobData);
 
-    const { job_link, job_title, country, city, county, remote, edited, published, posted } =
-        propsdata;
+    const {
+        job_link,
+        job_title,
+        description,
+        country,
+        city,
+        county,
+        remote,
+        salary_min,
+        salary_max,
+        salary_currency,
+        edited,
+        published,
+        posted,
+    } = propsdata;
 
     useEffect(() => {
         store.setJob({ ...propsdata });
@@ -230,6 +243,18 @@ export function JobForm({
                         disabled
                     />
                 </div>
+                <div className="flex flex-col gap-2">
+                    <label htmlFor="description" className="text-sm font-medium text-slate-600">
+                        Descriere
+                    </label>
+                    <textarea
+                        className="min-h-[140px] w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-700 shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        id="description"
+                        placeholder="Descrierea jobului"
+                        defaultValue={description ?? ''}
+                        onChange={changeHandler}
+                    />
+                </div>
                 <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 shadow-inner">
                     <label className="text-sm font-medium text-slate-600">Localitatea</label>
                     <div className="relative">
@@ -330,6 +355,56 @@ export function JobForm({
                             </option>
                         ))}
                     </select>
+                </div>
+                <div className="grid gap-4 md:grid-cols-3">
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="salary_min" className="text-sm font-medium text-slate-600">
+                            Salariu minim
+                        </label>
+                        <input
+                            className={fieldClassName}
+                            id="salary_min"
+                            placeholder="Ex: 5000"
+                            type="number"
+                            defaultValue={salary_min ?? ''}
+                            onChange={changeHandler}
+                            min="0"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="salary_max" className="text-sm font-medium text-slate-600">
+                            Salariu maxim
+                        </label>
+                        <input
+                            className={fieldClassName}
+                            id="salary_max"
+                            placeholder="Ex: 8000"
+                            type="number"
+                            defaultValue={salary_max ?? ''}
+                            onChange={changeHandler}
+                            min="0"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="salary_currency"
+                            className="text-sm font-medium text-slate-600"
+                        >
+                            Moneda
+                        </label>
+                        <select
+                            className={fieldClassName}
+                            id="salary_currency"
+                            defaultValue={salary_currency ?? ''}
+                            onChange={changeHandler}
+                        >
+                            <option value="">Selecteaza moneda</option>
+                            <option value="EUR">EURO</option>
+                            <option value="RON">RON</option>
+                            <option value="USD">USD</option>
+                            <option value="VOLUNTAR">Voluntar</option>
+                        </select>
+                    </div>
                 </div>
                 <Button
                     text="Salveaza modificarile"
