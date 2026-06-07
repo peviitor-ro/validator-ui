@@ -78,7 +78,7 @@ export function CompanyCard({
         };
 
         // remove the company
-        const response = await post(routes.COMPANY_DELETE, { company });
+        const response = await post(routes.COMPANY_DELETE, { companyId: id });
         if (response.status !== 200) {
             setAlert('A aparut o eroare la stergerea companiei.', 'error');
             return;
@@ -143,19 +143,35 @@ export function CompanyCard({
 
             <div className="mb-4 flex items-center justify-center">
                 <div className="flex items-center overflow-hidden rounded-2xl border border-gray-200 bg-white/80 shadow-sm backdrop-blur-sm">
-                    <button
-                        type="button"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setEditedData(data);
-                            setOpenModal(true);
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-700"
-                    >
-                        <img src={pencil} alt="Editeaza" className="h-4 w-4" />
-                        <span>Editeaza</span>
-                    </button>
-                    <div className="h-6 w-px bg-gray-200" />
+                    {have_access && (
+                        <>
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditedData(data);
+                                    setOpenModal(true);
+                                }}
+                                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-700"
+                            >
+                                <img src={pencil} alt="Editeaza" className="h-4 w-4" />
+                                <span>Editeaza</span>
+                            </button>
+                            <div className="h-6 w-px bg-gray-200" />
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete();
+                                }}
+                                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-rose-50 hover:text-rose-700"
+                            >
+                                <img src={deleteIcon} alt="Sterge" className="h-4 w-4" />
+                                <span>Sterge</span>
+                            </button>
+                            <div className="h-6 w-px bg-gray-200" />
+                        </>
+                    )}
                     <a
                         href={website}
                         target="_blank"
@@ -184,10 +200,9 @@ export function CompanyCard({
                 className={clsx(
                     'mb-2 flex items-center justify-center rounded-2xl border px-4 py-3 text-sm font-medium transition-colors',
                     {
-                        'border-red-200 bg-red-50 text-red-700 hover:bg-red-100':
-                            jobsCount && have_access,
+                        'border-red-200 bg-red-50 text-red-700 hover:bg-red-100': have_access,
                         'pointer-events-none border-gray-200 bg-gray-100 text-gray-400':
-                            !jobsCount || !have_access,
+                            !have_access,
                     },
                 )}
             >

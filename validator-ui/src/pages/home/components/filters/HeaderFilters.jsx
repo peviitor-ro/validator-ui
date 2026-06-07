@@ -24,7 +24,7 @@ export function Home({ children }) {
  * @param {Array} props.options - The options for the SelectField component.
  * @returns {JSX.Element} The rendered Header component.
  */
-Home.Header = function H({ title, selector, options }) {
+Home.Header = function H({ title, selector, options, action }) {
     /**
      * Destructures the search, order, setOrder, and setSearch properties from the selector function.
      *
@@ -69,7 +69,7 @@ Home.Header = function H({ title, selector, options }) {
                     <h1 className="text-2xl font-semibold text-slate-800 lg:text-3xl">{title}</h1>
                 </div>
 
-                <div className="grid gap-3 lg:min-w-[680px] lg:grid-cols-[minmax(0,1.7fr)_minmax(180px,0.9fr)_auto] lg:items-center">
+                <div className="grid gap-3 lg:min-w-[680px] lg:grid-cols-[minmax(0,1.7fr)_minmax(180px,0.9fr)_auto_auto] lg:items-center">
                     <InputField
                         id="search"
                         fieldClassName="rounded-2xl border border-slate-200 bg-white/90 shadow-sm"
@@ -88,6 +88,8 @@ Home.Header = function H({ title, selector, options }) {
                             setSearch(search);
                         }}
                     />
+
+                    {action}
                 </div>
             </div>
         </div>
