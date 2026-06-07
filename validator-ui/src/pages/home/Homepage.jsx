@@ -61,6 +61,7 @@ export function Homepage() {
 
     const [editedData, setEditedData] = useState({});
     const [openModal, setOpenModal] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     if (status === 'error') {
         return (
@@ -74,16 +75,17 @@ export function Homepage() {
         <Home>
             <Home.Header
                 title={'Companii'}
-                formComponent={
-                    <CompanyForm
-                        setCompanies={setCompanies}
-                        setAlertOpen={setAlertOpen}
-                        setAlertMessage={setAlertMessage}
-                        setAlertType={setAlertType}
-                    />
-                }
                 selector={useCompanyOptionsSelector}
                 options={SORT_OPTIONS}
+                action={
+                    <button
+                        type="button"
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="inline-flex w-full items-center justify-center rounded-2xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 lg:w-auto"
+                    >
+                        Adauga companie
+                    </button>
+                }
             />
 
             <Alert
@@ -129,6 +131,15 @@ export function Homepage() {
                 <CompanyForm
                     companyData={editedData}
                     method="PUT"
+                    setCompanies={setCompanies}
+                    setAlertOpen={setAlertOpen}
+                    setAlertMessage={setAlertMessage}
+                    setAlertType={setAlertType}
+                />
+            </Modal>
+
+            <Modal open={isCreateModalOpen} setOpen={setIsCreateModalOpen}>
+                <CompanyForm
                     setCompanies={setCompanies}
                     setAlertOpen={setAlertOpen}
                     setAlertMessage={setAlertMessage}
