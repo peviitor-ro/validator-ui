@@ -78,7 +78,7 @@ export function CompanyCard({
         };
 
         // remove the company
-        const response = await post(routes.COMPANY_DELETE, { companyId: id });
+        const response = await post(routes.COMPANY_DELETE, { company });
         if (response.status !== 200) {
             setAlert('A aparut o eroare la stergerea companiei.', 'error');
             return;
