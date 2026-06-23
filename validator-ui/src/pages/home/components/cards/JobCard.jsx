@@ -86,6 +86,7 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
         edited,
         published,
         posted,
+        origin,
     } = data;
     const { id, company } = useParams();
 
@@ -203,14 +204,27 @@ export function JobCard({ data, setJobs, setAlert, setEditedData, setOpenModal }
                                     <img src={pencil} alt="Editeaza" className={iconsClasses} />
                                     <span>Editeaza</span>
                                 </button>
-                                <Link
-                                    to={`/job/${data.id}`}
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="flex min-w-[110px] items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-medium text-sky-700 transition-colors hover:bg-sky-100"
-                                >
-                                    <img src={www} alt="Job" className={iconsClasses} />
-                                    <span>Vezi</span>
-                                </Link>
+                                {origin === 'manual' ? (
+                                    <Link
+                                        to={`/job/${data.id}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="flex min-w-[110px] items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-medium text-sky-700 transition-colors hover:bg-sky-100"
+                                    >
+                                        <img src={www} alt="Job" className={iconsClasses} />
+                                        <span>Vezi</span>
+                                    </Link>
+                                ) : (
+                                    <a
+                                        href={job_link}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="flex min-w-[110px] items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-medium text-sky-700 transition-colors hover:bg-sky-100"
+                                    >
+                                        <img src={www} alt="Job" className={iconsClasses} />
+                                        <span>Vezi</span>
+                                    </a>
+                                )}
                                 {!published && (
                                     <button
                                         type="button"
